@@ -920,9 +920,9 @@ En desarrollo
 Proyecto desarrollado por:
 
 ```text
-Nombre del integrante 1
-Nombre del integrante 2
-Nombre del integrante 3
+Adrián Freire
+Josselyn Guevara
+Anthonny Llanos
 ```
 
 ---
