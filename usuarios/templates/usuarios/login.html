@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-header">
+            <span class="logo-dot"></span>
+            <h2>Iniciar sesión en Ecualizer</h2>
+            <p>Sintoniza con tu cuenta de administrador, artista u oyente.</p>
+        </div>
+
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="login-error-msg">
+                    {% for error in form.non_field_errors %}
+                        <p>⚠️ {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="input-group">
+                <label for="{{ form.username.id_for_label }}">Nombre de usuario o Correo</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <span style="color: #ffb3d1; font-size: 12px;">{{ form.username.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="input-group">
+                <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <span style="color: #ffb3d1; font-size: 12px;">{{ form.password.errors }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-login-submit">Entrar a la plataforma</button>
+        </form>
+
+        <div class="login-footer">
+            <p>¿No tienes una cuenta? <a href="{% url 'usuario_create' %}">Regístrate aquí</a></p>
+            <p><a href="{% url 'home' %}" style="color: var(--text-gray); font-weight: normal;">Volver al inicio</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --bg-black: #060308;
+        --card-bg: #110b18;
+        --accent-neon-pink: #f72585;
+        --accent-neon-violet: #b5179e;
+        --text-white: #ffffff;
+        --text-gray: #9d8eb3;
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+
+    .login-card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        padding: 45px;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        position: relative;
+    }
+
+    /* Brillo de fondo sutil detrás de la tarjeta */
+    .login-card::after {
+        content: '';
+        position: absolute;
+        top: -10%; left: -10%; width: 120%; height: 120%;
+        background: radial-gradient(circle, rgba(114, 9, 183, 0.1) 0%, transparent 70%);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .login-header .logo-dot {
+        width: 12px;
+        height: 12px;
+        background-color: var(--accent-neon-pink);
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 15px var(--accent-neon-pink);
+        margin-bottom: 10px;
+    }
+
+    .login-header h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 5px 0;
+        letter-spacing: -0.5px;
+    }
+
+    .login-header p {
+        color: var(--text-gray);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-group label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-gray);
+        letter-spacing: 0.5px;
+    }
+
+    .input-group input {
+        background-color: #1a1126;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px 18px;
+        border-radius: 12px;
+        color: var(--text-white);
+        font-size: 15px;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .input-group input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-group input.form-control {
+        background-color: #1a1126;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px 18px;
+        border-radius: 12px;
+        color: var(--text-white);
+        font-size: 15px;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .input-group input.form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--accent-neon-violet);
+        box-shadow: 0 0 10px rgba(181, 23, 158, 0.2);
+        background-color: #211530;
+    }
+
+    .login-error-msg {
+        background-color: rgba(247, 37, 133, 0.1);
+        border: 1px solid var(--accent-neon-pink);
+        padding: 10px 15px;
+        border-radius: 10px;
+        color: #ffb3d1;
+        font-size: 13px;
+    }
+
+    .btn-login-submit {
+        background: linear-gradient(135deg, var(--accent-neon-violet), var(--accent-neon-pink));
+        color: var(--text-white);
+        border: none;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 10px;
+    }
+
+    .btn-login-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(247, 37, 133, 0.4);
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 13px;
+        color: var(--text-gray);
+    }
+
+    .login-footer a {
+        color: var(--accent-neon-pink);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

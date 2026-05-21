@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel-container">
+    <div class="panel-header">
+        <div>
+            <h1>Usuarios Oyentes</h1>
+            <p class="panel-subtitle">Visualiza, edita y gestiona las cuentas de los oyentes de la plataforma.</p>
+        </div>
+        <a class="btn-create-neon" href="{% url 'usuario_create' %}">
+            <span>+</span> Nuevo usuario oyente
+        </a>
+    </div>
+
+    <div class="table-responsive-wrapper">
+        <table class="custom-neon-table">
+            <thead>
+                <tr>
+                    <th>ID Persona</th>
+                    <th>Alias / Usuario</th>
+                    <th>País</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Género</th>
+                    <th class="text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td class="font-mono text-dim">{{ usuario.id_usuario.id_usuario }}</td>
+                    <td>
+                        <div class="user-profile-cell">
+                            <div class="avatar-placeholder">🎧</div>
+                            <span class="user-alias">{{ usuario.alias }}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge-country">{{ usuario.pais_usuario }}</span></td>
+                    <td>{{ usuario.fecha_nacimiento }}</td>
+                    <td>{{ usuario.genero }}</td>
+                    <td class="text-right">
+                        <div class="action-buttons-container">
+                            <a class="action-btn btn-edit" href="{% url 'usuario_update' usuario.id_usuario.id_usuario %}">Editar</a>
+                            <a class="action-btn btn-delete" href="{% url 'usuario_delete' usuario.id_usuario.id_usuario %}">Eliminar</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="table-empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>No existen usuarios registrados en el sistema actualmente.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    :root {
+        --bg-black: #060308;
+        --card-bg: #110b18;
+        --accent-neon-pink: #f72585;
+        --accent-neon-violet: #b5179e;
+        --text-white: #ffffff;
+        --text-gray: #9d8eb3;
+    }
+
+    .panel-container {
+        padding: 40px;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+    .panel-header h1 {
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        letter-spacing: -1px;
+    }
+
+    .panel-subtitle {
+        color: var(--text-gray);
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .btn-create-neon {
+        background-color: var(--accent-neon-violet);
+        color: var(--text-white);
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 0 15px rgba(181, 23, 158, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-create-neon:hover {
+        background-color: var(--accent-neon-pink);
+        box-shadow: 0 0 25px rgba(247, 37, 133, 0.5);
+        transform: translateY(-2px);
+    }
+
+    /* ESTILOS DE LA TABLA ESTILO DASHBOARD PREMIUM */
+    .table-responsive-wrapper {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+
+    .custom-neon-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    .custom-neon-table th {
+        background-color: #181022;
+        color: var(--text-gray);
+        padding: 18px 24px;
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .custom-neon-table td {
+        padding: 18px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        color: rgba(255, 255, 255, 0.85);
+        vertical-align: middle;
+    }
+
+    .custom-neon-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.01);
+    }
+
+    .font-mono { font-family: 'Courier New', Courier, monospace; }
+    .text-dim { color: var(--text-gray); font-size: 13px; }
+    .text-right { text-align: right; }
+
+    /* Perfil del oyente dentro de la celda */
+    .user-profile-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .avatar-placeholder {
+        width: 32px;
+        height: 32px;
+        background-color: #1e132c;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+    }
+
+    .user-alias {
+        font-weight: 600;
+        color: var(--text-white);
+    }
+
+    .badge-country {
+        background-color: rgba(114, 9, 183, 0.2);
+        color: #cbb3ff;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid rgba(114, 9, 183, 0.3);
+    }
+
+    /* CONTENEDOR DE ACCIONES */
+    .action-buttons-container {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .action-btn {
+        text-decoration: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--text-white);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-edit:hover {
+        background-color: var(--accent-neon-violet);
+        border-color: var(--accent-neon-violet);
+    }
+
+    .btn-delete {
+        background-color: rgba(247, 37, 133, 0.1);
+        color: var(--accent-neon-pink);
+        border: 1px solid rgba(247, 37, 133, 0.2);
+    }
+
+    .btn-delete:hover {
+        background-color: var(--accent-neon-pink);
+        color: var(--text-white);
+        box-shadow: 0 0 10px rgba(247, 37, 133, 0.4);
+    }
+
+    /* Estado Vacío */
+    .table-empty-state {
+        text-align: center !important;
+        padding: 50px !important;
+        color: var(--text-gray) !important;
+    }
+
+    .empty-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}

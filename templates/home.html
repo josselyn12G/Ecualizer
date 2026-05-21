@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="landing-container">
+    <header class="landing-header">
+        <div class="logo">
+            <span class="logo-dot"></span> Ecualizer
+        </div>
+        <nav class="landing-nav">
+            <button class="nav-tab active" onclick="switchTab('acerca')">Acerca de</button>
+            <button class="nav-tab" onclick="switchTab('tecnologias')">Tecnologías Utilizadas</button>
+            <button class="nav-tab" onclick="switchTab('informacion')">Información</button>
+        </nav>
+        <div class="auth-buttons">
+            <a href="{% url 'login' %}" class="btn-login">Iniciar Sesión</a>
+            <a href="{% url 'usuario_create' %}" class="btn-signup">Registrarse</a>
+        </div>
+    </header>
+
+    <main class="landing-hero scroll-reveal">
+        <div class="bg-text-back">ECUA</div>
+        <div class="bg-text-front">LIZER</div>
+
+        <div class="circle-composite">
+            <div class="circle circle-neon-violet fade-in-up">
+                <div class="circle-content">
+                    <span class="arrow">↗</span>
+                    <p>La plataforma definitiva para la gestión, analítica y ecualización de tu ecosistema musical.</p>
+                </div>
+            </div>
+            <div class="circle circle-vinyl fade-in-up delay-1">
+                <div class="vinyl-body">
+                    <div class="vinyl-center"></div>
+                </div>
+                <div class="circle-content center-content overlay-text">
+                    <h1>Ecualizer</h1>
+                </div>
+            </div>
+            <div class="circle circle-image-2 fade-in-up delay-2">
+                <div class="circle-content bottom-content">
+                    <button class="btn-learn-more">Explorar Tracks ↗</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="explore-section scroll-reveal">
+        <div class="explore-showcase">
+            <div class="showcase-card neon-glow-card">
+                <div class="card-image-placeholder img-artist-1"></div>
+                <div class="showcase-badge">Live VR</div>
+            </div>
+            <div class="showcase-card floating-card">
+                <div class="card-image-placeholder img-artist-2">
+                    <div class="play-button-central">▶</div>
+                </div>
+                <div class="text-marquee">FUTURE RHYTHMS • ECUALIZER • </div>
+            </div>
+        </div>
+        <div class="explore-text">
+            <span class="section-tag">MÓDULO EXCLUSIVO</span>
+            <h2>Explore without limits</h2>
+            <p>Gestiona y distribuye música en alta fidelidad. Diseñado para optimizar los flujos de trabajo de artistas independientes y sellos discográficos de la nueva era digital.</p>
+            <div class="interactive-vinyl-tracker">
+                <div class="mini-vinyl"></div>
+                <span>Loop Tracklist Active</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="carousel-section scroll-reveal">
+        <div class="carousel-header">
+            <h2>Visualiza tu música con un solo prompt</h2>
+            <p>Genera portadas y artes conceptuales automatizados para tus álbumes usando herramientas de IA integradas.</p>
+            <button class="btn-action-neon">Generar Arte ↗</button>
+        </div>
+        
+        <div class="curved-carousel-container">
+            <div class="carousel-track">
+                <div class="carousel-card c-1"><p>Synthwave Vibe</p></div>
+                <div class="carousel-card c-2"><p>Cyberpunk Beats</p></div>
+                <div class="carousel-card c-3 active-center"><p>Ecualizer AI</p></div>
+                <div class="carousel-card c-4"><p>Lo-Fi Chill</p></div>
+                <div class="carousel-card c-5"><p>Deep Techno</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="dynamic-content-section scroll-reveal">
+        <div id="acerca" class="tab-content active-content">
+            <div class="content-grid">
+                <div class="interactive-card">
+                    <h3>Gestión Centralizada</h3>
+                    <p>Control total sobre usuarios, artistas, oyentes y administradores desde un único panel optimizado.</p>
+                </div>
+                <div class="interactive-card">
+                    <h3>Catálogo Musical</h3>
+                    <p>Administración inteligente de álbumes, canciones y playlists con metadatos avanzados.</p>
+                </div>
+                <div class="interactive-card">
+                    <h3>Monetización y Pagos</h3>
+                    <p>Flujo automatizado para el procesamiento de suscripciones y regalías de artistas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tecnologias" class="tab-content">
+            <div class="content-grid">
+                <div class="interactive-card tech-card">
+                    <h3>Back-End</h3>
+                    <p>Potenciado por Python y Django, garantizando una arquitectura robusta, escalable y segura.</p>
+                </div>
+                <div class="interactive-card tech-card">
+                    <h3>Base de Datos</h3>
+                    <p>Infraestructura relacional optimizada con vistas, logins y roles específicos para cada tipo de usuario.</p>
+                </div>
+                <div class="interactive-card tech-card">
+                    <h3>Front-End</h3>
+                    <p>Diseño minimalista construido con HTML5, CSS3 avanzado y transiciones interactivas nativas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="informacion" class="tab-content">
+            <div class="content-grid">
+                <div class="interactive-card info-card">
+                    <h3>Analítica Avanzada</h3>
+                    <p>Métricas en tiempo real sobre reproducciones, popularidad de tracks y crecimiento de la comunidad.</p>
+                </div>
+                <div class="interactive-card info-card">
+                    <h3>Módulo de Industria</h3>
+                    <p>Herramientas diseñadas exclusivamente para sellos discográficos y creadores independientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Control de Pestañas Dinámicas
+    function switchTab(tabId) {
+        document.querySelectorAll('.nav-tab').forEach(button => button.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
+
+        event.currentTarget.classList.add('active');
+        document.getElementById(tabId).classList.add('active-content');
+    }
+
+    // Intersection Observer para disparar animaciones al hacer Scroll
+    document.addEventListener("DOMContentLoaded", function() {
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        
+        const observerOptions = {
+            root: null,
+            threshold: 0.15, // Se activa cuando el 15% del elemento es visible
+            rootMargin: "0px 0px -5px 0px"
+        };
+
+        const scrollObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    // Opcional: dejar de observar si solo quieres que se anime una vez
+                    // scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        revealElements.forEach(element => {
+            scrollObserver.observe(element);
+        });
+    });
+</script>
+
+<style>
+    :root {
+        --bg-black: #060308; /* Negro ultra oscuro con matiz violeta */
+        --card-bg: #110b18; /* Morado profundo para tarjetas */
+        --accent-neon-violet: #b5179e; /* Fucsia / Violeta brillante */
+        --accent-neon-pink: #f72585; /* Rosa neón encendido */
+        --accent-purple: #7209b7; /* Morado puro */
+        --text-white: #ffffff;
+        --text-gray: #9d8eb3;
+        --nav-bg: #191124;
+    }
+
+    body {
+        background-color: var(--bg-black);
+        color: var(--text-white);
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    .landing-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* BARRA DE NAVEGACIÓN */
+    .landing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background-color: transparent;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .logo-dot {
+        width: 10px;
+        height: 10px;
+        background-color: var(--accent-neon-pink);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent-neon-pink);
+    }
+
+    .landing-nav {
+        background-color: var(--nav-bg);
+        padding: 6px;
+        border-radius: 30px;
+        display: flex;
+        gap: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-tab {
+        background: transparent;
+        border: none;
+        color: var(--text-gray);
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-tab:hover, .nav-tab.active {
+        background-color: var(--accent-neon-violet);
+        color: var(--text-white);
+        box-shadow: 0 0 15px rgba(181, 23, 158, 0.4);
+    }
+
+    .auth-buttons {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .btn-login {
+        color: var(--text-white);
+        text-decoration: none;
+        padding: 10px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+
+    .btn-login:hover {
+        background-color: rgba(255,255,255,0.05);
+        border-color: var(--accent-neon-pink);
+    }
+
+    .btn-signup {
+        background-color: var(--accent-neon-pink);
+        color: var(--text-white);
+        text-decoration: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        box-shadow: 0 0 15px rgba(247, 37, 133, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-signup:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(247, 37, 133, 0.7);
+    }
+
+    /* SYSTEMA DE SCROLL REVEAL EFECTO */
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(60px);
+        transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1), 
+                    transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* COMPOSICIÓN HERO INTERACTIVA */
+    .landing-hero {
+        position: relative;
+        height: 550px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+    }
+
+    .bg-text-back, .bg-text-front {
+        position: absolute;
+        font-size: 18vw;
+        font-weight: 900;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(114, 9, 183, 0.15);
+        letter-spacing: -5px;
+        user-select: none;
+        z-index: 1;
+    }
+    .bg-text-back { left: -20px; top: 5%; }
+    .bg-text-front { right: -20px; bottom: 5%; }
+
+    .circle-composite {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+
+    .circle {
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        position: absolute;
+        overflow: hidden;
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .circle-neon-violet {
+        background: linear-gradient(135deg, var(--accent-purple), var(--accent-neon-violet));
+        color: var(--text-white);
+        left: 18%;
+        z-index: 2;
+    }
+
+    /* Efecto Vinilo de música giratorio */
+    .circle-vinyl {
+        background: #111;
+        left: 38%;
+        z-index: 3;
+        border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .vinyl-body {
+        position: absolute;
+        width: 90%; height: 90%;
+        top: 5%; left: 5%;
+        border-radius: 50%;
+        background: radial-gradient(circle, #333 4%, #111 4%, #111 10%, #222 10%, #111 20%, #222 30%, #111 40%, #222 50%, #111 60%, #222 70%, #111 80%);
+        animation: spinVinyl 12s linear infinite;
+        box-shadow: inset 0 0 20px rgba(247,37,133,0.3);
+    }
+
+    .vinyl-center {
+        position: absolute;
+        width: 25%; height: 25%;
+        top: 37.5%; left: 37.5%;
+        background-color: var(--accent-neon-pink);
+        border-radius: 50%;
+    }
+
+    @keyframes spinVinyl {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .overlay-text { pointer-events: none; z-index: 4; position: relative;}
+
+    .circle-image-2 {
+        background: linear-gradient(rgba(0,0,0,0.2), rgba(17, 11, 24, 0.85)), url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=600&auto=format&fit=crop') center/cover;
+        left: 58%;
+        z-index: 2;
+    }
+
+    .circle-content { padding: 40px; height: 100%; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+    .circle-neon-violet .arrow { font-size: 32px; margin-bottom: 20px; color: var(--accent-neon-pink); }
+    .center-content { justify-content: center; align-items: center; text-align: center; }
+    .center-content h1 { font-size: 44px; font-weight: 800; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+    .bottom-content { justify-content: flex-end; align-items: center; padding-bottom: 50px; }
+    
+    .btn-learn-more {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: var(--text-white);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+    .btn-learn-more:hover { background-color: var(--accent-neon-pink); border-color: var(--accent-neon-pink); }
+
+    /* SECCIÓN NUEVA 1: EXPLORE WITHOUT LIMITS */
+    .explore-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        margin: 100px 40px;
+        align-items: center;
+    }
+
+    .explore-showcase {
+        display: flex;
+        gap: 20px;
+        position: relative;
+    }
+
+    .showcase-card {
+        width: 240px;
+        height: 340px;
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+        background-color: var(--card-bg);
+    }
+
+    .neon-glow-card {
+        border: 2px solid var(--accent-neon-pink);
+        box-shadow: 0 0 30px rgba(247, 37, 133, 0.25);
+        transform: translateY(-20px);
+    }
+
+    .floating-card {
+        border: 1px solid rgba(255,255,255,0.05);
+        transform: translateY(20px);
+    }
+
+    .card-image-placeholder {
+        width: 100%; height: 100%;
+    }
+    .img-artist-1 { background: linear-gradient(to bottom, transparent, var(--bg-black)), url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop') center/cover; }
+    .img-artist-2 { background: linear-gradient(to bottom, transparent, var(--bg-black)), url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop') center/cover; display:flex; justify-content:center; align-items:center;}
+
+    .showcase-badge {
+        position: absolute; top: 15px; left: 15px;
+        background-color: rgba(0,0,0,0.6);
+        padding: 6px 12px; border-radius: 20px; font-size: 12px;
+        border: 1px solid var(--accent-neon-pink);
+    }
+
+    .play-button-central {
+        width: 50px; height: 50px; background: var(--text-white); color: black;
+        border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        font-size: 18px; cursor: pointer; box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    .text-marquee {
+        position: absolute; bottom: 15px; width: 100%; text-align: center;
+        font-size: 11px; font-weight: 700; color: var(--accent-neon-violet); letter-spacing: 1px;
+    }
+
+    .explore-text h2 { font-size: 42px; font-weight: 800; margin: 15px 0; letter-spacing: -1px; }
+    .explore-text p { color: var(--text-gray); line-height: 1.7; font-size: 16px; }
+    .section-tag { color: var(--accent-neon-pink); font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+
+    .interactive-vinyl-tracker {
+        display: flex; align-items: center; gap: 12px; margin-top: 30px;
+    }
+    .mini-vinyl {
+        width: 30px; height: 30px; background: radial-gradient(circle, var(--bg-black) 30%, var(--accent-neon-violet) 35%, #000 40%);
+        border-radius: 50%; animation: spinVinyl 4s linear infinite;
+    }
+
+    /* SECCIÓN NUEVA 2: CAROUSEL CON ARCO DE PERSPECTIVA 3D */
+    .carousel-section {
+        margin: 120px 40px;
+        text-align: center;
+    }
+    .carousel-header h2 { font-size: 38px; font-weight: 800; margin-bottom: 10px; }
+    .carousel-header p { color: var(--text-gray); margin-bottom: 30px; }
+
+    .btn-action-neon {
+        background: transparent; border: 2px solid var(--accent-neon-violet); color: var(--text-white);
+        padding: 12px 30px; border-radius: 30px; font-weight: 600; cursor: pointer;
+        transition: all 0.3s;
+    }
+    .btn-action-neon:hover { background: var(--accent-neon-violet); box-shadow: 0 0 20px var(--accent-neon-violet); }
+
+    .curved-carousel-container {
+        margin-top: 50px;
+        perspective: 1000px;
+        overflow: hidden;
+        padding: 40px 0;
+    }
+
+    .carousel-track {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        transform: rotateX(10deg); /* Genera la base del arco visual */
+    }
+
+    .carousel-card {
+        width: 180px; height: 260px;
+        border-radius: 16px;
+        background: linear-gradient(45deg, #1f122e, #11081c);
+        border: 1px solid rgba(255,255,255,0.05);
+        display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box;
+        transition: transform 0.4s, border-color 0.4s;
+    }
+    /* Estilización de cartas simulando el renderizado curvo */
+    .c-1 { transform: rotateY(25deg) translateZ(-40px); background-image: url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=200'); background-size: cover; }
+    .c-2 { transform: rotateY(15deg) translateZ(-20px); background-image: url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200'); background-size: cover; }
+    .c-3 { transform: scale(1.1) translateZ(20px); border-color: var(--accent-neon-pink); background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=200'); background-size: cover; box-shadow: 0 10px 30px rgba(247,37,133,0.2); }
+    .c-4 { transform: rotateY(-15deg) translateZ(-20px); background-image: url('https://images.unsplash.com/photo-1487180142328-0c4e37023af5?q=80&w=200'); background-size: cover; }
+    .c-5 { transform: rotateY(-25deg) translateZ(-40px); background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=200'); background-size: cover; }
+
+    .carousel-card p { font-size: 14px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin: 0; }
+
+    /* CONTENIDO DINÁMICO (TARJETAS INFERIORES) */
+    .dynamic-content-section { margin: 80px 40px; }
+    .tab-content { display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+    .tab-content.active-content { display: block; opacity: 1; transform: translateY(0); }
+
+    .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .interactive-card {
+        background-color: var(--card-bg);
+        border: 1px solid rgba(255,255,255,0.03);
+        padding: 35px; border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer; position: relative; overflow: hidden;
+    }
+
+    .interactive-card::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+        background-color: var(--accent-neon-pink); transform: scaleX(0);
+        transform-origin: left; transition: transform 0.3s ease;
+    }
+
+    .interactive-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255,255,255,0.1);
+        background-color: #160e22;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+    .interactive-card:hover::before { transform: scaleX(1); }
+    .interactive-card h3 { margin-top: 0; font-size: 22px; font-weight: 600; margin-bottom: 15px; }
+    .interactive-card p { color: var(--text-gray); line-height: 1.6; font-size: 15px; margin: 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+        .explore-section { grid-template-columns: 1fr; gap: 40px; }
+        .circle-composite { transform: scale(0.8); }
+    }
+    @media (max-width: 768px) {
+        .circle-composite, .curved-carousel-container { display: none; }
+        .landing-hero { height: 160px; }
+        .bg-text-back, .bg-text-front { font-size: 14vw; position: static; display: inline-block; }
+    }
+</style>
+{% endblock %}

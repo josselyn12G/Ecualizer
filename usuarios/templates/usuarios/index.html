@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="card">
+    <h1>Módulo de Usuarios</h1>
+    <p>Gestión de personas, usuarios oyentes, artistas y administradores.</p>
+
+    <div class="menu-grid">
+        <a class="menu-card" href="{% url 'persona_list' %}">Personas</a>
+        <a class="menu-card" href="{% url 'usuario_list' %}">Usuarios Oyentes</a>
+        <a class="menu-card" href="{% url 'artista_list' %}">Artistas</a>
+        <a class="menu-card" href="{% url 'administrador_list' %}">Administradores</a>
+    </div>
+</section>
+{% endblock %}
