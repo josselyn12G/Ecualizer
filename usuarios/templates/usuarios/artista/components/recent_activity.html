@@ -1,26 +1,39 @@
-<!-- Componente: Actividad reciente y accesos rápidos del artista -->
-<div class="two-col-grid">
+<!-- Componente: Top canciones + gráfica de oyentes mensuales -->
+<div class="two-col-grid" style="margin-bottom: 1.25rem;">
 
-  <!-- Canciones recientes -->
+  <!-- Top Canciones -->
   <div class="panel-card">
     <div class="panel-card__header">
       <div class="panel-card__title">
-        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">music_note</span>
-        Mis Canciones Recientes
+        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">leaderboard</span>
+        Top Canciones
       </div>
+      <a href="#" class="section-link">
+        Ver todas <span class="material-icons">chevron_right</span>
+      </a>
     </div>
+
     {% if canciones_recientes %}
-    <div class="track-list">
+    <div class="rank-list">
       {% for cancion in canciones_recientes %}
-      <div class="track-item">
-        <div class="track-item__cover">
+      <div class="rank-item">
+        <div class="rank-item__num
+          {% if forloop.counter == 1 %}rank-item__num--gold
+          {% elif forloop.counter == 2 %}rank-item__num--silver
+          {% elif forloop.counter == 3 %}rank-item__num--bronze{% endif %}">
+          {{ forloop.counter }}
+        </div>
+        <div class="rank-item__cover">
           <span class="material-icons">audiotrack</span>
         </div>
-        <div class="track-item__info">
-          <div class="track-item__name">{{ cancion.nombre }}</div>
-          <div class="track-item__artist">{{ cancion.album }}</div>
+        <div class="rank-item__info">
+          <div class="rank-item__name">{{ cancion.nombre }}</div>
+          <div class="rank-item__album">{{ cancion.album }}</div>
         </div>
-        <div class="track-item__duration">{{ cancion.reproducciones }} plays</div>
+        <div class="rank-item__plays">
+          <strong>{{ cancion.reproducciones }}</strong>
+          plays
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -36,48 +49,94 @@
     {% endif %}
   </div>
 
-  <!-- Accesos rápidos -->
+  <!-- Oyentes Mensuales — gráfica -->
   <div class="panel-card">
     <div class="panel-card__header">
       <div class="panel-card__title">
-        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">bolt</span>
-        Accesos Rápidos
+        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">show_chart</span>
+        Oyentes Mensuales
       </div>
+      <a href="#" class="section-link">
+        Analytics <span class="material-icons">chevron_right</span>
+      </a>
     </div>
-    <div class="quick-links">
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">album</span>
-        <div>
-          <div class="quick-link__label">Mis Álbumes</div>
-          <div class="quick-link__sub">Gestiona tu discografía</div>
+    <div class="chart-wrap">
+      <div class="chart-bars">
+        <div class="chart-col">
+          <div class="chart-col__bar" style="height:42%"></div>
+          <div class="chart-col__lbl">Dic</div>
         </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">bar_chart</span>
-        <div>
-          <div class="quick-link__label">Analítica</div>
-          <div class="quick-link__sub">Ver estadísticas detalladas</div>
+        <div class="chart-col">
+          <div class="chart-col__bar" style="height:55%"></div>
+          <div class="chart-col__lbl">Ene</div>
         </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">description</span>
-        <div>
-          <div class="quick-link__label">Mis Contratos</div>
-          <div class="quick-link__sub">Gestionar regalías y pagos</div>
+        <div class="chart-col">
+          <div class="chart-col__bar" style="height:48%"></div>
+          <div class="chart-col__lbl">Feb</div>
         </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">person</span>
-        <div>
-          <div class="quick-link__label">Mi Perfil</div>
-          <div class="quick-link__sub">Editar bio y foto</div>
+        <div class="chart-col">
+          <div class="chart-col__bar" style="height:63%"></div>
+          <div class="chart-col__lbl">Mar</div>
         </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
+        <div class="chart-col">
+          <div class="chart-col__bar" style="height:71%"></div>
+          <div class="chart-col__lbl">Abr</div>
+        </div>
+        <div class="chart-col chart-col--active">
+          <div class="chart-col__bar" style="height:88%"></div>
+          <div class="chart-col__lbl">May</div>
+        </div>
+      </div>
+      <div class="chart-footer">
+        <span>Últimos 6 meses</span>
+        <span class="trend-up" style="display:inline-flex;align-items:center;gap:0.15rem;font-size:0.75rem;font-weight:600;">
+          <span class="material-icons" style="font-size:0.85rem;">trending_up</span>
+          +{{ stats.oyentes_trend|default:"0" }}% este mes
+        </span>
+      </div>
     </div>
   </div>
 
+</div>
+
+<!-- Acciones rápidas -->
+<div class="section-header">
+  <span class="section-title">Accesos rápidos</span>
+</div>
+<div class="actions-grid">
+  <a href="#" class="action-card">
+    <div class="action-card__icon">
+      <span class="material-icons">library_music</span>
+    </div>
+    <div class="action-card__label">Mi Catálogo</div>
+    <div class="action-card__sub">Gestiona álbumes y canciones</div>
+  </a>
+  <a href="#" class="action-card">
+    <div class="action-card__icon">
+      <span class="material-icons">bar_chart</span>
+    </div>
+    <div class="action-card__label">Analytics</div>
+    <div class="action-card__sub">Estadísticas detalladas</div>
+  </a>
+  <a href="#" class="action-card">
+    <div class="action-card__icon">
+      <span class="material-icons">payments</span>
+    </div>
+    <div class="action-card__label">Monetización</div>
+    <div class="action-card__sub">Regalías e ingresos</div>
+  </a>
+  <a href="#" class="action-card">
+    <div class="action-card__icon">
+      <span class="material-icons">group</span>
+    </div>
+    <div class="action-card__label">Comunidad</div>
+    <div class="action-card__sub">Seguidores y playlists</div>
+  </a>
+  <a href="#" class="action-card">
+    <div class="action-card__icon">
+      <span class="material-icons">person</span>
+    </div>
+    <div class="action-card__label">Mi Perfil</div>
+    <div class="action-card__sub">Editar bio y branding</div>
+  </a>
 </div>

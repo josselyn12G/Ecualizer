@@ -477,3 +477,152 @@ button { font-family: inherit; }
 .badge--activo    { background: var(--green-bg); color: var(--green); }
 .badge--inactivo  { background: #f3f4f6; color: var(--text-muted); }
 .badge--suspendido{ background: var(--red-bg); color: var(--red); }
+
+/* ══════════════════════════════════════════════════
+   STAT CARD — TREND BADGE
+   ══════════════════════════════════════════════════ */
+.stat-card__trend {
+  display: inline-flex; align-items: center; gap: 0.15rem;
+  font-size: 0.72rem; font-weight: 600; margin-top: 0.3rem;
+}
+.stat-card__trend .material-icons { font-size: 0.85rem; }
+.trend-up   { color: var(--green); }
+.trend-down { color: var(--red); }
+.trend-flat { color: var(--text-muted); }
+
+.stat-card--accent { border-top: 3px solid var(--accent); }
+.stat-card--accent .stat-card__value { color: var(--accent); }
+
+/* ══════════════════════════════════════════════════
+   CHART — OYENTES MENSUALES (CSS bars)
+   ══════════════════════════════════════════════════ */
+.chart-wrap {
+  padding: 1rem 1.25rem 1.25rem;
+}
+.chart-label {
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted); margin-bottom: 0.85rem;
+}
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  height: 110px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+.chart-col__bar {
+  width: 100%;
+  background: var(--accent);
+  opacity: 0.7;
+  border-radius: 4px 4px 0 0;
+  transition: opacity 0.2s;
+  min-height: 4px;
+}
+.chart-col:hover .chart-col__bar { opacity: 1; }
+.chart-col--active .chart-col__bar { opacity: 1; box-shadow: 0 0 0 2px rgba(168,85,247,0.3); }
+.chart-col__lbl {
+  font-size: 0.62rem; color: var(--text-light);
+  flex-shrink: 0; margin-top: 0.25rem;
+}
+.chart-footer {
+  display: flex; justify-content: space-between;
+  margin-top: 0.75rem; font-size: 0.72rem; color: var(--text-muted);
+}
+
+/* ══════════════════════════════════════════════════
+   RANK LIST — TOP CANCIONES
+   ══════════════════════════════════════════════════ */
+.rank-list { display: flex; flex-direction: column; }
+.rank-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: var(--transition);
+}
+.rank-item:last-child { border-bottom: none; }
+.rank-item:hover { background: #fafafa; }
+.rank-item__num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--orange-bg);
+  color: var(--accent);
+  font-size: 0.72rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.rank-item__num--gold   { background: rgba(234,179,8,0.12); color: #ca8a04; }
+.rank-item__num--silver { background: rgba(148,163,184,0.15); color: #64748b; }
+.rank-item__num--bronze { background: rgba(180,83,9,0.1); color: #b45309; }
+.rank-item__cover {
+  width: 34px; height: 34px;
+  background: var(--orange-bg); border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--accent);
+}
+.rank-item__cover .material-icons { font-size: 0.95rem; }
+.rank-item__info { flex: 1; min-width: 0; }
+.rank-item__name  { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-item__album { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-item__plays { font-size: 0.72rem; color: var(--text-light); flex-shrink: 0; text-align: right; }
+.rank-item__plays strong { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text); }
+
+/* ══════════════════════════════════════════════════
+   QUICK ACTIONS GRID
+   ══════════════════════════════════════════════════ */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+.action-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1rem;
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.action-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--accent); }
+.action-card__icon {
+  width: 36px; height: 36px;
+  background: var(--orange-bg);
+  color: var(--accent);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.action-card__icon .material-icons { font-size: 1.1rem; }
+.action-card__label { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+.action-card__sub   { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+/* ══════════════════════════════════════════════════
+   SECTION HEADER
+   ══════════════════════════════════════════════════ */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-size: 0.82rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+.section-link {
+  font-size: 0.78rem; font-weight: 600; color: var(--accent);
+  display: inline-flex; align-items: center; gap: 0.15rem;
+  transition: var(--transition);
+}
+.section-link:hover { opacity: 0.75; }
+.section-link .material-icons { font-size: 0.85rem; }

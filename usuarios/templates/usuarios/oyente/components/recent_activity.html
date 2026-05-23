@@ -1,83 +1,55 @@
-<!-- Componente: Actividad reciente y accesos rápidos -->
-<div class="two-col-grid">
+<!-- Historial estilo Apple Music Playlist -->
+<div class="playlist-section">
 
-  <!-- Historial reciente -->
-  <div class="panel-card">
-    <div class="panel-card__header">
-      <div class="panel-card__title">
-        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">history</span>
-        Escuchado Recientemente
-      </div>
-    </div>
-    {% if historial %}
-    <div class="track-list">
+  <div class="playlist-section__header">
+    <span class="playlist-section__title">Historial de Reproducciones</span>
+    <a href="#" class="playlist-section__see-all">
+      Ver todo <span class="material-icons">chevron_right</span>
+    </a>
+  </div>
+
+  <table class="playlist-table">
+    <thead>
+      <tr>
+        <th class="col-num">#</th>
+        <th>TÍTULO</th>
+        <th>ARTISTA</th>
+        <th class="col-time">TIEMPO</th>
+        <th class="col-album">ÁLBUM</th>
+      </tr>
+    </thead>
+    <tbody>
       {% for track in historial %}
-      <div class="track-item">
-        <div class="track-item__cover">
-          <span class="material-icons">music_note</span>
-        </div>
-        <div class="track-item__info">
-          <div class="track-item__name">{{ track.nombre }}</div>
-          <div class="track-item__artist">{{ track.artista }}</div>
-        </div>
-        <div class="track-item__duration">{{ track.duracion }}</div>
-      </div>
+      <tr class="playlist-row {% if forloop.counter == 1 %}playlist-row--active{% endif %}">
+        <td class="col-num">
+          <span class="material-icons track-play-icon">play_arrow</span>
+          <span class="track-num">{{ forloop.counter|stringformat:"02d" }}</span>
+        </td>
+        <td>
+          <div class="track-title-wrap">
+            <div class="track-cover">
+              <span class="material-icons">music_note</span>
+            </div>
+            <span class="track-name">{{ track.nombre }}</span>
+          </div>
+        </td>
+        <td class="col-artist">{{ track.artista }}</td>
+        <td class="col-time">{{ track.duracion }}</td>
+        <td class="col-album">{{ track.album|default:"&mdash;" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="playlist-empty">
+          <span class="material-icons">music_off</span>
+          <p>Aún no hay historial de reproducciones.</p>
+          <a href="#" class="btn-new">
+            <span class="material-icons">explore</span>
+            Explorar música
+          </a>
+        </td>
+      </tr>
       {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-      <div class="empty-icon">&#127925;</div>
-      <p>Aún no has escuchado nada.<br>¡Explora la música disponible!</p>
-      <a href="#" class="btn-new" style="margin-top:1rem;">
-        <span class="material-icons">explore</span>
-        Explorar música
-      </a>
-    </div>
-    {% endif %}
-  </div>
-
-  <!-- Accesos rápidos -->
-  <div class="panel-card">
-    <div class="panel-card__header">
-      <div class="panel-card__title">
-        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">bolt</span>
-        Accesos Rápidos
-      </div>
-    </div>
-    <div class="quick-links">
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">auto_awesome</span>
-        <div>
-          <div class="quick-link__label">Recomendaciones</div>
-          <div class="quick-link__sub">Basadas en tus gustos</div>
-        </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">trending_up</span>
-        <div>
-          <div class="quick-link__label">Tendencias</div>
-          <div class="quick-link__sub">Lo más escuchado hoy</div>
-        </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">library_music</span>
-        <div>
-          <div class="quick-link__label">Mi Biblioteca</div>
-          <div class="quick-link__sub">Tus canciones guardadas</div>
-        </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="material-icons quick-link__icon">card_membership</span>
-        <div>
-          <div class="quick-link__label">Mi Suscripción</div>
-          <div class="quick-link__sub">Ver plan actual</div>
-        </div>
-        <span class="material-icons quick-link__arrow">chevron_right</span>
-      </a>
-    </div>
-  </div>
+    </tbody>
+  </table>
 
 </div>
