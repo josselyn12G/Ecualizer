@@ -1,0 +1,92 @@
+{% extends "usuarios/admin/base_admin.html" %}
+{% load static %}
+
+{% block nav_dashboard %}active{% endblock %}
+{% block topbar_title %}Dashboard General{% endblock %}
+{% block breadcrumb %}Admin / Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">headphones</span>
+    <div class="stat-card__label">Oyentes</div>
+    <div class="stat-card__value">{{ stats.oyentes }}</div>
+    <div class="stat-card__sub">Cuentas registradas</div>
+  </div>
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">mic</span>
+    <div class="stat-card__label">Artistas</div>
+    <div class="stat-card__value">{{ stats.artistas }}</div>
+    <div class="stat-card__sub">Perfiles artísticos</div>
+  </div>
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">admin_panel_settings</span>
+    <div class="stat-card__label">Administradores</div>
+    <div class="stat-card__value">{{ stats.admins }}</div>
+    <div class="stat-card__sub">Cuentas admin</div>
+  </div>
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">verified_user</span>
+    <div class="stat-card__label">Activos</div>
+    <div class="stat-card__value" style="color:var(--orange)">{{ stats.activos }}</div>
+    <div class="stat-card__sub">Cuentas activas</div>
+  </div>
+</div>
+
+<div class="panel-card">
+  <div class="panel-card__header">
+    <div>
+      <div class="panel-card__title">Últimos Registros</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem;">
+        Usuarios que se han unido recientemente
+      </div>
+    </div>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Fecha registro</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in recientes %}
+      <tr>
+        <td class="id-col">#{{ p.id_usuario }}</td>
+        <td class="name-col">{{ p.primer_nombre }} {{ p.primer_apellido }}</td>
+        <td>{{ p.correo }}</td>
+        <td>{{ p.fecha_registro|date:"d/m/Y"|default:"&mdash;" }}</td>
+        <td><span class="badge badge--{{ p.estado }}">{{ p.estado|capfirst }}</span></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">
+          <div class="empty-state">
+            <div class="empty-icon">&#128101;</div>
+            <p>No hay registros aún.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+  <a href="{% url 'admin_oyente_list' %}" class="btn-new">
+    <span class="material-icons">headphones</span>
+    Gestionar Oyentes
+  </a>
+  <a href="{% url 'admin_artista_list' %}" class="btn-new">
+    <span class="material-icons">mic</span>
+    Gestionar Artistas
+  </a>
+  <a href="{% url 'admin_admin_list' %}" class="btn-new">
+    <span class="material-icons">admin_panel_settings</span>
+    Gestionar Admins
+  </a>
+</div>
+{% endblock %}

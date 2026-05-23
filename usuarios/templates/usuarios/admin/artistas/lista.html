@@ -1,0 +1,70 @@
+{% extends "usuarios/admin/base_admin.html" %}
+{% block title %}Artistas &mdash; Ecualizer Admin{% endblock %}
+{% block topbar_title %}Artistas{% endblock %}
+{% block nav_artistas %}active{% endblock %}
+{% block breadcrumb %}Admin / Artistas{% endblock %}
+
+{% block content %}
+<div class="panel-card">
+  <div class="panel-card__header">
+    <span class="panel-card__title">Lista de artistas</span>
+    <div class="filter-row">
+      <form method="get" style="display:contents;">
+        <input class="filter-input" type="text" name="q" value="{{ q }}" placeholder="Nombre, nombre artistico o correo...">
+        <select class="filter-select" name="estado">
+          <option value="">Todos los estados</option>
+          <option value="activo"     {% if estado_sel == 'activo' %}selected{% endif %}>Activo</option>
+          <option value="inactivo"   {% if estado_sel == 'inactivo' %}selected{% endif %}>Inactivo</option>
+          <option value="suspendido" {% if estado_sel == 'suspendido' %}selected{% endif %}>Suspendido</option>
+        </select>
+        <button type="submit" class="btn-filter">Filtrar</button>
+        {% if q or estado_sel %}
+          <a href="{% url 'admin_artista_list' %}" class="btn-cancel" style="padding:.45rem .85rem; font-size:.82rem; border-radius:var(--radius);">Limpiar</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre completo</th>
+        <th>Nombre artistico</th>
+        <th>Correo</th>
+        <th>Estado</th>
+        <th>Fecha registro</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in artistas %}
+      <tr>
+        <td class="id-col">{{ a.id_usuario.id_usuario }}</td>
+        <td class="name-col">{{ a.id_usuario.primer_nombre }} {{ a.id_usuario.primer_apellido }}</td>
+        <td>{{ a.nombre_artistico }}</td>
+        <td>{{ a.id_usuario.correo }}</td>
+        <td><span class="badge badge--{{ a.id_usuario.estado }}">{{ a.id_usuario.estado|capfirst }}</span></td>
+        <td>{{ a.id_usuario.fecha_registro|date:"d/m/Y"|default:"&mdash;" }}</td>
+        <td>
+          <div class="action-btns">
+            <a href="{% url 'admin_artista_detail' a.pk %}" class="btn-action btn-action--ver">Ver</a>
+            <a href="{% url 'admin_artista_edit' a.pk %}"   class="btn-action btn-action--editar">Editar</a>
+            <a href="{% url 'admin_artista_delete' a.pk %}" class="btn-action btn-action--eliminar">Desactivar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon">&#127908;</div>
+            <p>No se encontraron artistas.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

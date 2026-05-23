@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel Admin — Ecualizer{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'usuarios/admin_panel.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <span class="sidebar-logo__icon">&#127925;</span>
+      <span class="sidebar-logo__text">Ecua<strong>lizer</strong></span>
+    </div>
+
+    <!-- Navegación principal -->
+    <nav class="sidebar-nav">
+
+      <!-- Dashboard directo (sin sub-items) -->
+      <a href="{% url 'admin_dashboard' %}"
+         class="sidebar-direct {% block nav_dashboard %}{% endblock %}">
+        <span class="material-icons">dashboard</span>
+        <span>Dashboard</span>
+      </a>
+
+      <!-- ── Inicio ──────────────────────────────────────── -->
+      <div class="nav-group {% block nav_inicio_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">home</span>
+          <span class="nav-group__label">Inicio</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_kpis %}{% endblock %}">KPIs</a>
+          <a href="#" class="nav-item {% block nav_ranking_canciones %}{% endblock %}">Ranking Canciones</a>
+          <a href="#" class="nav-item {% block nav_ingresos_inicio %}{% endblock %}">Ingresos</a>
+          <a href="#" class="nav-item {% block nav_usuarios_activos_inicio %}{% endblock %}">Usuarios Activos</a>
+          <a href="#" class="nav-item {% block nav_regalias_inicio %}{% endblock %}">Regalías</a>
+        </div>
+      </div>
+
+      <!-- ── Biblioteca ──────────────────────────────────── -->
+      <div class="nav-group {% block nav_biblioteca_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">library_music</span>
+          <span class="nav-group__label">Biblioteca</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas %}{% endblock %}">Artistas</a>
+          <a href="#" class="nav-item {% block nav_albumes %}{% endblock %}">Álbumes</a>
+          <a href="#" class="nav-item {% block nav_canciones %}{% endblock %}">Canciones</a>
+          <a href="#" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
+          <a href="#" class="nav-item {% block nav_tipos_album %}{% endblock %}">Tipos Álbum</a>
+        </div>
+      </div>
+
+      <!-- ── Usuarios ────────────────────────────────────── -->
+      <div class="nav-group {% block nav_usuarios_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">people</span>
+          <span class="nav-group__label">Usuarios</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="{% url 'admin_oyente_list' %}" class="nav-item {% block nav_oyentes %}{% endblock %}">Usuarios</a>
+          <a href="#" class="nav-item {% block nav_personas %}{% endblock %}">Personas</a>
+          <a href="{% url 'admin_admin_list' %}" class="nav-item {% block nav_admins %}{% endblock %}">Administradores</a>
+        </div>
+      </div>
+
+      <!-- ── Comercial ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_comercial_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">storefront</span>
+          <span class="nav-group__label">Comercial</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_planes %}{% endblock %}">Planes</a>
+          <a href="#" class="nav-item {% block nav_suscripciones %}{% endblock %}">Suscripciones</a>
+          <a href="#" class="nav-item {% block nav_pagos %}{% endblock %}">Pagos</a>
+          <a href="#" class="nav-item {% block nav_regalias %}{% endblock %}">Regalías</a>
+          <a href="#" class="nav-item {% block nav_discograficas %}{% endblock %}">Discográficas</a>
+          <a href="#" class="nav-item {% block nav_contratos %}{% endblock %}">Contratos</a>
+        </div>
+      </div>
+
+      <!-- ── Analítica ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_analitica_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">bar_chart</span>
+          <span class="nav-group__label">Analítica</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_reproducciones %}{% endblock %}">Reproducciones</a>
+          <a href="#" class="nav-item {% block nav_ranking_global %}{% endblock %}">Ranking Global</a>
+          <a href="#" class="nav-item {% block nav_ingresos_analitica %}{% endblock %}">Ingresos</a>
+          <a href="#" class="nav-item {% block nav_usuarios_activos %}{% endblock %}">Usuarios Activos</a>
+          <a href="#" class="nav-item {% block nav_likes %}{% endblock %}">Likes</a>
+          <a href="#" class="nav-item {% block nav_engagement %}{% endblock %}">Engagement</a>
+        </div>
+      </div>
+
+      <!-- ── Configuración ───────────────────────────────── -->
+      <div class="nav-group {% block nav_config_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">settings</span>
+          <span class="nav-group__label">Configuración</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_seguridad %}{% endblock %}">Seguridad</a>
+          <a href="#" class="nav-item {% block nav_parametros %}{% endblock %}">Parámetros</a>
+          <a href="#" class="nav-item {% block nav_logs %}{% endblock %}">Logs</a>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- Usuario y logout -->
+    <div class="sidebar-footer">
+      {% if admin_persona %}
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">{{ admin_persona.primer_nombre|first|upper }}</div>
+        <div class="sidebar-user__info">
+          <div class="sidebar-user__name">{{ admin_persona.primer_nombre }} {{ admin_persona.primer_apellido }}</div>
+          <div class="sidebar-user__role">
+            {% if admin_perfil %}{{ admin_perfil.get_rol_admin_display }}{% else %}Administrador{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="sidebar-logout">
+        <span class="material-icons">logout</span>
+        <span>Cerrar sesión</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══════════════════════════════ -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" title="Colapsar menú">
+          <span class="material-icons">menu</span>
+        </button>
+        <div>
+          <h1 class="topbar__title">{% block topbar_title %}Panel Admin{% endblock %}</h1>
+          <div class="topbar__breadcrumb">{% block breadcrumb %}Admin{% endblock %}</div>
+        </div>
+      </div>
+      <div class="topbar__right">
+        {% if admin_persona %}
+        <div class="topbar-user">
+          <div class="topbar-avatar">{{ admin_persona.primer_nombre|first|upper }}</div>
+          <span class="topbar-user__name">{{ admin_persona.primer_nombre }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Mensajes flash -->
+    {% if messages %}
+    <div class="flash-bar">
+      {% for msg in messages %}
+      <div class="flash flash--{{ msg.tags|default:'info' }}">
+        <span class="material-icons flash__icon">
+          {% if msg.tags == 'success' %}check_circle{% elif msg.tags == 'error' or msg.tags == 'danger' %}error{% else %}info{% endif %}
+        </span>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Contenido -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  // ── Toggle sidebar collapse ─────────────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+
+  toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('sidebar--collapsed');
+  });
+
+  // ── Grupos colapsables ──────────────────────────────────
+  document.querySelectorAll('.nav-group__header').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const group = btn.closest('.nav-group');
+      const isOpen = group.classList.contains('open');
+
+      // Cerrar todos los demás
+      document.querySelectorAll('.nav-group.open').forEach(function (g) {
+        if (g !== group) g.classList.remove('open');
+      });
+
+      group.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // Abrir el grupo que contiene el link activo al cargar
+  document.querySelectorAll('.nav-item.active').forEach(function (link) {
+    const group = link.closest('.nav-group');
+    if (group) group.classList.add('open');
+  });
+
+  // Abrir grupos marcados como abiertos por el template
+  document.querySelectorAll('.nav-group.open').forEach(function (group) {
+    // ya están marcados — nada que hacer
+  });
+
+  // Auto-ocultar flash messages
+  setTimeout(function () {
+    document.querySelectorAll('.flash-bar').forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.4s';
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  }, 4000);
+})();
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends "usuarios/admin/base_admin.html" %}
+{% block title %}Editar Artista &mdash; Ecualizer Admin{% endblock %}
+{% block topbar_title %}Editar artista{% endblock %}
+{% block nav_artistas %}active{% endblock %}
+{% block breadcrumb %}Admin / <a href="{% url 'admin_artista_list' %}">Artistas</a> / Editar{% endblock %}
+
+{% block content %}
+{% if p_form.non_field_errors or a_form.non_field_errors %}
+<div class="msg msg--error" style="margin-bottom:1rem;">
+  {% for e in p_form.non_field_errors %}{{ e }} {% endfor %}
+  {% for e in a_form.non_field_errors %}{{ e }} {% endfor %}
+</div>
+{% endif %}
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="edit-layout">
+
+    <div class="edit-section">
+      <h2>Datos personales</h2>
+      {% for field in p_form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<span class="field-error">{{ field.errors.0 }}</span>{% endif %}
+      </div>
+      {% endfor %}
+      <div class="form-group">
+        <label class="form-label">Nueva contrasena (dejar vacio para no cambiar)</label>
+        <input type="password" name="nueva_contrasena" class="eq-input" placeholder="••••••••">
+        <span class="pass-hint">Solo se actualiza si escribes algo aqui.</span>
+      </div>
+    </div>
+
+    <div class="edit-section">
+      <h2>Perfil artistico</h2>
+      {% for field in a_form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<span class="field-error">{{ field.errors.0 }}</span>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn-save">Guardar cambios</button>
+    <a href="{% url 'admin_artista_list' %}" class="btn-cancel">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

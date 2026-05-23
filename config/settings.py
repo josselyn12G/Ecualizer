@@ -131,3 +131,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# Sesiones en cookies firmadas — no requiere tabla django_session en BD.
+# El login_Administrador no tiene permiso CREATE TABLE en SQL Server.
+# Límite ~4KB por sesión (suficiente para usuario_id, tipo, nombre).
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'

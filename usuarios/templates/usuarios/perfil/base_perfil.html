@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Mi perfil &mdash; Ecualizer{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'usuarios/usuarios.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="dashboard-page">
+
+  <nav class="dashboard-nav">
+    <a href="/" class="brand-logo" style="text-decoration:none; display:flex; align-items:center; gap:.5rem;">
+      <div class="brand-icon" style="width:30px;height:30px;font-size:1rem;">&#127925;</div>
+      <span class="brand-name" style="font-size:1.2rem;">Ecua<span>lizer</span></span>
+    </a>
+    <div class="nav-user">
+      <div class="avatar" style="background:{% block avatar_color %}var(--accent){% endblock %}">
+        {{ persona.primer_nombre|first|upper }}
+      </div>
+      <div class="user-info">
+        <span class="user-name">{% block nav_nombre %}{{ persona.primer_nombre }}{% endblock %}</span>
+        <span class="user-tipo">{% block nav_tipo %}{% endblock %}</span>
+      </div>
+      <a href="{% url 'logout' %}" class="btn btn-sm btn-secondary" style="width:auto; padding:.4rem 1rem;">
+        Salir
+      </a>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="msg msg--{{ msg.tags|default:'info' }}" style="margin-bottom:1rem; border-radius:var(--radius); padding:.75rem 1rem;">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+</div>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

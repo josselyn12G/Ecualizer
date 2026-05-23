@@ -1,0 +1,70 @@
+{% extends "usuarios/admin/base_admin.html" %}
+{% block title %}Administradores &mdash; Ecualizer Admin{% endblock %}
+{% block topbar_title %}Administradores{% endblock %}
+{% block nav_admins %}active{% endblock %}
+{% block breadcrumb %}Admin / Administradores{% endblock %}
+
+{% block content %}
+<div class="panel-card">
+  <div class="panel-card__header">
+    <span class="panel-card__title">Lista de administradores</span>
+    <div class="filter-row">
+      <form method="get" style="display:contents;">
+        <input class="filter-input" type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre o correo...">
+        <select class="filter-select" name="estado">
+          <option value="">Todos los estados</option>
+          <option value="activo"     {% if estado_sel == 'activo' %}selected{% endif %}>Activo</option>
+          <option value="inactivo"   {% if estado_sel == 'inactivo' %}selected{% endif %}>Inactivo</option>
+          <option value="suspendido" {% if estado_sel == 'suspendido' %}selected{% endif %}>Suspendido</option>
+        </select>
+        <button type="submit" class="btn-filter">Filtrar</button>
+        {% if q or estado_sel %}
+          <a href="{% url 'admin_admin_list' %}" class="btn-cancel" style="padding:.45rem .85rem; font-size:.82rem; border-radius:var(--radius);">Limpiar</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre completo</th>
+        <th>Correo</th>
+        <th>Rol</th>
+        <th>Departamento</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in admins %}
+      <tr>
+        <td class="id-col">{{ a.id_usuario.id_usuario }}</td>
+        <td class="name-col">{{ a.id_usuario.primer_nombre }} {{ a.id_usuario.primer_apellido }}</td>
+        <td>{{ a.id_usuario.correo }}</td>
+        <td>{{ a.get_rol_admin_display }}</td>
+        <td>{{ a.departamento }}</td>
+        <td><span class="badge badge--{{ a.id_usuario.estado }}">{{ a.id_usuario.estado|capfirst }}</span></td>
+        <td>
+          <div class="action-btns">
+            <a href="{% url 'admin_admin_detail' a.pk %}" class="btn-action btn-action--ver">Ver</a>
+            <a href="{% url 'admin_admin_edit' a.pk %}"   class="btn-action btn-action--editar">Editar</a>
+            <a href="{% url 'admin_admin_delete' a.pk %}" class="btn-action btn-action--eliminar">Desactivar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon">&#128736;</div>
+            <p>No se encontraron administradores.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

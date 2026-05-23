@@ -1,0 +1,76 @@
+{% extends "usuarios/admin/base_admin.html" %}
+{% block title %}Oyentes &mdash; Ecualizer Admin{% endblock %}
+{% block topbar_title %}Oyentes{% endblock %}
+{% block nav_oyentes %}active{% endblock %}
+{% block breadcrumb %}Admin / Oyentes{% endblock %}
+
+{% block content %}
+<div class="panel-card">
+  <div class="panel-card__header">
+    <span class="panel-card__title">Lista de oyentes</span>
+    <div class="filter-row">
+      <form method="get" style="display:contents;">
+        <input class="filter-input" type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre, alias o correo...">
+        <select class="filter-select" name="estado">
+          <option value="">Todos los estados</option>
+          <option value="activo"     {% if estado_sel == 'activo' %}selected{% endif %}>Activo</option>
+          <option value="inactivo"   {% if estado_sel == 'inactivo' %}selected{% endif %}>Inactivo</option>
+          <option value="suspendido" {% if estado_sel == 'suspendido' %}selected{% endif %}>Suspendido</option>
+        </select>
+        <button type="submit" class="btn-filter">Filtrar</button>
+        {% if q or estado_sel %}
+          <a href="{% url 'admin_oyente_list' %}" class="btn-cancel" style="padding:.45rem .85rem; font-size:.82rem; border-radius:var(--radius);">Limpiar</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre completo</th>
+        <th>Alias</th>
+        <th>Correo</th>
+        <th>Pais</th>
+        <th>Estado</th>
+        <th>Fecha registro</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in oyentes %}
+      <tr>
+        <td class="id-col">{{ o.id_usuario.id_usuario }}</td>
+        <td class="name-col">
+          {{ o.id_usuario.primer_nombre }}
+          {% if o.id_usuario.segundo_nombre %} {{ o.id_usuario.segundo_nombre }}{% endif %}
+          {{ o.id_usuario.primer_apellido }}
+        </td>
+        <td>{{ o.alias }}</td>
+        <td>{{ o.id_usuario.correo }}</td>
+        <td>{{ o.pais_usuario }}</td>
+        <td><span class="badge badge--{{ o.id_usuario.estado }}">{{ o.id_usuario.estado|capfirst }}</span></td>
+        <td>{{ o.id_usuario.fecha_registro|date:"d/m/Y"|default:"&mdash;" }}</td>
+        <td>
+          <div class="action-btns">
+            <a href="{% url 'admin_oyente_detail' o.pk %}" class="btn-action btn-action--ver">Ver</a>
+            <a href="{% url 'admin_oyente_edit' o.pk %}"   class="btn-action btn-action--editar">Editar</a>
+            <a href="{% url 'admin_oyente_delete' o.pk %}" class="btn-action btn-action--eliminar">Desactivar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8">
+          <div class="empty-state">
+            <div class="empty-icon">&#127911;</div>
+            <p>No se encontraron oyentes.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
