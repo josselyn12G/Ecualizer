@@ -1,0 +1,16 @@
+{% extends "usuarios/artista/base_artista.html" %}
+
+{% block title %}Panel Artista — Ecualizer{% endblock %}
+{% block topbar_title %}Panel de Artista{% endblock %}
+{% block breadcrumb %}Inicio / Dashboard{% endblock %}
+{% block nav_inicio %}active{% endblock %}
+
+{% block content %}
+
+  {% include "usuarios/artista/components/welcome_banner.html" %}
+
+  {% include "usuarios/artista/components/quick_stats.html" %}
+
+  {% include "usuarios/artista/components/recent_activity.html" %}
+
+{% endblock %}

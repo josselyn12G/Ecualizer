@@ -1,0 +1,29 @@
+<!-- Componente: Banner de bienvenida -->
+<div class="welcome-banner">
+  <div class="welcome-banner__left">
+    <div class="welcome-banner__avatar">{{ persona.primer_nombre|first|upper }}</div>
+    <div>
+      <h2 class="welcome-banner__title">
+        ¡Hola, {% if perfil and perfil.alias %}{{ perfil.alias }}{% else %}{{ persona.primer_nombre }}{% endif %}! &#127911;
+      </h2>
+      <p class="welcome-banner__sub">
+        Bienvenido a tu espacio en Ecualizer.
+        {% if persona.fecha_registro %}
+          Miembro desde {{ persona.fecha_registro|date:"F Y" }}.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="welcome-banner__right">
+    <span class="welcome-badge">
+      <span class="material-icons">verified</span>
+      {% if persona.estado == 'activo' %}Cuenta activa{% else %}{{ persona.estado|capfirst }}{% endif %}
+    </span>
+    {% if perfil and perfil.pais_usuario %}
+    <span class="welcome-badge welcome-badge--muted">
+      <span class="material-icons">place</span>
+      {{ perfil.pais_usuario }}
+    </span>
+    {% endif %}
+  </div>
+</div>

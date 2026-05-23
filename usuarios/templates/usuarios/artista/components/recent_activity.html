@@ -1,0 +1,83 @@
+<!-- Componente: Actividad reciente y accesos rápidos del artista -->
+<div class="two-col-grid">
+
+  <!-- Canciones recientes -->
+  <div class="panel-card">
+    <div class="panel-card__header">
+      <div class="panel-card__title">
+        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">music_note</span>
+        Mis Canciones Recientes
+      </div>
+    </div>
+    {% if canciones_recientes %}
+    <div class="track-list">
+      {% for cancion in canciones_recientes %}
+      <div class="track-item">
+        <div class="track-item__cover">
+          <span class="material-icons">audiotrack</span>
+        </div>
+        <div class="track-item__info">
+          <div class="track-item__name">{{ cancion.nombre }}</div>
+          <div class="track-item__artist">{{ cancion.album }}</div>
+        </div>
+        <div class="track-item__duration">{{ cancion.reproducciones }} plays</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">&#127908;</div>
+      <p>Aún no tienes canciones publicadas.<br>¡Sube tu primera canción!</p>
+      <a href="#" class="btn-new" style="margin-top:1rem;">
+        <span class="material-icons">add</span>
+        Subir canción
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="panel-card">
+    <div class="panel-card__header">
+      <div class="panel-card__title">
+        <span class="material-icons" style="font-size:1rem; vertical-align:middle; color:var(--accent);">bolt</span>
+        Accesos Rápidos
+      </div>
+    </div>
+    <div class="quick-links">
+      <a href="#" class="quick-link">
+        <span class="material-icons quick-link__icon">album</span>
+        <div>
+          <div class="quick-link__label">Mis Álbumes</div>
+          <div class="quick-link__sub">Gestiona tu discografía</div>
+        </div>
+        <span class="material-icons quick-link__arrow">chevron_right</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="material-icons quick-link__icon">bar_chart</span>
+        <div>
+          <div class="quick-link__label">Analítica</div>
+          <div class="quick-link__sub">Ver estadísticas detalladas</div>
+        </div>
+        <span class="material-icons quick-link__arrow">chevron_right</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="material-icons quick-link__icon">description</span>
+        <div>
+          <div class="quick-link__label">Mis Contratos</div>
+          <div class="quick-link__sub">Gestionar regalías y pagos</div>
+        </div>
+        <span class="material-icons quick-link__arrow">chevron_right</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="material-icons quick-link__icon">person</span>
+        <div>
+          <div class="quick-link__label">Mi Perfil</div>
+          <div class="quick-link__sub">Editar bio y foto</div>
+        </div>
+        <span class="material-icons quick-link__arrow">chevron_right</span>
+      </a>
+    </div>
+  </div>
+
+</div>

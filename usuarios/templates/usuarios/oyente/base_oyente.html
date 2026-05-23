@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Mi Panel — Ecualizer{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'usuarios/oyente_panel.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="panel-layout">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <span class="sidebar-logo__icon">&#127925;</span>
+      <span class="sidebar-logo__text">Ecua<strong>lizer</strong></span>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="sidebar-nav">
+
+      <!-- Inicio directo -->
+      <a href="{% url 'dashboard_oyente' %}"
+         class="sidebar-direct {% block nav_inicio %}{% endblock %}">
+        <span class="material-icons">home</span>
+        <span>Inicio</span>
+      </a>
+
+      <!-- ── Para Ti ──────────────────────────────────────── -->
+      <div class="nav-group {% block nav_para_ti_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">auto_awesome</span>
+          <span class="nav-group__label">Para Ti</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_continuar_escuchando %}{% endblock %}">Continuar Escuchando</a>
+          <a href="#" class="nav-item {% block nav_recomendaciones %}{% endblock %}">Recomendaciones</a>
+          <a href="#" class="nav-item {% block nav_nuevos_lanzamientos %}{% endblock %}">Nuevos Lanzamientos</a>
+        </div>
+      </div>
+
+      <!-- ── Explorar ─────────────────────────────────────── -->
+      <div class="nav-group {% block nav_explorar_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">explore</span>
+          <span class="nav-group__label">Explorar</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_buscar %}{% endblock %}">Buscar</a>
+          <a href="#" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
+          <a href="#" class="nav-item {% block nav_tendencias %}{% endblock %}">Tendencias</a>
+          <a href="#" class="nav-item {% block nav_rankings %}{% endblock %}">Rankings</a>
+        </div>
+      </div>
+
+      <!-- ── Mi Biblioteca ───────────────────────────────── -->
+      <div class="nav-group {% block nav_biblioteca_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">library_music</span>
+          <span class="nav-group__label">Mi Biblioteca</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_playlists %}{% endblock %}">Playlists</a>
+          <a href="#" class="nav-item {% block nav_canciones_favoritas %}{% endblock %}">Canciones Favoritas</a>
+          <a href="#" class="nav-item {% block nav_albumes_guardados %}{% endblock %}">Álbumes Guardados</a>
+          <a href="#" class="nav-item {% block nav_artistas_seguidos %}{% endblock %}">Artistas Seguidos</a>
+        </div>
+      </div>
+
+      <!-- ── Mi Música ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_mi_musica_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">equalizer</span>
+          <span class="nav-group__label">Mi Música</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_top_canciones %}{% endblock %}">Top Canciones</a>
+          <a href="#" class="nav-item {% block nav_top_artistas %}{% endblock %}">Top Artistas</a>
+          <a href="#" class="nav-item {% block nav_generos_favoritos %}{% endblock %}">Géneros Favoritos</a>
+          <a href="#" class="nav-item {% block nav_tiempo_escuchado %}{% endblock %}">Tiempo Escuchado</a>
+          <a href="#" class="nav-item {% block nav_historial %}{% endblock %}">Historial</a>
+        </div>
+      </div>
+
+      <!-- ── Suscripción ─────────────────────────────────── -->
+      <div class="nav-group {% block nav_suscripcion_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">card_membership</span>
+          <span class="nav-group__label">Suscripción</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_mi_plan %}{% endblock %}">Mi Plan</a>
+          <a href="#" class="nav-item {% block nav_historial_pagos %}{% endblock %}">Historial Pagos</a>
+        </div>
+      </div>
+
+      <!-- ── Perfil ──────────────────────────────────────── -->
+      <div class="nav-group {% block nav_perfil_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">person</span>
+          <span class="nav-group__label">Perfil</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_datos_personales %}{% endblock %}">Datos Personales</a>
+          <a href="#" class="nav-item {% block nav_preferencias %}{% endblock %}">Preferencias</a>
+          <a href="#" class="nav-item {% block nav_seguridad %}{% endblock %}">Seguridad</a>
+        </div>
+      </div>
+
+      <!-- Configuración directo -->
+      <a href="#" class="sidebar-direct {% block nav_configuracion %}{% endblock %}">
+        <span class="material-icons">settings</span>
+        <span>Configuración</span>
+      </a>
+
+    </nav>
+
+    <!-- Footer con usuario -->
+    <div class="sidebar-footer">
+      {% if persona %}
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">{{ persona.primer_nombre|first|upper }}</div>
+        <div class="sidebar-user__info">
+          <div class="sidebar-user__name">
+            {% if perfil and perfil.alias %}{{ perfil.alias }}{% else %}{{ persona.primer_nombre }}{% endif %}
+          </div>
+          <div class="sidebar-user__role">&#127911; Oyente</div>
+        </div>
+      </div>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="sidebar-logout">
+        <span class="material-icons">logout</span>
+        <span>Cerrar sesión</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══════════════════════════════ -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button">
+          <span class="material-icons">menu</span>
+        </button>
+        <div>
+          <h1 class="topbar__title">{% block topbar_title %}Mi Panel{% endblock %}</h1>
+          <div class="topbar__breadcrumb">{% block breadcrumb %}Inicio{% endblock %}</div>
+        </div>
+      </div>
+      <div class="topbar__right">
+        {% if persona %}
+        <div class="topbar-user">
+          <div class="topbar-avatar">{{ persona.primer_nombre|first|upper }}</div>
+          <span class="topbar-user__name">
+            {% if perfil and perfil.alias %}{{ perfil.alias }}{% else %}{{ persona.primer_nombre }}{% endif %}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="flash-bar">
+      {% for msg in messages %}
+      <div class="flash flash--{{ msg.tags|default:'info' }}">
+        <span class="material-icons flash__icon">
+          {% if msg.tags == 'success' %}check_circle{% elif msg.tags == 'error' or msg.tags == 'danger' %}error{% else %}info{% endif %}
+        </span>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Contenido de la página -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+
+  // Toggle colapso del sidebar
+  toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('sidebar--collapsed');
+  });
+
+  // Grupos colapsables
+  document.querySelectorAll('.nav-group__header').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const group = btn.closest('.nav-group');
+      const isOpen = group.classList.contains('open');
+      document.querySelectorAll('.nav-group.open').forEach(function (g) {
+        if (g !== group) g.classList.remove('open');
+      });
+      group.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // Abrir el grupo del link activo al cargar
+  document.querySelectorAll('.nav-item.active').forEach(function (link) {
+    const group = link.closest('.nav-group');
+    if (group) group.classList.add('open');
+  });
+
+  // Auto-ocultar flash messages
+  setTimeout(function () {
+    document.querySelectorAll('.flash-bar').forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.4s';
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  }, 4000);
+})();
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

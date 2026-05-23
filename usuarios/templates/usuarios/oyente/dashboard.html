@@ -1,0 +1,16 @@
+{% extends "usuarios/oyente/base_oyente.html" %}
+
+{% block title %}Mi Panel — Ecualizer{% endblock %}
+{% block topbar_title %}Panel de Usuario{% endblock %}
+{% block breadcrumb %}Inicio / Dashboard{% endblock %}
+{% block nav_inicio %}active{% endblock %}
+
+{% block content %}
+
+  {% include "usuarios/oyente/components/welcome_banner.html" %}
+
+  {% include "usuarios/oyente/components/quick_stats.html" %}
+
+  {% include "usuarios/oyente/components/recent_activity.html" %}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+<!-- Componente: Banner de bienvenida del artista -->
+<div class="welcome-banner">
+  <div class="welcome-banner__left">
+    <div class="welcome-banner__avatar">{{ persona.primer_nombre|first|upper }}</div>
+    <div>
+      <h2 class="welcome-banner__title">
+        ¡Hola, {% if perfil and perfil.nombre_artistico %}{{ perfil.nombre_artistico }}{% else %}{{ persona.primer_nombre }}{% endif %}! &#127908;
+      </h2>
+      <p class="welcome-banner__sub">
+        Bienvenido a tu panel de artista en Ecualizer.
+        {% if persona.fecha_registro %}
+          Artista desde {{ persona.fecha_registro|date:"F Y" }}.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="welcome-banner__right">
+    <span class="welcome-badge">
+      <span class="material-icons">verified</span>
+      {% if persona.estado == 'activo' %}Artista verificado{% else %}{{ persona.estado|capfirst }}{% endif %}
+    </span>
+    {% if perfil and perfil.genero_musical %}
+    <span class="welcome-badge welcome-badge--muted">
+      <span class="material-icons">music_note</span>
+      {{ perfil.genero_musical }}
+    </span>
+    {% endif %}
+  </div>
+</div>

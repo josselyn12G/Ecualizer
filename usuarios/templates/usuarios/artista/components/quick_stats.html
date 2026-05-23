@@ -1,0 +1,32 @@
+<!-- Componente: Estadísticas rápidas del artista -->
+<div class="stats-grid">
+
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">album</span>
+    <div class="stat-card__label">Álbumes</div>
+    <div class="stat-card__value">{{ stats.albumes|default:"0" }}</div>
+    <div class="stat-card__sub">Publicados</div>
+  </div>
+
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">music_note</span>
+    <div class="stat-card__label">Canciones</div>
+    <div class="stat-card__value">{{ stats.canciones|default:"0" }}</div>
+    <div class="stat-card__sub">En catálogo</div>
+  </div>
+
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">play_circle</span>
+    <div class="stat-card__label">Reproducciones</div>
+    <div class="stat-card__value">{{ stats.reproducciones|default:"0" }}</div>
+    <div class="stat-card__sub">Total acumuladas</div>
+  </div>
+
+  <div class="stat-card">
+    <span class="material-icons stat-card__icon">people</span>
+    <div class="stat-card__label">Seguidores</div>
+    <div class="stat-card__value">{{ stats.seguidores|default:"0" }}</div>
+    <div class="stat-card__sub">Te siguen</div>
+  </div>
+
+</div>

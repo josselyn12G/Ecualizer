@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel Artista — Ecualizer{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'usuarios/artista_panel.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="panel-layout">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+      <span class="sidebar-logo__icon">&#127925;</span>
+      <span class="sidebar-logo__text">Ecua<strong>lizer</strong></span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <!-- Inicio directo -->
+      <a href="{% url 'dashboard_artista' %}"
+         class="sidebar-direct {% block nav_inicio %}{% endblock %}">
+        <span class="material-icons">home</span>
+        <span>Inicio</span>
+      </a>
+
+      <!-- ── Mi Perfil ────────────────────────────────────── -->
+      <div class="nav-group {% block nav_perfil_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">person</span>
+          <span class="nav-group__label">Mi Perfil</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_datos_personales %}{% endblock %}">Datos Personales</a>
+          <a href="#" class="nav-item {% block nav_foto_bio %}{% endblock %}">Foto y Bio</a>
+          <a href="#" class="nav-item {% block nav_redes_sociales %}{% endblock %}">Redes Sociales</a>
+        </div>
+      </div>
+
+      <!-- ── Mi Música ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_mi_musica_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">library_music</span>
+          <span class="nav-group__label">Mi Música</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_albumes %}{% endblock %}">Álbumes</a>
+          <a href="#" class="nav-item {% block nav_canciones %}{% endblock %}">Canciones</a>
+          <a href="#" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
+        </div>
+      </div>
+
+      <!-- ── Analítica ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_analitica_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">bar_chart</span>
+          <span class="nav-group__label">Analítica</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_reproducciones %}{% endblock %}">Reproducciones</a>
+          <a href="#" class="nav-item {% block nav_seguidores %}{% endblock %}">Seguidores</a>
+          <a href="#" class="nav-item {% block nav_likes %}{% endblock %}">Likes</a>
+          <a href="#" class="nav-item {% block nav_tendencias %}{% endblock %}">Tendencias</a>
+        </div>
+      </div>
+
+      <!-- ── Contratos ───────────────────────────────────── -->
+      <div class="nav-group {% block nav_contratos_open %}{% endblock %}">
+        <button class="nav-group__header" type="button">
+          <span class="material-icons">description</span>
+          <span class="nav-group__label">Contratos</span>
+          <span class="material-icons nav-group__arrow">chevron_right</span>
+        </button>
+        <div class="nav-group__items">
+          <a href="#" class="nav-item {% block nav_mis_contratos %}{% endblock %}">Mis Contratos</a>
+          <a href="#" class="nav-item {% block nav_regalias %}{% endblock %}">Regalías</a>
+          <a href="#" class="nav-item {% block nav_pagos_recibidos %}{% endblock %}">Pagos Recibidos</a>
+        </div>
+      </div>
+
+      <!-- Configuración directo -->
+      <a href="#" class="sidebar-direct {% block nav_configuracion %}{% endblock %}">
+        <span class="material-icons">settings</span>
+        <span>Configuración</span>
+      </a>
+
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      {% if persona %}
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">{{ persona.primer_nombre|first|upper }}</div>
+        <div class="sidebar-user__info">
+          <div class="sidebar-user__name">
+            {% if perfil and perfil.nombre_artistico %}{{ perfil.nombre_artistico }}{% else %}{{ persona.primer_nombre }}{% endif %}
+          </div>
+          <div class="sidebar-user__role">&#127908; Artista</div>
+        </div>
+      </div>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="sidebar-logout">
+        <span class="material-icons">logout</span>
+        <span>Cerrar sesión</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══════════════════════════════ -->
+  <div class="main-wrapper">
+
+    <header class="topbar">
+      <div class="topbar__left">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button">
+          <span class="material-icons">menu</span>
+        </button>
+        <div>
+          <h1 class="topbar__title">{% block topbar_title %}Panel Artista{% endblock %}</h1>
+          <div class="topbar__breadcrumb">{% block breadcrumb %}Inicio{% endblock %}</div>
+        </div>
+      </div>
+      <div class="topbar__right">
+        {% if persona %}
+        <div class="topbar-user">
+          <div class="topbar-avatar">{{ persona.primer_nombre|first|upper }}</div>
+          <span class="topbar-user__name">
+            {% if perfil and perfil.nombre_artistico %}{{ perfil.nombre_artistico }}{% else %}{{ persona.primer_nombre }}{% endif %}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if messages %}
+    <div class="flash-bar">
+      {% for msg in messages %}
+      <div class="flash flash--{{ msg.tags|default:'info' }}">
+        <span class="material-icons flash__icon">
+          {% if msg.tags == 'success' %}check_circle{% elif msg.tags == 'error' or msg.tags == 'danger' %}error{% else %}info{% endif %}
+        </span>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+
+  toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('sidebar--collapsed');
+  });
+
+  document.querySelectorAll('.nav-group__header').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const group = btn.closest('.nav-group');
+      const isOpen = group.classList.contains('open');
+      document.querySelectorAll('.nav-group.open').forEach(function (g) {
+        if (g !== group) g.classList.remove('open');
+      });
+      group.classList.toggle('open', !isOpen);
+    });
+  });
+
+  document.querySelectorAll('.nav-item.active').forEach(function (link) {
+    const group = link.closest('.nav-group');
+    if (group) group.classList.add('open');
+  });
+
+  setTimeout(function () {
+    document.querySelectorAll('.flash-bar').forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.4s';
+      setTimeout(function () { el.remove(); }, 400);
+    });
+  }, 4000);
+})();
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -72,11 +72,14 @@ class AdminLoginForm(forms.Form):
                 raise forms.ValidationError('Credenciales incorrectas.')
 
             if not check_password(contrasena, persona.contrasena):
+                print('Contraseña incorrecta para correo:', correo)  # Debug
                 raise forms.ValidationError('Credenciales incorrectas.')
 
             if persona.estado == 'inactivo':
+                print('Cuenta inactiva para correo:', correo)  # Debug
                 raise forms.ValidationError('Esta cuenta esta inactiva.')
             if persona.estado == 'suspendido':
+                print('Cuenta suspendida para correo:', correo)  # Debug
                 raise forms.ValidationError('Esta cuenta ha sido suspendida.')
 
             # Verificar que sea administrador
@@ -95,6 +98,7 @@ class AdminLoginForm(forms.Form):
 
 
 class LoginForm(forms.Form):
+
     correo = forms.EmailField(
         label='Correo electrónico',
         widget=forms.EmailInput(attrs={
@@ -104,6 +108,7 @@ class LoginForm(forms.Form):
             'autofocus': True,
         })
     )
+
     contrasena = forms.CharField(
         label='Contraseña',
         widget=forms.PasswordInput(attrs={
@@ -115,34 +120,72 @@ class LoginForm(forms.Form):
     )
 
     def clean(self):
+
+        print("===== ENTRO AL CLEAN =====")
+
         cleaned_data = super().clean()
+
         correo = cleaned_data.get('correo')
         contrasena = cleaned_data.get('contrasena')
 
+        print("CORREO RECIBIDO:", correo)
+
         if correo and contrasena:
+
             try:
                 persona = Persona.objects.get(correo=correo)
+
+                print("USUARIO ENCONTRADO")
+                print("HASH BD:", persona.contrasena)
+
             except Persona.DoesNotExist:
-                raise forms.ValidationError('Correo o contraseña incorrectos.')
 
-            if not check_password(contrasena, persona.contrasena):
-                raise forms.ValidationError('Correo o contraseña incorrectos.')
+                print("NO EXISTE ESE CORREO")
 
-            if persona.estado == 'inactivo':
                 raise forms.ValidationError(
-                    'Tu cuenta está inactiva. Contacta al soporte en soporte@ecualizer.com'
+                    'Correo o contraseña incorrectos.'
                 )
+
+            resultado = check_password(
+                contrasena,
+                persona.contrasena
+            )
+
+            print("CHECK PASSWORD:", resultado)
+
+            if not resultado:
+
+                print("PASSWORD INCORRECTA")
+
+                raise forms.ValidationError(
+                    'Correo o contraseña incorrectos.'
+                )
+
+            # Validación estado cuenta
+            if persona.estado == 'inactivo':
+
+                print("CUENTA INACTIVA")
+
+                raise forms.ValidationError(
+                    'Tu cuenta está inactiva. Contacta al soporte.'
+                )
+
             if persona.estado == 'suspendido':
+
+                print("CUENTA SUSPENDIDA")
+
                 raise forms.ValidationError(
                     'Tu cuenta ha sido suspendida por un administrador.'
                 )
 
+            print("LOGIN OK")
+
             self._persona = persona
+
         return cleaned_data
 
     def get_persona(self):
         return getattr(self, '_persona', None)
-
 
 # ─────────────────────────────────────────────
 # REGISTRO — DATOS PERSONA (compartido)
