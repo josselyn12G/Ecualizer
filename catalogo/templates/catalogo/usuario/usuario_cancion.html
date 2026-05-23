@@ -1,0 +1,197 @@
+{% extends "usuarios/oyente/base_oyente.html" %}
+{% load static %}
+
+{% block title %}Canciones — Ecualizer{% endblock %}
+{% block topbar_title %}Canciones{% endblock %}
+{% block breadcrumb %}Catálogo / Canciones{% endblock %}
+{% block nav_canciones %}active{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  .glass-card {
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+  }
+  .genre-pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.32rem 0.85rem; border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-2); font-size: 0.78rem; font-weight: 500;
+    transition: all 0.18s; cursor: pointer;
+  }
+  .genre-pill:hover, .genre-pill.active {
+    background: rgba(249,115,22,0.15);
+    border-color: rgba(249,115,22,0.30);
+    color: var(--orange);
+  }
+  .song-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto 80px;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    transition: background 0.15s; cursor: pointer;
+  }
+  .song-row:hover { background: rgba(255,255,255,0.05); }
+  .song-row__cover {
+    width: 36px; height: 36px;
+    background: var(--orange-dim);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--orange);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-main" style="padding: 1.5rem 1.75rem 2.5rem;">
+
+{% if modo == 'list' or modo == 'filter' %}
+
+  <div class="d-flex justify-content-between align-items-end mb-3">
+    <div>
+      <div class="section-tag">Catálogo</div>
+      <h2 class="section-title">
+        {% if modo == 'filter' %}Género: {{ genero_nombre }}{% else %}Canciones{% endif %}
+      </h2>
+    </div>
+  </div>
+
+  <!-- Búsqueda -->
+  <form method="get" action="{% url 'catalogo:usuario_cancion_list' %}" class="glass-card mb-3">
+    <div class="d-flex gap-2">
+      <input type="text" name="q" class="form-control" value="{{ busqueda }}"
+             placeholder="Buscar canciones…"
+             style="background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10); color:#fff;">
+      <button class="btn-new"><span class="material-icons">search</span>Buscar</button>
+    </div>
+  </form>
+
+  <!-- Filtros por género -->
+  <div class="glass-card mb-3">
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{% url 'catalogo:usuario_cancion_list' %}"
+         class="genre-pill {% if modo == 'list' %}active{% endif %}">
+        <span class="material-icons" style="font-size:0.85rem;">all_inclusive</span>Todos
+      </a>
+      {% for g in generos %}
+        <a href="{% url 'catalogo:usuario_cancion_filter' g.pk %}"
+           class="genre-pill {% if g.pk == genero_actual %}active{% endif %}">
+          <span class="material-icons" style="font-size:0.85rem;">music_note</span>{{ g.nombre_genero }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Lista de canciones -->
+  <div class="glass-card" style="padding: 0.75rem 0.5rem;">
+    {% for c in canciones %}
+    <div class="song-row" onclick="window.location='{% url 'catalogo:usuario_cancion_detail' c.idCancion %}'">
+      <div class="song-row__cover">
+        <span class="material-icons" style="font-size:1rem;">audiotrack</span>
+      </div>
+      <div>
+        <div style="font-weight:600; color:#fff;">{{ c.nombreCancion }}</div>
+        <small style="color: var(--text-muted);">
+          {{ c.nombreArtistico|default:"" }} · {{ c.tituloAlbum|default:"" }}
+        </small>
+      </div>
+      <div style="color: var(--text-light); font-size: 0.85rem;">
+        {{ c.duracion }}s
+      </div>
+      <div style="color: var(--text-muted); font-size: 0.78rem;">
+        {{ c.totalReproducciones|default:0 }} plays
+      </div>
+      <button class="btn-new" style="padding: 0.35rem 0.85rem; font-size:0.75rem;"
+              onclick="event.stopPropagation(); reproducir({{ c.idCancion }}, this);">
+        <span class="material-icons" style="font-size:0.85rem;">play_arrow</span>Play
+      </button>
+    </div>
+    {% empty %}
+    <div class="text-center py-4" style="color: var(--text-muted);">
+      <span class="material-icons" style="font-size:2rem; opacity:0.4; display:block;">music_off</span>
+      <p class="mt-2">No se encontraron canciones.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+{% elif modo == 'detail' %}
+
+  <div class="glass-card">
+    <div class="d-flex align-items-center gap-4">
+      <div style="width:120px; height:120px; background: linear-gradient(135deg, var(--orange) 0%, #ea580c 100%); border-radius:14px; display:flex; align-items:center; justify-content:center;">
+        <span class="material-icons" style="font-size:3rem; color:#fff;">audiotrack</span>
+      </div>
+      <div class="flex-grow-1">
+        <div class="section-tag mb-2">Canción</div>
+        <h2 class="section-title">{{ cancion.nombre_cancion }}</h2>
+        <p style="color: var(--text-muted);">
+          <strong>{{ cancion.album.artista.nombre_artistico }}</strong> ·
+          Álbum: {{ cancion.album.titulo_album }} · Pista {{ cancion.numero_pista }} ·
+          {{ cancion.duracion_formateada }} · {{ cancion.calidad_kbps }} kbps
+        </p>
+        <button class="btn-new mt-2" onclick="reproducir({{ cancion.pk }}, this);">
+          <span class="material-icons">play_arrow</span>Reproducir
+        </button>
+        <a href="{% url 'catalogo:usuario_cancion_list' %}" class="btn-ghost mt-2 ms-2">
+          <span class="material-icons">arrow_back</span>Volver
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if cancion.letra_cancion %}
+  <div class="glass-card mt-3">
+    <h5 style="color:#fff; font-weight:700; margin-bottom: 0.75rem;">Letra</h5>
+    <pre style="color: var(--text-2); white-space: pre-wrap; font-family:inherit; margin:0;">{{ cancion.letra_cancion }}</pre>
+  </div>
+  {% endif %}
+
+{% endif %}
+
+</div>
+
+<script>
+function reproducir(id, btn) {
+  btn.disabled = true;
+  const csrf = document.querySelector('input[name=csrfmiddlewaretoken]');
+  const url = '/catalogo/canciones/' + id + '/';
+
+  const fd = new FormData();
+  fd.append('duracion_escuchada', '30');
+  fd.append('fue_saltada', 'N');
+  fd.append('pais', 'Ecuador');
+  if (csrf) fd.append('csrfmiddlewaretoken', csrf.value);
+
+  fetch(url, {
+    method: 'POST',
+    body: fd,
+    headers: {
+      'X-CSRFToken': document.cookie.split('csrftoken=')[1]?.split(';')[0] || '',
+    },
+  })
+    .then(r => r.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.ok) {
+        btn.innerHTML = '<span class="material-icons">check</span>Reproducido';
+        setTimeout(() => location.reload(), 800);
+      } else {
+        alert('Error: ' + (data.error || 'desconocido'));
+      }
+    })
+    .catch(() => { btn.disabled = false; });
+}
+</script>
+
+{# Garantiza un csrf token en la página para reproducir() #}
+<form style="display:none;">{% csrf_token %}</form>
+
+{% endblock %}

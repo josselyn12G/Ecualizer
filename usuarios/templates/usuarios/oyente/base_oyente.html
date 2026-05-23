@@ -70,12 +70,14 @@
       <!-- Divisor Biblioteca -->
       <div class="sb-divider"></div>
 
-      <a href="#" class="sb-item {% block nav_albumes %}{% endblock %}">
+      <a href="{% url 'catalogo:usuario_album_list' %}"
+         class="sb-item {% block nav_albumes %}{% endblock %}">
         <span class="material-icons">album</span>
         <span class="sb-item__label">Álbumes</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_canciones %}{% endblock %}">
+      <a href="{% url 'catalogo:usuario_cancion_list' %}"
+         class="sb-item {% block nav_canciones %}{% endblock %}">
         <span class="material-icons">music_note</span>
         <span class="sb-item__label">Canciones</span>
       </a>
