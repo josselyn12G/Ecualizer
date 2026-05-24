@@ -39,4 +39,8 @@ urlpatterns = [
     path('admin/admins/<int:pk>/',                  views.AdminAdminDetailView.as_view(), name='admin_admin_detail'),
     path('admin/admins/<int:pk>/editar/',           views.AdminAdminEditView.as_view(),   name='admin_admin_edit'),
     path('admin/admins/<int:pk>/eliminar/',         views.AdminAdminDeleteView.as_view(), name='admin_admin_delete'),
+
+    # Personas (vista global, supertipo de Oyente/Artista/Admin)
+    path('admin/personas/',                         views.AdminPersonaListView.as_view(),   name='admin_persona_list'),
+    path('admin/personas/<int:pk>/',                views.AdminPersonaDetailView.as_view(), name='admin_persona_detail'),
 ]

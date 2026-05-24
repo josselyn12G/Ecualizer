@@ -683,20 +683,60 @@ button { font-family: inherit; }
 .id-col   { font-weight: 700; color: var(--orange) !important; }
 .name-col { font-weight: 600; }
 
+/* ── Badges ────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.6rem;
+  padding: 0.25rem 0.75rem; /* Un poco más de padding */
   border-radius: 20px;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.2px;
+  border: 1px solid transparent; /* Asegura que el borde exista */
 }
 
-.badge--activo    { background: var(--green-bg); color: var(--green); }
-.badge--inactivo  { background: #f3f4f6; color: var(--text-muted); }
-.badge--suspendido{ background: var(--red-bg); color: var(--red); }
+/* Usamos valores con un poco más de fuerza para que se noten */
+.badge--activo { 
+  background: rgba(34, 197, 94, 0.8); 
+  color: #16a34a; 
+  border-color: rgba(34, 197, 94, 0.2);
+}
+.badge--activa { 
+  background: rgba(34, 197, 94, 0.8); 
+  color: #16a34a; 
+  border-color: rgba(34, 197, 94, 0.2);
+}
+.badge--inactiva { 
+  background: rgba(31, 32, 32, 0.8); 
+  color: #6b7280; 
+  border-color: rgba(31, 32, 32, 0.8); 
+}
 
+.badge--bloqueada { 
+  background: rgba(88, 5, 77, 0.8); 
+  color: #6b7280; 
+  border-color: rgba(88, 5, 77, 0.8); 
+}
+
+.badge--eliminada{ 
+  background: rgba(168, 16, 37, 0.8); 
+  color: #6b7280; 
+  border-color: rgba(168, 16, 37, 0.8); 
+}
+
+
+
+.badge--inactivo { 
+  background: rgba(31, 32, 32, 0.8); 
+  color: #6b7280; 
+  border-color: #e5e7eb;
+}
+
+.badge--eliminado, .badge--suspendido { 
+  background: rgba(239, 68, 68, 0.8); 
+  color: #dc2626; 
+  border-color: rgba(239, 68, 68, 0.2);
+}
 .action-btns {
   display: flex;
   align-items: center;

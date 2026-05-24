@@ -28,4 +28,6 @@ from .admin_views import (
     AdminAdminDetailView,
     AdminAdminEditView,
     AdminAdminDeleteView,
+    AdminPersonaListView,
+    AdminPersonaDetailView,
 )

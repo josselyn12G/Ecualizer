@@ -160,7 +160,8 @@ class CancionUpdateForm(_CancionBaseForm):
 
 
 # ──────────────────────────────────────────────────────────
-# ADMIN — Editar (incluye estado)
+# ADMIN — Editar (incluye estado). Los géneros NO se editan aquí:
+# se gestionan con chips/agregar/quitar individualmente (M:N).
 # ──────────────────────────────────────────────────────────
 class CancionAdminUpdateForm(_CancionBaseForm):
     estado_cancion = forms.ChoiceField(
@@ -168,6 +169,9 @@ class CancionAdminUpdateForm(_CancionBaseForm):
         choices=Cancion.ESTADO_CHOICES,
         widget=forms.Select(attrs={'class': 'form-select'}),
     )
+
+    # Removemos el ModelMultipleChoiceField heredado del base
+    generos = None
 
     class Meta:
         model = Cancion
@@ -179,8 +183,13 @@ class CancionAdminUpdateForm(_CancionBaseForm):
             'calidad_kbps',
             'letra_cancion',
             'estado_cancion',
-            'generos',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Eliminar el field 'generos' que viene del base
+        if 'generos' in self.fields:
+            del self.fields['generos']
 
 
 # ──────────────────────────────────────────────────────────

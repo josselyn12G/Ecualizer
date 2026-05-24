@@ -28,11 +28,22 @@ from .views.usuario.cancion_views import (
     UsuarioCancionListView, UsuarioCancionDetailView, UsuarioCancionFilterView,
 )
 from .views.administrador.album_views import (
-    AdminAlbumListView, AdminAlbumUpdateView, AdminAlbumReportView,
+    AdminAlbumListView, AdminAlbumUpdateView,
+    AdminAlbumDetailView, AdminAlbumReportView,
 )
 from .views.administrador.cancion_views import (
     AdminCancionListView, AdminCancionUpdateView,
-    AdminCancionDeactivateView, AdminCancionReportView,
+    AdminCancionDetailView, AdminCancionDeactivateView,
+    AdminCancionReportView,
+    AdminCancionGeneroAddView, AdminCancionGeneroRemoveView,
+)
+from .views.administrador.genero_views import (
+    AdminGeneroListView, AdminGeneroCreateView, AdminGeneroUpdateView,
+    AdminGeneroDetailView, AdminGeneroDeleteView,
+)
+from .views.administrador.tipo_album_views import (
+    AdminTipoAlbumListView, AdminTipoAlbumCreateView, AdminTipoAlbumUpdateView,
+    AdminTipoAlbumDetailView, AdminTipoAlbumDeleteView,
 )
 
 
@@ -103,6 +114,9 @@ urlpatterns = [
     path('admin/albumes/',
          AdminAlbumListView.as_view(),
          name='admin_album_list'),
+    path('admin/albumes/<int:pk>/',
+         AdminAlbumDetailView.as_view(),
+         name='admin_album_detail'),
     path('admin/albumes/<int:pk>/editar/',
          AdminAlbumUpdateView.as_view(),
          name='admin_album_update'),
@@ -116,6 +130,9 @@ urlpatterns = [
     path('admin/canciones/',
          AdminCancionListView.as_view(),
          name='admin_cancion_list'),
+    path('admin/canciones/<int:pk>/',
+         AdminCancionDetailView.as_view(),
+         name='admin_cancion_detail'),
     path('admin/canciones/<int:pk>/editar/',
          AdminCancionUpdateView.as_view(),
          name='admin_cancion_update'),
@@ -125,4 +142,49 @@ urlpatterns = [
     path('admin/canciones/<int:pk>/reportar/',
          AdminCancionReportView.as_view(),
          name='admin_cancion_report'),
+    # M:N géneros
+    path('admin/canciones/<int:pk>/genero/agregar/',
+         AdminCancionGeneroAddView.as_view(),
+         name='admin_cancion_genero_add'),
+    path('admin/canciones/<int:pk>/genero/<int:genero_id>/quitar/',
+         AdminCancionGeneroRemoveView.as_view(),
+         name='admin_cancion_genero_remove'),
+
+    # ═════════════════════════════════════════════════════
+    # ADMIN · GeneroMusical · CRUD
+    # ═════════════════════════════════════════════════════
+    path('admin/generos/',
+         AdminGeneroListView.as_view(),
+         name='admin_genero_list'),
+    path('admin/generos/nuevo/',
+         AdminGeneroCreateView.as_view(),
+         name='admin_genero_create'),
+    path('admin/generos/<int:pk>/',
+         AdminGeneroDetailView.as_view(),
+         name='admin_genero_detail'),
+    path('admin/generos/<int:pk>/editar/',
+         AdminGeneroUpdateView.as_view(),
+         name='admin_genero_update'),
+    path('admin/generos/<int:pk>/eliminar/',
+         AdminGeneroDeleteView.as_view(),
+         name='admin_genero_delete'),
+
+    # ═════════════════════════════════════════════════════
+    # ADMIN · TipoAlbum · CRUD
+    # ═════════════════════════════════════════════════════
+    path('admin/tipos-album/',
+         AdminTipoAlbumListView.as_view(),
+         name='admin_tipo_album_list'),
+    path('admin/tipos-album/nuevo/',
+         AdminTipoAlbumCreateView.as_view(),
+         name='admin_tipo_album_create'),
+    path('admin/tipos-album/<int:pk>/',
+         AdminTipoAlbumDetailView.as_view(),
+         name='admin_tipo_album_detail'),
+    path('admin/tipos-album/<int:pk>/editar/',
+         AdminTipoAlbumUpdateView.as_view(),
+         name='admin_tipo_album_update'),
+    path('admin/tipos-album/<int:pk>/eliminar/',
+         AdminTipoAlbumDeleteView.as_view(),
+         name='admin_tipo_album_delete'),
 ]

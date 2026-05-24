@@ -70,6 +70,8 @@
           </td>
           <td class="text-end">
             <div class="action-btns justify-content-end">
+              <a href="{% url 'catalogo:admin_album_detail' a.idAlbum %}"
+                 class="btn-action btn-action--ver">Ver</a>
               <a href="{% url 'catalogo:admin_album_update' a.idAlbum %}"
                  class="btn-action btn-action--editar">Editar</a>
               <a href="{% url 'catalogo:admin_album_report' a.idAlbum %}"
@@ -85,6 +87,82 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+{% elif modo == 'detail' %}
+
+  <div class="form-card" style="max-width: 820px;">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h3 class="mb-1">{{ album.titulo_album }}</h3>
+        <small class="text-muted">
+          Álbum #{{ album.pk }} ·
+          Artista: <strong>{{ album.artista.nombre_artistico }}</strong>
+        </small>
+      </div>
+      <span class="badge badge--{{ album.estado_album }}">{{ album.estado_album|capfirst }}</span>
+    </div>
+
+    <div class="detail-grid" style="padding:0; margin-bottom:1.25rem;">
+      <div class="detail-field">
+        <div class="detail-label">Tipo de álbum</div>
+        <div class="detail-value">{{ album.tipo_album.nombre_tipo }}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Fecha de lanzamiento</div>
+        <div class="detail-value">{{ album.fecha_lanzamiento_album|date:"d/m/Y" }}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Canciones</div>
+        <div class="detail-value"><strong>{{ canciones|length }}</strong></div>
+      </div>
+    </div>
+
+    {% if album.descripcion_album %}
+    <div class="detail-field" style="margin-bottom:1.25rem;">
+      <div class="detail-label">Descripción</div>
+      <div class="detail-value" style="white-space:pre-wrap;">{{ album.descripcion_album }}</div>
+    </div>
+    {% endif %}
+
+    <h6 style="color: var(--text-muted); text-transform: uppercase; font-size:0.75rem; letter-spacing:0.05em; margin-top:1.5rem;">
+      Canciones del álbum
+    </h6>
+    {% if canciones %}
+    <table class="data-table" style="margin-top: 0.5rem;">
+      <thead>
+        <tr>
+          <th>Pista</th>
+          <th>Canción</th>
+          <th>Duración</th>
+          <th>Calidad</th>
+          <th>Reprods.</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in canciones %}
+        <tr>
+          <td class="id-col">#{{ c.numero_pista }}</td>
+          <td class="name-col">{{ c.nombre_cancion }}</td>
+          <td>{{ c.duracion }}s</td>
+          <td>{{ c.calidad_kbps }} kbps</td>
+          <td><strong>{{ c.total_reproducciones }}</strong></td>
+          <td><span class="badge badge--{{ c.estado_cancion }}">{{ c.estado_cancion|capfirst }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted" style="font-style:italic;">Este álbum aún no tiene canciones.</p>
+    {% endif %}
+
+    <div class="form-actions">
+      <a href="{% url 'catalogo:admin_album_update' album.pk %}" class="btn-action btn-action--editar">
+        <span class="material-icons" style="font-size:0.9rem; vertical-align:middle;">edit</span> Editar
+      </a>
+      <a href="{% url 'catalogo:admin_album_list' %}" class="btn-back">Volver al listado</a>
+    </div>
   </div>
 
 {% elif modo == 'update' %}

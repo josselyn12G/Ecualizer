@@ -1,7 +1,7 @@
 {% extends "usuarios/admin/base_admin.html" %}
-{% load static %}
+{% load static catalogo_extras %}
 
-{% block title %}Canciones — Panel Admin{% endblock %}
+{% block title %}Canciones — Admin{% endblock %}
 {% block topbar_title %}Canciones{% endblock %}
 {% block breadcrumb %}Admin / Catálogo / Canciones{% endblock %}
 {% block nav_canciones %}active{% endblock %}
@@ -26,9 +26,8 @@
   <div class="panel-card" style="margin-bottom: 1.25rem;">
     <div class="panel-card__header">
       <div class="panel-card__title">
-        <span class="material-icons" style="font-size:1rem; color:var(--orange);">leaderboard</span>
-        Top 20 — Ranking Global (último mes) ·
-        <small class="text-muted" style="font-weight:400;">SP sp_RankingGlobalCanciones</small>
+        <span class="material-icons" style="font-size:1rem; color:var(--orange); vertical-align:middle;">leaderboard</span>
+        Top 20 — Ranking Global (último mes)
       </div>
     </div>
     <table class="data-table">
@@ -51,7 +50,7 @@
   {% endif %}
 
   <!-- Filtros -->
-  <form method="get" class="panel-card" style="padding: 1.25rem; margin-bottom: 1.25rem;">
+  <form method="get" class="panel-card" style="padding:1.25rem; margin-bottom:1.25rem;">
     <div class="row g-2">
       <div class="col-md-7">
         <label class="form-label">Buscar canción</label>
@@ -72,8 +71,8 @@
     </div>
   </form>
 
-  <!-- Tabla principal -->
-  <div class="panel-card" style="overflow-x: auto;">
+  <!-- Tabla principal con géneros por canción -->
+  <div class="panel-card" style="overflow-x:auto;">
     <table class="data-table">
       <thead>
         <tr>
@@ -81,8 +80,8 @@
           <th>Canción</th>
           <th>Álbum</th>
           <th>Artista</th>
+          <th>Géneros</th>
           <th>Duración</th>
-          <th>Calidad</th>
           <th>Reprods.</th>
           <th>Estado</th>
           <th class="text-end">Acciones</th>
@@ -95,14 +94,27 @@
           <td class="name-col">{{ c.nombreCancion }}</td>
           <td>{{ c.tituloAlbum|default:"—" }}</td>
           <td>{{ c.nombreArtistico|default:"—" }}</td>
+          <td>
+            {% if c.generosCSV %}
+              {% for g in c.generosCSV|split:"," %}
+                <span class="genre-chip">
+                  <span class="material-icons" style="font-size:0.7rem;">music_note</span>
+                  {{ g }}
+                </span>
+              {% endfor %}
+            {% else %}
+              <span class="genre-chip__empty">sin géneros</span>
+            {% endif %}
+          </td>
           <td>{{ c.duracion }}s</td>
-          <td>{{ c.calidadKbps }} kbps</td>
           <td><strong>{{ c.totalReproducciones|default:0 }}</strong></td>
           <td>
             <span class="badge badge--{{ c.estadoCancion }}">{{ c.estadoCancion|capfirst }}</span>
           </td>
           <td class="text-end">
             <div class="action-btns justify-content-end">
+              <a href="{% url 'catalogo:admin_cancion_detail' c.idCancion %}"
+                 class="btn-action btn-action--ver">Ver</a>
               <a href="{% url 'catalogo:admin_cancion_update' c.idCancion %}"
                  class="btn-action btn-action--editar">Editar</a>
               <form method="post" action="{% url 'catalogo:admin_cancion_deactivate' c.idCancion %}"
@@ -127,15 +139,88 @@
     </table>
   </div>
 
+{% elif modo == 'detail' %}
+
+  <div class="form-card" style="max-width: 760px;">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h3 class="mb-1">{{ cancion.nombre_cancion }}</h3>
+        <small class="text-muted">
+          Canción #{{ cancion.pk }} ·
+          Álbum: <strong>{{ cancion.album.titulo_album }}</strong> ·
+          Artista: <strong>{{ cancion.album.artista.nombre_artistico }}</strong>
+        </small>
+      </div>
+      <a href="{% url 'catalogo:admin_cancion_update' cancion.pk %}" class="btn-action btn-action--editar">
+        <span class="material-icons" style="font-size:0.9rem; vertical-align:middle;">edit</span> Editar
+      </a>
+    </div>
+
+    <div class="detail-grid" style="padding:0; margin-bottom:1.25rem;">
+      <div class="detail-field">
+        <div class="detail-label">Duración</div>
+        <div class="detail-value">{{ cancion.duracion_formateada }} ({{ cancion.duracion }}s)</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Calidad</div>
+        <div class="detail-value">{{ cancion.calidad_kbps }} kbps</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">N° de pista</div>
+        <div class="detail-value">{{ cancion.numero_pista }}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Reproducciones</div>
+        <div class="detail-value"><strong>{{ cancion.total_reproducciones }}</strong></div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Fecha de lanzamiento</div>
+        <div class="detail-value">{{ cancion.fecha_lanzamiento|date:"d/m/Y" }}</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-label">Estado</div>
+        <div class="detail-value">
+          <span class="badge badge--{{ cancion.estado_cancion }}">{{ cancion.estado_cancion|capfirst }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-field" style="margin-bottom:1rem;">
+      <div class="detail-label">Géneros asociados</div>
+      <div class="detail-value">
+        {% for g in generos_asignados %}
+          <span class="genre-chip">
+            <span class="material-icons" style="font-size:0.7rem;">music_note</span>
+            {{ g.nombreGenero }}
+          </span>
+        {% empty %}
+          <span class="genre-chip__empty">Esta canción no tiene géneros asignados.</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if cancion.letra_cancion %}
+    <div class="detail-field" style="margin-bottom:1rem;">
+      <div class="detail-label">Letra</div>
+      <div class="detail-value" style="white-space:pre-wrap; line-height:1.6;">{{ cancion.letra_cancion }}</div>
+    </div>
+    {% endif %}
+
+    <div class="form-actions">
+      <a href="{% url 'catalogo:admin_cancion_list' %}" class="btn-back">Volver al listado</a>
+    </div>
+  </div>
+
 {% elif modo == 'update' %}
 
   <div class="form-card" style="max-width: 760px;">
     <h3 class="mb-3">Editar Canción #{{ cancion.pk }}</h3>
+
     <form method="post">
       {% csrf_token %}
       <div class="row g-3">
         {% for field in form %}
-          <div class="col-md-{% if field.name == 'letra_cancion' or field.name == 'generos' or field.name == 'nombre_cancion' %}12{% else %}6{% endif %}">
+          <div class="col-md-{% if field.name == 'letra_cancion' or field.name == 'nombre_cancion' %}12{% else %}6{% endif %}">
             <label class="form-label">{{ field.label }}</label>
             {{ field }}
             {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
@@ -147,6 +232,59 @@
         <a href="{% url 'catalogo:admin_cancion_list' %}" class="btn-back">Cancelar</a>
       </div>
     </form>
+
+    <!-- ═════════════ GESTIÓN DE GÉNEROS M:N ═════════════ -->
+    <hr style="margin: 2rem 0; border-color: var(--border);">
+
+    <h5 style="margin-bottom: 1rem;">
+      <span class="material-icons" style="font-size:1.1rem; vertical-align:middle; color:var(--orange);">music_note</span>
+      Géneros de la canción
+    </h5>
+    <p class="text-muted" style="font-size:0.85rem; margin-bottom:1rem;">
+      Cada género se gestiona individualmente: quita con la <strong>×</strong> de cada chip o usa el formulario de abajo para agregar uno nuevo.
+    </p>
+
+    <!-- Chips de géneros actuales -->
+    <div style="margin-bottom: 1.25rem;">
+      {% for g in generos_asignados %}
+        <span class="genre-chip">
+          <span class="material-icons" style="font-size:0.7rem;">music_note</span>
+          {{ g.nombreGenero }}
+          <form method="post"
+                action="{% url 'catalogo:admin_cancion_genero_remove' cancion.pk g.idGeneroMusical %}"
+                style="display:inline;"
+                onsubmit="return confirm('¿Quitar &quot;{{ g.nombreGenero }}&quot; de esta canción?');">
+            {% csrf_token %}
+            <button type="submit" class="genre-chip__remove" title="Quitar">×</button>
+          </form>
+        </span>
+      {% empty %}
+        <span class="genre-chip__empty">Esta canción no tiene géneros asignados.</span>
+      {% endfor %}
+    </div>
+
+    <!-- Form: agregar género -->
+    {% if generos_disponibles %}
+    <form method="post" action="{% url 'catalogo:admin_cancion_genero_add' cancion.pk %}" class="d-flex gap-2 align-items-end">
+      {% csrf_token %}
+      <div class="form-group" style="flex:1; margin-bottom:0;">
+        <label class="form-label">Agregar género</label>
+        <select name="genero_id" class="form-select filter-select" required>
+          <option value="">-- Selecciona un género --</option>
+          {% for g in generos_disponibles %}
+            <option value="{{ g.pk }}">{{ g.nombre_genero }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn-new">
+        <span class="material-icons">add</span> Agregar
+      </button>
+    </form>
+    {% else %}
+      <p class="text-muted" style="font-style:italic; font-size:0.85rem;">
+        Esta canción ya tiene todos los géneros disponibles asignados.
+      </p>
+    {% endif %}
   </div>
 
 {% elif modo == 'report' %}
@@ -167,9 +305,7 @@
         </div>
       {% endfor %}
       <div class="form-actions">
-        <button type="submit" class="btn-save" style="background: var(--red);">
-          Enviar reporte
-        </button>
+        <button type="submit" class="btn-save" style="background: var(--red);">Enviar reporte</button>
         <a href="{% url 'catalogo:admin_cancion_list' %}" class="btn-back">Cancelar</a>
       </div>
     </form>

@@ -229,6 +229,88 @@ class AdminArtistaDeleteView(RequiereAdmin, View):
 
 
 # ─────────────────────────────────────────────
+# CRUD PERSONAS · vista global de todas las personas
+# (Persona es el supertipo de Oyente/Artista/Admin)
+# ─────────────────────────────────────────────
+
+class AdminPersonaListView(RequiereAdmin, View):
+    """Lista todas las Personas con su rol calculado.
+    No tiene paginación → muestra todos los registros."""
+
+    def get(self, request):
+        qs = Persona.objects.all().order_by('-fecha_registro', '-id_usuario')
+
+        q = request.GET.get('q', '').strip()
+        estado = request.GET.get('estado', '')
+        tipo = request.GET.get('tipo', '')
+
+        if q:
+            qs = qs.filter(
+                Q(primer_nombre__icontains=q) |
+                Q(primer_apellido__icontains=q) |
+                Q(correo__icontains=q) |
+                Q(cedula_usuario__icontains=q)
+            )
+        if estado:
+            qs = qs.filter(estado=estado)
+
+        # Materializamos para poder calcular tipo por cada persona.
+        # Las queries de subtype son rápidas (PK lookups).
+        oyente_ids = set(Usuario.objects.values_list('id_usuario_id', flat=True))
+        artista_ids = set(Artista.objects.values_list('id_usuario_id', flat=True))
+        admin_ids = set(Administrador.objects.values_list('id_usuario_id', flat=True))
+
+        personas = []
+        for p in qs:
+            tipo_persona = []
+            if p.id_usuario in oyente_ids:
+                tipo_persona.append('oyente')
+            if p.id_usuario in artista_ids:
+                tipo_persona.append('artista')
+            if p.id_usuario in admin_ids:
+                tipo_persona.append('administrador')
+            p.tipos = tipo_persona  # atributo dinámico para el template
+            p.tipo_principal = tipo_persona[0] if tipo_persona else 'sin rol'
+            if not tipo or p.tipo_principal == tipo:
+                personas.append(p)
+
+        ctx = _ctx_admin(request)
+        ctx.update({
+            'personas': personas,
+            'q': q, 'estado_sel': estado, 'tipo_sel': tipo,
+            'total': len(personas),
+        })
+        return render(request, 'usuarios/admin/personas/lista.html', ctx)
+
+
+class AdminPersonaDetailView(RequiereAdmin, View):
+    def get(self, request, pk):
+        persona = get_object_or_404(Persona, pk=pk)
+        # Detectar todos los perfiles asociados
+        try:
+            oyente = Usuario.objects.get(pk=persona.pk)
+        except Usuario.DoesNotExist:
+            oyente = None
+        try:
+            artista = Artista.objects.get(pk=persona.pk)
+        except Artista.DoesNotExist:
+            artista = None
+        try:
+            admin_perfil = Administrador.objects.get(pk=persona.pk)
+        except Administrador.DoesNotExist:
+            admin_perfil = None
+
+        ctx = _ctx_admin(request)
+        ctx.update({
+            'persona': persona,
+            'oyente_p': oyente,
+            'artista_p': artista,
+            'admin_p': admin_perfil,
+        })
+        return render(request, 'usuarios/admin/personas/detalle.html', ctx)
+
+
+# ─────────────────────────────────────────────
 # CRUD ADMINISTRADORES
 # ─────────────────────────────────────────────
 

@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.db import DatabaseError
 
 from usuarios.mixins import RequiereAdmin
-from ...models import Album
+from ...models import Album, Cancion
 from ...forms import AlbumAdminUpdateForm, AlbumReportForm
 from ...services import (
     sp_listar_albumes,
@@ -85,6 +85,23 @@ class AdminAlbumUpdateView(RequiereAdmin, View):
                 'form': form, 'album': album, 'modo': 'update',
             })
         return redirect('catalogo:admin_album_list')
+
+
+# ──────────────────────────────────────────────────────────
+# DETAIL · Ver detalle del álbum (incluye canciones)
+# ──────────────────────────────────────────────────────────
+class AdminAlbumDetailView(RequiereAdmin, View):
+    template_name = 'catalogo/administrador/admin_album.html'
+
+    def get(self, request, pk):
+        album = get_object_or_404(
+            Album.objects.select_related('artista', 'tipo_album'),
+            pk=pk,
+        )
+        canciones = Cancion.objects.filter(album=album).order_by('numero_pista')
+        return render(request, self.template_name, {
+            'album': album, 'canciones': canciones, 'modo': 'detail',
+        })
 
 
 # ──────────────────────────────────────────────────────────

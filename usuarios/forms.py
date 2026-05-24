@@ -465,8 +465,8 @@ class AdministradorForm(forms.ModelForm):
 # FORMULARIOS DE EDICION — Panel de administracion
 # ─────────────────────────────────────────────
 
-_INPUT = {'class': 'eq-input'}
-_SELECT = {'class': 'eq-select'}
+_INPUT = {'class': 'eq-input form-control'}
+_SELECT = {'class': 'eq-select form-select'}
 
 
 class AdminEditPersonaForm(forms.ModelForm):

@@ -57,10 +57,10 @@
         </button>
         <div class="nav-group__items">
           <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas %}{% endblock %}">Artistas</a>
-          <a href="#" class="nav-item {% block nav_albumes %}{% endblock %}">Álbumes</a>
-          <a href="#" class="nav-item {% block nav_canciones %}{% endblock %}">Canciones</a>
-          <a href="#" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
-          <a href="#" class="nav-item {% block nav_tipos_album %}{% endblock %}">Tipos Álbum</a>
+          <a href="{% url 'catalogo:admin_album_list' %}" class="nav-item {% block nav_albumes %}{% endblock %}">Álbumes</a>
+          <a href="{% url 'catalogo:admin_cancion_list' %}" class="nav-item {% block nav_canciones %}{% endblock %}">Canciones</a>
+          <a href="{% url 'catalogo:admin_genero_list' %}" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
+          <a href="{% url 'catalogo:admin_tipo_album_list' %}" class="nav-item {% block nav_tipos_album %}{% endblock %}">Tipos Álbum</a>
         </div>
       </div>
 
@@ -72,8 +72,9 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-          <a href="{% url 'admin_oyente_list' %}" class="nav-item {% block nav_oyentes %}{% endblock %}">Usuarios</a>
-          <a href="#" class="nav-item {% block nav_personas %}{% endblock %}">Personas</a>
+          <a href="{% url 'admin_oyente_list' %}" class="nav-item {% block nav_oyentes %}{% endblock %}">Oyentes</a>
+          <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas_users %}{% endblock %}">Artistas</a>
+          <a href="{% url 'admin_persona_list' %}" class="nav-item {% block nav_personas %}{% endblock %}">Personas</a>
           <a href="{% url 'admin_admin_list' %}" class="nav-item {% block nav_admins %}{% endblock %}">Administradores</a>
         </div>
       </div>
