@@ -27,3 +27,9 @@
 [2026-05-24 00:07:32,205] INFO    ecualizer.auth: LOGIN persona=thelumineers@gmail.com tipo=artista
 [2026-05-24 00:13:37,162] INFO    ecualizer.auth: LOGIN form válido
 [2026-05-24 00:13:37,197] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-24 00:33:32,010] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-24 00:35:30,125] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-24 00:35:30,130] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-24 00:42:18,370] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-24 00:42:18,379] INFO    ecualizer.auth: LOGIN persona=duki@ecualizer.com tipo=artista
+[2026-05-24 00:43:33,250] INFO    ecualizer.auth: ADMIN LOGIN form válido
