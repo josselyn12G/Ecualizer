@@ -28,4 +28,5 @@ urlpatterns = [
     path('', home, name='home'),
     path('usuarios/', include('usuarios.urls')),
     path('catalogo/', include('catalogo.urls')),
+    path('biblioteca/', include('biblioteca.urls')),
 ]

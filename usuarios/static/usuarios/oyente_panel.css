@@ -45,6 +45,20 @@ body {
 }
 
 a { text-decoration: none; color: inherit; }
+
+/* Sidebar: nunca subrayar (ni siquiera cuando Bootstrap u otros CSS de
+   las páginas internas intentan agregar text-decoration al :hover/:active) */
+.sidebar a,
+.sidebar a:hover,
+.sidebar a:focus,
+.sidebar a:active,
+.sb-item,
+.sb-item:hover,
+.sb-item:focus,
+.sb-item:active,
+.sb-item.active,
+.sidebar-logout,
+.sidebar-logout:hover { text-decoration: none !important; }
 button { font-family: inherit; cursor: pointer; }
 
 /* ── Fondo borroso (FondoDashboard.png) ──────────── */
@@ -74,6 +88,12 @@ button { font-family: inherit; cursor: pointer; }
   min-height: 100vh;
   position: relative;
   z-index: 2;
+}
+
+/* Spacing entre sidebar y panel principal · gutters laterales */
+:root {
+  --panel-gutter: 32px;
+  --panel-gutter-right: 36px;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -169,7 +189,6 @@ button { font-family: inherit; cursor: pointer; }
 }
 .sidebar-nav::-webkit-scrollbar { display: none; }
 .sb-bottom {
-  padding: 0.25rem 0.65rem 0.5rem;
   border-top: 1px solid rgba(255,255,255,0.05);
   flex-shrink: 0;
   display: flex; flex-direction: column; gap: 3px;
@@ -208,11 +227,13 @@ button { font-family: inherit; cursor: pointer; }
               color 0.18s ease, box-shadow 0.18s ease;
 }
 .sb-item .material-icons {
-  font-size: 1.15rem; flex-shrink: 0;
-  width: 24px; text-align: center;
-  opacity: 0.58;
-  transition: opacity 0.18s, color 0.18s;
+  font-size: 1.5rem; flex-shrink: 0;
+  width: 28px; text-align: center;
+  opacity: 0.72;
+  transition: opacity 0.18s, color 0.18s, font-size 0.18s;
 }
+.sb-item:hover .material-icons,
+.sb-item.active .material-icons { opacity: 1; }
 .sb-item__label {
   flex: 1; overflow: hidden;
   opacity: 1; max-width: 160px;
@@ -310,14 +331,31 @@ button { font-family: inherit; cursor: pointer; }
 .sidebar--collapsed .sb-item.active,
 .sidebar--collapsed .sb-item:hover {
   justify-content: center;
-  margin: 0 4px;          /* margen fijo, sin hover-expand */
-  padding: 0.82rem 0;
+  margin: 0 6px;
+  padding: 0.78rem 0;
   gap: 0;
   box-shadow: none;
+  transition: margin 0.18s ease, padding 0.18s ease,
+              background 0.18s ease, transform 0.18s ease;
 }
-.sidebar--collapsed .sb-item .material-icons { width: auto; }
-.sidebar--collapsed .sb-item.active { background: rgba(249,115,22,0.15); }
-.sidebar--collapsed .sb-item:hover  { background: rgba(255,255,255,0.09); margin: 0 4px; }
+.sidebar--collapsed .sb-item .material-icons {
+  width: auto;
+  font-size: 1.65rem;          /* más grandes y visibles cuando está colapsado */
+  opacity: 0.85;
+}
+.sidebar--collapsed .sb-item.active {
+  background: rgba(249,115,22,0.15);
+  margin: 0 4px;
+}
+/* Hover en colapsado: pastilla más ancha + leve scale para que se vea expandido */
+.sidebar--collapsed .sb-item:hover {
+  background: rgba(249,115,22,0.18);
+  margin: 0 2px;
+  padding: 0.78rem 0.25rem;
+  transform: scale(1.04);
+  box-shadow: inset 0 0 0 1px rgba(249,115,22,0.25);
+}
+.sidebar--collapsed .sb-item:hover .material-icons { color: var(--orange); }
 
 /* Ocultar dot en ítems colapsados */
 .sidebar--collapsed .sb-item__dot { display: none; }
@@ -338,11 +376,13 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   min-width: 0;
-  margin-left: var(--sb-width);
+  /* Gutter izquierdo entre sidebar y panel, gutter derecho contra el borde */
+  margin-left: calc(var(--sb-width) + var(--panel-gutter));
+  padding-right: var(--panel-gutter-right);
   transition: margin-left 0.22s ease;
 }
 .sidebar--collapsed ~ .main-wrapper {
-  margin-left: var(--sb-width-col);
+  margin-left: calc(var(--sb-width-col) + var(--panel-gutter));
 }
 
 /* ══════════════════════════════════════════════════════
@@ -414,7 +454,21 @@ button { font-family: inherit; cursor: pointer; }
 .flash--info    { border-color: rgba(249,115,22,0.28);  color: var(--orange); }
 
 /* ── Main content ────────────────────────────────── */
-.main-content { flex: 1; padding: 0; overflow-x: hidden; }
+.main-content {
+  flex: 1;
+  padding: 1.5rem 0.5rem 2.5rem;
+  overflow-x: hidden;
+}
+
+/* Topbar: se extiende para pegarse al sidebar (negamos el gutter izquierdo del
+   wrapper) y al borde derecho de la pantalla — funciona igual en colapsado.
+   Internamente conserva un padding cómodo. */
+.topbar {
+  margin-left: calc(var(--panel-gutter) * -1);
+  margin-right: calc(var(--panel-gutter-right) * -1);
+  padding: 0 1.5rem;
+}
+.flash-bar { padding: 0.75rem 0.5rem 0; }
 
 /* ══════════════════════════════════════════════════════
    DASHBOARD GRID

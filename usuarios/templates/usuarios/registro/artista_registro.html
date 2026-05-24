@@ -189,11 +189,18 @@
       padding: 1rem;
       margin-bottom: 1.5rem;
       border-radius: 6px;
+      list-style: none;
     }
     .error-list li {
       color: #d32f2f;
       margin-bottom: 0.5rem;
       font-size: 0.9rem;
+    }
+    .field-error {
+      display: block;
+      color: #d32f2f;
+      font-size: 0.78rem;
+      margin-top: 0.3rem;
     }
   </style>
 </head>
@@ -259,16 +266,29 @@
         <div class="form-group">
           <label class="form-label">Cédula de Identidad *</label>
           {{ persona_form.cedula_usuario }}
+          {% for e in persona_form.cedula_usuario.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
         </div>
         <div class="form-group">
           <label class="form-label">Correo Electrónico *</label>
           {{ persona_form.correo }}
+          {% for e in persona_form.correo.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
         </div>
-        <div class="form-group">
-          <label class="form-label">Contraseña *</label>
-          {{ persona_form.contrasena }}
+
+        <div class="row">
+          <div class="col"><div class="form-group">
+            <label class="form-label">Contraseña *</label>
+            {{ persona_form.contrasena }}
+            {% for e in persona_form.contrasena.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+          <div class="col"><div class="form-group">
+            <label class="form-label">Confirmar *</label>
+            {{ persona_form.confirmar_contrasena }}
+            {% for e in persona_form.confirmar_contrasena.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
         </div>
-        
+
+        {# Errores adicionales (primer_nombre/apellido, etc.) se muestran como popup gracias a messages.error #}
+
         <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar</button>
       </div>
 
@@ -282,12 +302,14 @@
         <div class="form-group">
           <label class="form-label">Nombre Artístico *</label>
           {{ artista_form.nombre_artistico }}
+          {% for e in artista_form.nombre_artistico.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
           <small class="small-text">Nombre de su marca personal</small>
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Biografía Artística</label>
           {{ artista_form.biografia }}
+          {% for e in artista_form.biografia.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
           <small class="small-text">Descripción breve de su trayectoria</small>
         </div>
 
@@ -303,6 +325,8 @@
 <section class="side-left">
   <img src="{% static 'img/FondoEcualizer.png' %}" alt="Imagen Registro">
 </section>
+
+{% include "usuarios/_popups.html" %}
 
 <script>
   function nextStep() {

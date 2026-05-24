@@ -372,6 +372,15 @@ GO
 ALTER ROLE db_owner ADD MEMBER user_AdminDB;
 GO
 
+
+GRANT EXECUTE 
+ON SCHEMA::Catalogo TO RolAdministrador;
+GO
+
+GRANT EXECUTE 
+ON SCHEMA::Analitica TO RolAdministrador;
+GO
+
 -- ====================================================
 --       Verificación de Usuarios, Roles y Permisos
 -- ====================================================

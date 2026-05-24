@@ -136,3 +136,55 @@ STATICFILES_DIRS = [
 # El login_Administrador no tiene permiso CREATE TABLE en SQL Server.
 # Límite ~4KB por sesión (suficiente para usuario_id, tipo, nombre).
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+
+# ──────────────────────────────────────────────────────────
+# LOGGING — debug de registro/auth
+# Salida en consola + archivo `ecualizer.log` en la raíz del proyecto.
+# ──────────────────────────────────────────────────────────
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'detallado': {
+            'format': '[{asctime}] {levelname:7s} {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'detallado',
+            'level': 'DEBUG',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'ecualizer.log',
+            'formatter': 'detallado',
+            'level': 'DEBUG',
+            'encoding': 'utf-8',
+        },
+    },
+    'loggers': {
+        'ecualizer.registro': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'ecualizer.auth': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'ecualizer.biblioteca': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}

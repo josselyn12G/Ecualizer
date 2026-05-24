@@ -66,6 +66,20 @@ body {
 a { text-decoration: none; color: inherit; }
 button { font-family: inherit; cursor: pointer; }
 
+/* Override Bootstrap link underline en el sidebar y elementos del panel */
+.sidebar a,
+.sidebar a:hover,
+.sidebar a:focus,
+.sb-item,
+.sb-item:hover,
+.sb-item:focus,
+.sidebar-logout,
+.sidebar-logout:hover,
+.section-link,
+.section-link:hover,
+.album-card,
+.album-card * { text-decoration: none !important; }
+
 /* ══════════════════════════════════════════════════════
    LAYOUT
 ══════════════════════════════════════════════════════ */
@@ -291,12 +305,14 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   min-width: 0;
-  margin-left: var(--sb-width);
+  /* Gutter izquierdo entre sidebar y panel · gutter derecho contra el borde */
+  margin-left: calc(var(--sb-width) + 18px);
+  padding-right: 24px;
   transition: margin-left 0.22s ease;
   position: relative;
 }
 .sidebar--collapsed ~ .main-wrapper {
-  margin-left: var(--sb-width-col);
+  margin-left: calc(var(--sb-width-col) + 18px);
 }
 
 /* ══════════════════════════════════════════════════════

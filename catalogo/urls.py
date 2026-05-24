@@ -26,6 +26,10 @@ from .views.usuario.album_views import (
 )
 from .views.usuario.cancion_views import (
     UsuarioCancionListView, UsuarioCancionDetailView, UsuarioCancionFilterView,
+    UsuarioCancionPreviewView,
+)
+from .views.usuario.artista_views import (
+    UsuarioArtistaListView, UsuarioArtistaDetailView,
 )
 from .views.administrador.album_views import (
     AdminAlbumListView, AdminAlbumUpdateView,
@@ -107,6 +111,19 @@ urlpatterns = [
     path('canciones/genero/<int:genero_id>/',
          UsuarioCancionFilterView.as_view(),
          name='usuario_cancion_filter'),
+    path('canciones/<int:pk>/preview/',
+         UsuarioCancionPreviewView.as_view(),
+         name='usuario_cancion_preview'),
+
+    # ═════════════════════════════════════════════════════
+    # USUARIO (oyente) · Artistas
+    # ═════════════════════════════════════════════════════
+    path('artistas/',
+         UsuarioArtistaListView.as_view(),
+         name='usuario_artista_list'),
+    path('artistas/<int:pk>/',
+         UsuarioArtistaDetailView.as_view(),
+         name='usuario_artista_detail'),
 
     # ═════════════════════════════════════════════════════
     # ADMIN · Album

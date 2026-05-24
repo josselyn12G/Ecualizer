@@ -40,26 +40,37 @@ class ArtistaCancionListView(RequiereArtista, View):
         album_id = request.GET.get('album') or None
         estado = request.GET.get('estado') or None
 
-        # SP: SP_ListarCanciones
-        canciones = sp_listar_canciones(
-            artista_id=artista_id,
-            album_id=album_id,
-            estado=estado,
-            busqueda=busqueda,
-        )
+        # SP: SP_ListarCanciones (defensivo: si el SP no existe aún o
+        # devuelve error, no rompemos la pantalla)
+        try:
+            canciones = sp_listar_canciones(
+                artista_id=artista_id,
+                album_id=album_id,
+                estado=estado,
+                busqueda=busqueda,
+            )
+        except DatabaseError as e:
+            messages.error(request, f'No se pudo cargar el listado de canciones: {e}')
+            canciones = []
 
         # SP existente: sp_ReporteReproduccionesPorCancion (KPI)
-        reproducciones = sp_reporte_reproducciones_por_cancion(
-            id_artista=artista_id,
-            id_album=album_id,
-            periodo='mes',
-        )
+        try:
+            reproducciones = sp_reporte_reproducciones_por_cancion(
+                id_artista=artista_id,
+                id_album=album_id,
+                periodo='mes',
+            )
+        except DatabaseError:
+            reproducciones = []
 
         # Álbumes del artista para el filtro
-        albumes_del_artista = Album.objects.filter(
-            artista_id=artista_id,
-            estado_album='activo',
-        )
+        try:
+            albumes_del_artista = list(Album.objects.filter(
+                artista_id=artista_id,
+                estado_album='activo',
+            ))
+        except DatabaseError:
+            albumes_del_artista = []
 
         return render(request, self.template_name, {
             'canciones': canciones,

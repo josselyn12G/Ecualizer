@@ -106,6 +106,23 @@
     
     .form-step { display: none; }
     .form-step.active { display: block; }
+
+    /* Errores inline */
+    .field-error {
+      display: block;
+      color: #d32f2f;
+      font-size: 0.78rem;
+      margin-top: 0.3rem;
+    }
+    .error-list {
+      background: #fee;
+      border-left: 4px solid #ff4500;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      list-style: none;
+    }
+    .error-list li { color: #d32f2f; font-size: 0.85rem; margin: 0.15rem 0; }
   </style>
 </head>
 <body>
@@ -124,37 +141,98 @@
       <img src="{% static 'img/LogoNaranja.png' %}" alt="Logo">
     </div>
 
+    {% if persona_form.non_field_errors or usuario_form.non_field_errors %}
+    <ul class="error-list">
+      {% for e in persona_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+      {% for e in usuario_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
     <form method="post" id="regForm">
       {% csrf_token %}
 
       <div class="form-step active" id="step-1">
         <h2 class="auth-title">Crea tu cuenta</h2>
         <p class="auth-subtitle">Datos personales</p>
-        
+
         <div class="row">
-          <div class="col"><div class="form-group"><label class="form-label">Nombre</label>{{ persona_form.primer_nombre }}</div></div>
-          <div class="col"><div class="form-group"><label class="form-label">Apellido</label>{{ persona_form.primer_apellido }}</div></div>
+          <div class="col"><div class="form-group">
+            <label class="form-label">Nombre *</label>{{ persona_form.primer_nombre }}
+            {% for e in persona_form.primer_nombre.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+          <div class="col"><div class="form-group">
+            <label class="form-label">2do Nombre</label>{{ persona_form.segundo_nombre }}
+            {% for e in persona_form.segundo_nombre.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
         </div>
-        
-        <div class="form-group"><label class="form-label">Correo</label>{{ persona_form.correo }}</div>
-        <div class="form-group"><label class="form-label">Contraseña</label>{{ persona_form.contrasena }}</div>
-        
+
+        <div class="row">
+          <div class="col"><div class="form-group">
+            <label class="form-label">Apellido *</label>{{ persona_form.primer_apellido }}
+            {% for e in persona_form.primer_apellido.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+          <div class="col"><div class="form-group">
+            <label class="form-label">2do Apellido</label>{{ persona_form.segundo_apellido }}
+            {% for e in persona_form.segundo_apellido.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Cédula *</label>{{ persona_form.cedula_usuario }}
+          {% for e in persona_form.cedula_usuario.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo *</label>{{ persona_form.correo }}
+          {% for e in persona_form.correo.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
+        <div class="row">
+          <div class="col"><div class="form-group">
+            <label class="form-label">Contraseña *</label>{{ persona_form.contrasena }}
+            {% for e in persona_form.contrasena.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+          <div class="col"><div class="form-group">
+            <label class="form-label">Confirmar *</label>{{ persona_form.confirmar_contrasena }}
+            {% for e in persona_form.confirmar_contrasena.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div></div>
+        </div>
+
         <button type="button" class="btn btn-primary" onclick="nextStep()">Continuar</button>
       </div>
 
       <div class="form-step" id="step-2">
         <h2 class="auth-title">Perfil de oyente</h2>
         <p class="auth-subtitle">Finaliza tu registro</p>
-        
-        <div class="form-group"><label class="form-label">Alias</label>{{ usuario_form.alias }}</div>
-        <div class="form-group"><label class="form-label">País</label>{{ usuario_form.pais_usuario }}</div>
-        
+
+        <div class="form-group">
+          <label class="form-label">Alias *</label>{{ usuario_form.alias }}
+          {% for e in usuario_form.alias.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">País *</label>{{ usuario_form.pais_usuario }}
+          {% for e in usuario_form.pais_usuario.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Fecha de nacimiento *</label>{{ usuario_form.fecha_nacimiento }}
+          {% for e in usuario_form.fecha_nacimiento.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Género *</label>{{ usuario_form.genero }}
+          {% for e in usuario_form.genero.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+
         <button type="submit" class="btn btn-primary">Crear cuenta</button>
         <button type="button" class="btn btn-secondary" onclick="prevStep()">Volver</button>
       </div>
     </form>
   </div>
 </section>
+
+{% include "usuarios/_popups.html" %}
 
 <script>
   function nextStep() {

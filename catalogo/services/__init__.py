@@ -44,6 +44,15 @@ from .tipo_album_service import (
     sp_editar_tipo_album,
     sp_eliminar_tipo_album,
 )
+from .deezer_service import (
+    deezer_get_artist_image,
+    deezer_get_album_image,
+    deezer_get_track_image,
+    deezer_get_track_preview,
+    deezer_enrich_canciones,
+    deezer_enrich_albumes,
+)
+from .lyrics_service import obtener_letra
 
 __all__ = [
     # SPs nuevos · Album / Cancion
@@ -62,4 +71,10 @@ __all__ = [
     # TipoAlbum CRUD
     'sp_listar_tipos_album', 'sp_crear_tipo_album',
     'sp_editar_tipo_album', 'sp_eliminar_tipo_album',
+    # Deezer (imágenes + preview MP3, sin auth)
+    'deezer_get_artist_image', 'deezer_get_album_image', 'deezer_get_track_image',
+    'deezer_get_track_preview',
+    'deezer_enrich_canciones', 'deezer_enrich_albumes',
+    # Letras (api.lyrics.ovh)
+    'obtener_letra',
 ]

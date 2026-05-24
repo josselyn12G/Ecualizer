@@ -37,12 +37,17 @@ class ArtistaAlbumListView(RequiereArtista, View):
         busqueda = request.GET.get('q') or None
         estado = request.GET.get('estado') or None
 
-        # SP: SP_ListarAlbumes
-        albumes = sp_listar_albumes(
-            artista_id=artista_id,
-            estado=estado,
-            busqueda=busqueda,
-        )
+        # SP: SP_ListarAlbumes (defensivo: si falla el SP no rompemos
+        # la pantalla, mostramos lista vacía con mensaje)
+        try:
+            albumes = sp_listar_albumes(
+                artista_id=artista_id,
+                estado=estado,
+                busqueda=busqueda,
+            )
+        except DatabaseError as e:
+            messages.error(request, f'No se pudo cargar el listado de álbumes: {e}')
+            albumes = []
 
         return render(request, self.template_name, {
             'albumes': albumes,

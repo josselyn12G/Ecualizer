@@ -1,0 +1,29 @@
+[2026-05-24 00:01:01,400] DEBUG   ecualizer.registro: GET RegistroArtistaView
+[2026-05-24 00:01:36,205] DEBUG   ecualizer.registro: GET RegistroArtistaView
+[2026-05-24 00:01:40,446] DEBUG   ecualizer.registro: GET RegistroOyenteView
+[2026-05-24 00:02:31,183] DEBUG   ecualizer.registro: GET RegistroOyenteView
+[2026-05-24 00:03:18,075] INFO    ecualizer.registro: POST RegistroOyenteView · keys=['csrfmiddlewaretoken', 'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 'cedula_usuario', 'correo', 'contrasena', 'confirmar_contrasena', 'alias', 'pais_usuario', 'fecha_nacimiento', 'genero']
+[2026-05-24 00:03:18,468] INFO    ecualizer.registro: Validación · persona=False usuario=True
+[2026-05-24 00:03:18,468] WARNING ecualizer.registro: OYENTE persona · errores en RegistroPersonaForm: {"cedula_usuario": [{"message": "Ya existe una cuenta registrada con esta c\u00e9dula.", "code": ""}]}
+[2026-05-24 00:03:18,468] WARNING ecualizer.registro:   · cedula_usuario → Ya existe una cuenta registrada con esta cédula.
+[2026-05-24 00:03:47,748] INFO    ecualizer.registro: POST RegistroOyenteView · keys=['csrfmiddlewaretoken', 'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 'cedula_usuario', 'correo', 'contrasena', 'confirmar_contrasena', 'alias', 'pais_usuario', 'fecha_nacimiento', 'genero']
+[2026-05-24 00:03:47,759] INFO    ecualizer.registro: Validación · persona=True usuario=True
+[2026-05-24 00:03:47,761] INFO    ecualizer.registro: Guardando Persona...
+[2026-05-24 00:03:48,701] INFO    ecualizer.registro: Persona OK · id=22 correo=jospao@hotmail.com
+[2026-05-24 00:03:48,701] INFO    ecualizer.registro: Guardando Usuario (oyente) asociado...
+[2026-05-24 00:03:48,713] INFO    ecualizer.registro: Usuario OK · alias=dany1210
+[2026-05-24 00:03:48,715] INFO    ecualizer.registro: Registro oyente COMPLETADO id=22
+[2026-05-24 00:04:07,647] DEBUG   ecualizer.registro: GET RegistroArtistaView
+[2026-05-24 00:05:03,195] DEBUG   ecualizer.registro: GET RegistroArtistaView
+[2026-05-24 00:05:52,373] INFO    ecualizer.registro: POST RegistroArtistaView · keys=['csrfmiddlewaretoken', 'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 'cedula_usuario', 'correo', 'contrasena', 'confirmar_contrasena', 'nombre_artistico', 'biografia']
+[2026-05-24 00:05:52,693] INFO    ecualizer.registro: Validación · persona=True artista=True
+[2026-05-24 00:05:52,694] INFO    ecualizer.registro: Guardando Persona (artista)...
+[2026-05-24 00:05:53,617] INFO    ecualizer.registro: Persona OK · id=23 correo=thelumineers@gmail.com
+[2026-05-24 00:05:53,617] INFO    ecualizer.registro: Guardando Artista asociado...
+[2026-05-24 00:05:53,627] INFO    ecualizer.registro: Artista OK · nombre=The Lumineers
+[2026-05-24 00:05:53,629] INFO    ecualizer.registro: Registro artista COMPLETADO id=23
+[2026-05-24 00:07:00,400] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-24 00:07:32,198] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-24 00:07:32,205] INFO    ecualizer.auth: LOGIN persona=thelumineers@gmail.com tipo=artista
+[2026-05-24 00:13:37,162] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-24 00:13:37,197] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente

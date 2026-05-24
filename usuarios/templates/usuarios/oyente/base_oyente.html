@@ -82,7 +82,8 @@
         <span class="sb-item__label">Canciones</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_artistas %}{% endblock %}">
+      <a href="{% url 'catalogo:usuario_artista_list' %}"
+         class="sb-item {% block nav_artistas %}{% endblock %}">
         <span class="material-icons">mic</span>
         <span class="sb-item__label">Artistas</span>
       </a>
@@ -90,6 +91,27 @@
       <a href="#" class="sb-item {% block nav_playlists %}{% endblock %}">
         <span class="material-icons">queue_music</span>
         <span class="sb-item__label">Playlists</span>
+      </a>
+
+      <!-- ── Biblioteca · social ───────────────── -->
+      <div class="sb-divider"></div>
+
+      <a href="{% url 'biblioteca:mis_canciones_liked' %}"
+         class="sb-item {% block nav_mis_likes %}{% endblock %}">
+        <span class="material-icons">favorite</span>
+        <span class="sb-item__label">Canciones que me gustan</span>
+      </a>
+
+      <a href="{% url 'biblioteca:mis_artistas' %}"
+         class="sb-item {% block nav_mis_artistas %}{% endblock %}">
+        <span class="material-icons">favorite_border</span>
+        <span class="sb-item__label">Mis Artistas</span>
+      </a>
+
+      <a href="{% url 'biblioteca:mis_albumes' %}"
+         class="sb-item {% block nav_mis_albumes %}{% endblock %}">
+        <span class="material-icons">bookmark</span>
+        <span class="sb-item__label">Mis Álbumes</span>
       </a>
 
       <div class="sb-divider"></div>

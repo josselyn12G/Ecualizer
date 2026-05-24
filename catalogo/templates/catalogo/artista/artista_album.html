@@ -7,55 +7,99 @@
 {% block nav_catalogo %}active{% endblock %}
 
 {% block extra_css %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-  .panel-card.bootstrap-card { padding: 1.5rem; }
-  .bootstrap-card .form-control,
-  .bootstrap-card .form-select,
-  .bootstrap-card .form-label { color: #fff; }
-  .bootstrap-card .form-control,
-  .bootstrap-card .form-select {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.10);
+  /* ── Form glass (alineado al estilo del dashboard naranja) ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
   }
-  .bootstrap-card .form-control::placeholder { color: rgba(255,255,255,0.4); }
-  .bootstrap-card .form-control:focus,
-  .bootstrap-card .form-select:focus {
-    background: rgba(255,255,255,0.08);
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
-    color: #fff;
-  }
-  .table-dark-glass {
-    background: transparent !important;
-    color: var(--text-2);
-  }
-  .table-dark-glass thead th {
-    background: rgba(255,255,255,0.04);
+  @media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .field-label {
+    display: block;
+    font-size: 0.72rem; font-weight: 600;
     color: var(--text-muted);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-color: var(--glass-border);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 0.35rem;
   }
-  .table-dark-glass tbody td {
-    border-color: rgba(255,255,255,0.04);
+  .field-input,
+  .field-select,
+  .field-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 10px;
+    color: var(--text);
+    padding: 0.55rem 0.85rem;
+    font-size: 0.86rem; font-family: inherit;
+    transition: var(--tr); outline: none;
+  }
+  .field-input::placeholder { color: rgba(255,255,255,0.4); }
+  .field-input:focus,
+  .field-select:focus,
+  .field-textarea:focus {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(249,115,22,0.45);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  }
+  .field-textarea { min-height: 90px; resize: vertical; }
+
+  /* ── Album mini-cover sobre la grilla del artista ── */
+  .my-albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1rem;
+  }
+  .my-album-card .album-actions {
+    display: flex; gap: 0.4rem;
+    margin-top: 0.55rem;
+  }
+  .my-album-card .album-actions form { display: inline-flex; }
+  .my-album-card .badge {
+    margin-top: 0.45rem;
+    align-self: flex-start;
+  }
+
+  .btn-pill-icon {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.75rem; font-weight: 600;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
     color: var(--text-2);
-    vertical-align: middle;
+    transition: var(--tr);
+    cursor: pointer;
   }
-  .table-dark-glass tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .btn-pill-icon:hover {
+    background: var(--glass-bg-h); color: var(--text);
+  }
+  .btn-pill-icon .material-icons { font-size: 0.9rem; }
+  .btn-pill-icon--danger {
+    background: var(--red-bg);
+    color: var(--red);
+    border-color: rgba(239,68,68,0.30);
+  }
+  .btn-pill-icon--danger:hover {
+    background: rgba(239,68,68,0.18); color: var(--red);
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- ════════════════════ LIST ════════════════════ -->
 {% if modo == 'list' %}
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- Header de sección -->
+  <div class="section-header">
     <div>
-      <h3 class="mb-0" style="font-weight:800; letter-spacing:-0.02em;">Mis Álbumes</h3>
-      <small style="color: var(--text-muted);">Gestiona tu discografía</small>
+      <h3 class="section-title" style="font-size:1.35rem;">
+        <span class="material-icons">library_music</span>
+        Mis Álbumes
+      </h3>
+      <small style="color: var(--text-muted);">Gestiona tu discografía — {{ albumes|length }} álbum{{ albumes|length|pluralize:"es" }}</small>
     </div>
     <a href="{% url 'catalogo:artista_album_create' %}" class="btn-new">
       <span class="material-icons">add</span>
@@ -63,99 +107,99 @@
     </a>
   </div>
 
-  <!-- Filtros -->
-  <form method="get" class="panel-card bootstrap-card mb-3">
-    <div class="row g-2">
-      <div class="col-md-6">
-        <label class="form-label">Buscar por título</label>
-        <input type="text" name="q" class="form-control"
+  <!-- Filtros (glass) -->
+  <form method="get" class="panel-card" style="padding:1rem 1.25rem;">
+    <div class="form-grid">
+      <div>
+        <label class="field-label">Buscar por título</label>
+        <input type="text" name="q" class="field-input"
                value="{{ busqueda }}" placeholder="Ej. Midnight Echoes">
       </div>
-      <div class="col-md-4">
-        <label class="form-label">Estado</label>
-        <select name="estado" class="form-select">
+      <div>
+        <label class="field-label">Estado</label>
+        <select name="estado" class="field-select">
           <option value="">Todos</option>
           {% for val, lbl in estados %}
             <option value="{{ val }}" {% if val == estado_actual %}selected{% endif %}>{{ lbl }}</option>
           {% endfor %}
         </select>
       </div>
-      <div class="col-md-2 d-flex align-items-end">
-        <button type="submit" class="btn btn-light w-100" style="background: var(--accent); border-color: var(--accent); color:#fff; font-weight:600;">
+      <div>
+        <button type="submit" class="btn-new" style="height:38px;">
+          <span class="material-icons">filter_alt</span>
           Filtrar
         </button>
       </div>
     </div>
   </form>
 
-  <!-- Tabla -->
-  <div class="panel-card" style="overflow-x:auto;">
-    <table class="table table-dark-glass align-middle mb-0">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Título</th>
-          <th>Tipo</th>
-          <th>Lanzamiento</th>
-          <th>Estado</th>
-          <th class="text-end">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in albumes %}
-        <tr>
-          <td><span class="badge" style="background: var(--accent-bg); color: var(--accent);">#{{ a.idAlbum }}</span></td>
-          <td><strong>{{ a.tituloAlbum }}</strong></td>
-          <td>{{ a.nombreTipo|default:"—" }}</td>
-          <td>{{ a.fechaLanzamientoAlbum|date:"d/m/Y" }}</td>
-          <td>
-            <span class="badge badge--{{ a.estadoAlbum }}">{{ a.estadoAlbum|capfirst }}</span>
-          </td>
-          <td class="text-end">
-            <a href="{% url 'catalogo:artista_album_update' a.idAlbum %}"
-               class="btn btn-sm btn-ghost">
-              <span class="material-icons" style="font-size:0.95rem;">edit</span> Editar
-            </a>
-            <form method="post" action="{% url 'catalogo:artista_album_deactivate' a.idAlbum %}"
-                  class="d-inline" onsubmit="return confirm('¿Desactivar este álbum?');">
-              {% csrf_token %}
-              <button class="btn btn-sm" style="background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,0.3); border-radius:50px;">
-                <span class="material-icons" style="font-size:0.95rem;">delete</span> Desactivar
-              </button>
-            </form>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6" class="text-center py-4" style="color: var(--text-muted);">
-          No tienes álbumes registrados.
-        </td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <!-- Grilla de álbumes (estilo dashboard) -->
+  {% if albumes %}
+  <div class="my-albums-grid">
+    {% for a in albumes %}
+    <div class="album-card my-album-card">
+      <div class="album-card__cover album-card__cover--v{% cycle '1' '2' '3' '4' '5' %}">
+        <span class="material-icons">album</span>
+      </div>
+      <div class="album-card__body">
+        <div class="album-card__title">{{ a.tituloAlbum }}</div>
+        <div class="album-card__meta">
+          <span>{{ a.fechaLanzamientoAlbum|date:"Y" }}</span>
+          <span class="dot"></span>
+          <span>{{ a.nombreTipo|default:"—" }}</span>
+        </div>
+        <span class="badge badge--{{ a.estadoAlbum }}">{{ a.estadoAlbum|capfirst }}</span>
 
-<!-- ════════════════════ CREATE / UPDATE ════════════════════ -->
+        <div class="album-actions">
+          <a href="{% url 'catalogo:artista_album_update' a.idAlbum %}" class="btn-pill-icon">
+            <span class="material-icons">edit</span> Editar
+          </a>
+          <form method="post" action="{% url 'catalogo:artista_album_deactivate' a.idAlbum %}"
+                onsubmit="return confirm('¿Desactivar este álbum?');">
+            {% csrf_token %}
+            <button type="submit" class="btn-pill-icon btn-pill-icon--danger">
+              <span class="material-icons">delete</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel-card">
+    <div class="empty-state">
+      <span class="material-icons">library_music</span>
+      <p>Aún no tienes álbumes registrados.<br>Crea tu primer álbum para comenzar tu discografía.</p>
+      <a href="{% url 'catalogo:artista_album_create' %}" class="btn-new">
+        <span class="material-icons">add</span> Crear álbum
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
 {% elif modo == 'create' or modo == 'update' %}
 
-  <div class="panel-card bootstrap-card" style="max-width: 720px;">
-    <h3 class="mb-1" style="font-weight:800;">
+  <!-- Form glass -->
+  <div class="panel-card" style="padding:1.5rem 1.75rem; max-width:720px;">
+    <h3 style="font-weight:800; letter-spacing:-0.02em; margin-bottom:0.25rem;">
       {% if modo == 'create' %}Nuevo Álbum{% else %}Editar Álbum{% endif %}
     </h3>
-    <small style="color: var(--text-muted);" class="d-block mb-4">
+    <small style="color: var(--text-muted); display:block; margin-bottom:1.25rem;">
       {% if modo == 'create' %}Llena los datos para crear tu nuevo álbum.{% else %}Actualiza la información del álbum.{% endif %}
     </small>
 
     <form method="post">
       {% csrf_token %}
       {% for field in form %}
-        <div class="mb-3">
-          <label class="form-label">{{ field.label }}</label>
+        <div style="margin-bottom:1rem;">
+          <label class="field-label">{{ field.label }}</label>
           {{ field }}
-          {% if field.help_text %}<div class="form-text" style="color:var(--text-light);">{{ field.help_text }}</div>{% endif %}
-          {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+          {% if field.help_text %}<div style="color:var(--text-light); font-size:0.72rem; margin-top:0.25rem;">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div style="color:var(--red); font-size:0.78rem; margin-top:0.25rem;">{{ error }}</div>{% endfor %}
         </div>
       {% endfor %}
-      <div class="d-flex gap-2 mt-4">
+      <div style="display:flex; gap:0.6rem; margin-top:1.5rem;">
         <button type="submit" class="btn-new">
           <span class="material-icons">save</span>
           {% if modo == 'create' %}Crear{% else %}Guardar{% endif %}
@@ -164,6 +208,14 @@
       </div>
     </form>
   </div>
+
+  <script>
+    // Aplica estilo glass a los inputs auto-renderizados por Django
+    document.querySelectorAll('form input, form select, form textarea').forEach(function(el){
+      if (el.type === 'submit' || el.type === 'button' || el.type === 'hidden') return;
+      el.classList.add(el.tagName === 'SELECT' ? 'field-select' : (el.tagName === 'TEXTAREA' ? 'field-textarea' : 'field-input'));
+    });
+  </script>
 
 {% endif %}
 

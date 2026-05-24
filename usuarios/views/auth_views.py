@@ -1,11 +1,17 @@
+import logging
+
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib import messages
 
 # Formularios de autenticación
 from ..forms import LoginForm, AdminLoginForm
 
 # Modelos de usuario
 from ..models import Persona, Usuario, Artista, Administrador
+
+
+logger = logging.getLogger('ecualizer.auth')
 
 
 # ----------------------------------------------------
@@ -112,32 +118,32 @@ class LoginView(View):
         # Validar formulario
         if form.is_valid():
 
-            print("FORMULARIO VALIDO")
+            logger.info('LOGIN form válido')
 
-            # Obtener persona autenticada
             persona = form.get_persona()
-
-            print("PERSONA:", persona)
-
-            # Detectar tipo de usuario
             tipo = _detectar_tipo(persona)
 
-            print("TIPO DETECTADO:", tipo)
+            logger.info('LOGIN persona=%s tipo=%s', persona.correo, tipo)
 
-            # Guardar sesión
             request.session['usuario_id'] = persona.id_usuario
             request.session['usuario_nombre'] = persona.primer_nombre
             request.session['tipo_usuario'] = tipo
 
-            print("SESION GUARDADA")
-
-            # Redireccionar dashboard
+            messages.success(
+                request,
+                f'¡Hola {persona.primer_nombre}! Sesión iniciada.'
+            )
             return _redirect_por_tipo(tipo)
 
-        # Si formulario inválido
-        print("FORM INVALIDO")
-        print(form.errors)
-        print(form.non_field_errors())
+        # Form inválido → loguear + propagar como popups
+        logger.warning('LOGIN inválido · errors=%s', form.errors.as_json())
+        for err in form.non_field_errors():
+            messages.error(request, str(err))
+        for campo, errs in form.errors.items():
+            if campo == '__all__':
+                continue
+            for err in errs:
+                messages.error(request, f'{campo}: {err}')
 
         return render(
             request,
@@ -213,24 +219,22 @@ class AdminLoginView(View):
         form = AdminLoginForm(data=request.POST)
 
         if form.is_valid():
-
-            print("ADMIN FORM VALIDO")
-
+            logger.info('ADMIN LOGIN form válido')
             persona = form.get_persona()
-
-            print("ADMIN:", persona)
-
-            # Crear sesión admin
             request.session['usuario_id'] = persona.id_usuario
             request.session['usuario_nombre'] = persona.primer_nombre
             request.session['tipo_usuario'] = 'administrador'
-
-            print("ADMIN LOGIN OK")
-
+            messages.success(request, 'Sesión de administrador iniciada.')
             return redirect('admin_dashboard')
 
-        print("ADMIN FORM INVALIDO")
-        print(form.errors)
+        logger.warning('ADMIN LOGIN inválido · errors=%s', form.errors.as_json())
+        for err in form.non_field_errors():
+            messages.error(request, str(err))
+        for campo, errs in form.errors.items():
+            if campo == '__all__':
+                continue
+            for err in errs:
+                messages.error(request, f'{campo}: {err}')
 
         return render(
             request,
