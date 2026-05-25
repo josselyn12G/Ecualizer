@@ -1,0 +1,88 @@
+{% extends "usuarios/oyente/base_oyente.html" %}
+
+{% block title %}Mis Suscripciones — Ecualizer{% endblock %}
+{% block topbar_title %}Mis Suscripciones{% endblock %}
+{% block breadcrumb %}Perfil / Suscripciones{% endblock %}
+{% block nav_suscripcion %}active{% endblock %}
+
+{% block content %}
+<style>
+  .subs-hero {
+    border-radius: 18px;
+    padding: 1.5rem 1.75rem;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 60%, #7c2d12 100%);
+    color: #fff;
+    margin-bottom: 1.25rem;
+  }
+  .subs-hero__title { font-size: 2rem; font-weight: 800; }
+  .subs-hero__sub   { font-size: 0.85rem; color: rgba(255,255,255,0.85); margin-top: 0.3rem; }
+  .subs-table {
+    background: rgba(0,0,0,0.40);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 14px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+  }
+  .subs-table table { width: 100%; border-collapse: collapse; }
+  .subs-table thead th {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    text-align: left;
+  }
+  .subs-table tbody td {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.86rem;
+    color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .subs-table tbody tr:last-child td { border-bottom: none; }
+  .subs-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+  .badge-activa    { background: rgba(34,197,94,0.15); color: #22c55e; padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+  .badge-inactiva  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+  .badge-cancelada { background: rgba(239,68,68,0.15); color: #ef4444; padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+</style>
+
+<div class="subs-hero">
+  <div class="subs-hero__title">Mis Suscripciones</div>
+  <div class="subs-hero__sub">{{ total }} registro{{ total|pluralize:"s" }} encontrado{{ total|pluralize:"s" }}</div>
+</div>
+
+{% if historial %}
+<div class="subs-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Plan</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Estado suscripción</th>
+        <th>Monto</th>
+        <th>Estado pago</th>
+        <th>Fecha pago</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in historial %}
+      <tr>
+        <td><strong>{{ s.PlanContratado }}</strong></td>
+        <td>{{ s.Inicio }}</td>
+        <td>{{ s.Fin }}</td>
+        <td><span class="badge-{{ s.EstadoSuscripcion }}">{{ s.EstadoSuscripcion|capfirst }}</span></td>
+        <td>${{ s.Monto }}</td>
+        <td>{{ s.EstadoPago }}</td>
+        <td>{{ s.FechaPago }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div style="text-align:center; padding:3rem 1rem; color:rgba(255,255,255,0.4);">
+  <span class="material-icons" style="font-size:3rem; display:block; margin-bottom:0.6rem;">card_membership</span>
+  <p>No tienes suscripciones registradas.</p>
+</div>
+{% endif %}
+{% endblock %}

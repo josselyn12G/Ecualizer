@@ -420,3 +420,8 @@ JOIN sys.schemas              sch ON pe.major_id             = sch.schema_id
 WHERE pe.class = 3
 ORDER BY pr.name, sch.name;
 GO
+
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Administrador;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Artista;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Sistema;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Reportes;

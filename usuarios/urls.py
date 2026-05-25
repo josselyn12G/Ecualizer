@@ -1,5 +1,12 @@
 from django.urls import path
 from . import views
+from pagos.artista_views import ArtistaMonetizacionView
+from pagos.admin_views import (
+    AdminPlanesListView,
+    AdminSuscripcionesListView,
+    AdminPagosListView,
+    AdminIngresosView,
+)
 
 urlpatterns = [
     path('', views.index_usuarios, name='index_usuarios'),
@@ -43,4 +50,15 @@ urlpatterns = [
     # Personas (vista global, supertipo de Oyente/Artista/Admin)
     path('admin/personas/',                         views.AdminPersonaListView.as_view(),   name='admin_persona_list'),
     path('admin/personas/<int:pk>/',                views.AdminPersonaDetailView.as_view(), name='admin_persona_detail'),
+    
+    # Comercial — Planes, Suscripciones, Pagos 
+    path('admin/comercial/planes/',        AdminPlanesListView.as_view(),        name='admin_planes_list'),
+    path('admin/comercial/suscripciones/', AdminSuscripcionesListView.as_view(), name='admin_suscripciones_list'),
+    path('admin/comercial/pagos/',         AdminPagosListView.as_view(),         name='admin_pagos_list'),
+
+    # Analítica — Ingresos 
+    path('admin/analitica/ingresos/',      AdminIngresosView.as_view(),          name='admin_ingresos'),
+    # Monetización Artista 
+    path('perfil/artista/monetizacion/',   ArtistaMonetizacionView.as_view(),    name='artista_monetizacion'),
+    
 ]
