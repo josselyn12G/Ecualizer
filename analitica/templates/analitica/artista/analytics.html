@@ -1,0 +1,306 @@
+{% extends "analitica/artista/_base_analitica_artista.html" %}
+{% load static %}
+
+{% block title %}Analytics — Ecualizer{% endblock %}
+{% block topbar_title %}Analytics{% endblock %}
+{% block breadcrumb %}Artista / Analytics{% endblock %}
+{% block nav_analytics %}active{% endblock %}
+
+{% block content %}
+
+{# ── Filtros ── #}
+<form method="get" class="an-filter">
+  <div class="an-filter__grid">
+    <div>
+      <label>Periodo (canciones / geo)</label>
+      {{ form.periodo }}
+    </div>
+    <div>
+      <label>Periodo (Top 10)</label>
+      {{ form.periodo_top }}
+    </div>
+    <div>
+      <label>Álbum</label>
+      <select name="album">
+        <option value="">— Todos los álbumes —</option>
+        {% for a in albumes %}
+        <option value="{{ a.id_album }}"
+          {% if filtros_aplicados.album == a.id_album %}selected{% endif %}>
+          {{ a.titulo_album }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Mes (oyentes)</label>
+      {{ form.mes }}
+    </div>
+    <div>
+      <label>Año (oyentes)</label>
+      {{ form.anio }}
+    </div>
+    <div>
+      <label>Regalías · desde</label>
+      {{ form.desde }}
+    </div>
+    <div>
+      <label>Regalías · hasta</label>
+      {{ form.hasta }}
+    </div>
+    <div>
+      <label>USD por reproducción</label>
+      {{ form.valor_por_reproduccion }}
+    </div>
+    <div>
+      <button type="submit" class="btn-an">
+        <span class="material-icons">filter_alt</span>
+        Aplicar filtros
+      </button>
+    </div>
+  </div>
+</form>
+
+{# ── KPIs (calculados en base a los filtros aplicados) ── #}
+<div class="an-grid an-grid--kpis" style="margin-bottom:1rem;">
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">people</span></div>
+    <div class="kpi-card__label">Oyentes únicos</div>
+    <div class="kpi-card__value">{{ kpis.oyentes_mes|default:0 }}</div>
+    <div class="kpi-card__sub">{{ kpis.periodo_label|default:"—" }}</div>
+    {% if kpis.crecimiento_pct is not None %}
+    <span class="kpi-card__trend {% if kpis.crecimiento_pct >= 0 %}trend-up{% else %}trend-down{% endif %}">
+      <span class="material-icons">{% if kpis.crecimiento_pct >= 0 %}trending_up{% else %}trending_down{% endif %}</span>
+      {% if kpis.crecimiento_pct >= 0 %}+{% endif %}{{ kpis.crecimiento_pct }}%
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">play_circle</span></div>
+    <div class="kpi-card__label">Reproducciones (filtro)</div>
+    <div class="kpi-card__value">{{ kpis.reproducciones_total|default:0 }}</div>
+    <div class="kpi-card__sub">Periodo: {{ filtros_aplicados.periodo }}</div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">history</span></div>
+    <div class="kpi-card__label">Mes anterior</div>
+    <div class="kpi-card__value">{{ kpis.oyentes_anterior|default:0 }}</div>
+    <div class="kpi-card__sub">Oyentes únicos · comparativo</div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">payments</span></div>
+    <div class="kpi-card__label">Regalías (rango)</div>
+    <div class="kpi-card__value">${{ kpis.regalias_total|default:0|floatformat:2 }}</div>
+    <div class="kpi-card__sub">
+      {{ filtros_aplicados.desde|date:"d/m/Y" }} → {{ filtros_aplicados.hasta|date:"d/m/Y" }}
+    </div>
+  </div>
+
+</div>
+
+{# ── Charts ── #}
+<div class="an-grid an-grid--equal-2" style="margin-bottom:1rem;">
+
+  <div class="chart-card">
+    <div class="chart-card__head">
+      <div class="chart-card__title">
+        <span class="material-icons">leaderboard</span>
+        Top 10 canciones · {{ filtros_aplicados.periodo_top }}
+      </div>
+      <span class="chart-card__hint">sp_Top10CancionesArtista</span>
+    </div>
+    <div class="chart-card__body chart-card__body--lg">
+      <canvas id="chartTop10"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card__head">
+      <div class="chart-card__title">
+        <span class="material-icons">public</span>
+        Distribución geográfica · {{ filtros_aplicados.periodo }}
+      </div>
+      <span class="chart-card__hint">sp_DistribucionGeograficaArtista</span>
+    </div>
+    <div class="chart-card__body chart-card__body--lg">
+      <canvas id="chartGeo"></canvas>
+    </div>
+  </div>
+
+</div>
+
+{# ── Reproducciones por canción ── #}
+<div class="chart-card" style="margin-bottom:1rem;">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">queue_music</span>
+      Reproducciones por canción
+    </div>
+    <span class="chart-card__hint">
+      sp_ReporteReproduccionesPorCancion · periodo={{ filtros_aplicados.periodo }}
+      {% if filtros_aplicados.album %}· álbum filtrado{% endif %}
+    </span>
+  </div>
+  <table class="an-table">
+    <thead>
+      <tr>
+        <th>Canción</th>
+        <th>Álbum</th>
+        <th class="num">Reproducciones</th>
+        <th class="num">Oyentes únicos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in repros_cancion %}
+      <tr>
+        <td>{{ r.Cancion }}</td>
+        <td>{{ r.Album }}</td>
+        <td class="num">{{ r.TotalReproducciones }}</td>
+        <td class="num accent">{{ r.OyentesUnicos }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="an-empty"><span class="material-icons">music_off</span>Sin datos para el filtro.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ── Distribución geográfica (tabla) ── #}
+<div class="chart-card" style="margin-bottom:1rem;">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">map</span>
+      Distribución geográfica (detalle)
+    </div>
+  </div>
+  <table class="an-table">
+    <thead>
+      <tr>
+        <th>País</th>
+        <th class="num">Reproducciones</th>
+        <th class="num">Porcentaje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in geografia %}
+      <tr>
+        <td>{{ r.Pais|default:"—" }}</td>
+        <td class="num">{{ r.TotalReproducciones }}</td>
+        <td class="num accent">{{ r.Porcentaje }}%</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="an-empty"><span class="material-icons">map</span>Sin datos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ── Regalías ── #}
+<div class="chart-card">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">payments</span>
+      Regalías por canción y país
+    </div>
+    <span class="chart-card__hint">
+      sp_ReporteRegaliasArtista · {{ filtros_aplicados.desde|date:"d/m/Y" }} → {{ filtros_aplicados.hasta|date:"d/m/Y" }}
+      · tarifa ${{ filtros_aplicados.valor|floatformat:4 }}
+    </span>
+  </div>
+  <table class="an-table">
+    <thead>
+      <tr>
+        <th>Canción</th>
+        <th>País</th>
+        <th class="num">Reproducciones</th>
+        <th class="num">Bruto</th>
+        <th class="num">Deducción discográfica</th>
+        <th class="num">Neto artista</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in regalias %}
+      <tr>
+        <td>{{ r.Cancion }}</td>
+        <td>{{ r.Pais|default:"—" }}</td>
+        <td class="num">{{ r.TotalReproducciones }}</td>
+        <td class="num">${{ r.MontoBruto|floatformat:2 }}</td>
+        <td class="num">${{ r.DeduccionDiscografica|floatformat:2 }}</td>
+        <td class="num accent">${{ r.MontoNetoArtista|floatformat:2 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="an-empty"><span class="material-icons">attach_money</span>Sin regalías en el rango.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block analitica_js %}
+<script>
+(function () {
+  // ── Top 10 ──
+  const top10Data = [
+    {% for r in top10 %}
+    { label: {{ r.Cancion|stringformat:"r" }},
+      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  if (top10Data.length) {
+    new Chart(document.getElementById('chartTop10'), {
+      type: 'bar',
+      data: {
+        labels: top10Data.map(d => d.label),
+        datasets: [{
+          label: 'Reproducciones',
+          data: top10Data.map(d => d.value),
+          backgroundColor: AN_PALETTE,
+          borderRadius: 6,
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { precision: 0 } },
+          y: { ticks: { autoSkip: false } },
+        },
+      },
+    });
+  }
+
+  // ── Distribución geográfica ──
+  const geoData = [
+    {% for r in geografia %}
+    { label: {{ r.Pais|default:"Desconocido"|stringformat:"r" }},
+      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  if (geoData.length) {
+    new Chart(document.getElementById('chartGeo'), {
+      type: 'doughnut',
+      data: {
+        labels: geoData.map(d => d.label),
+        datasets: [{
+          data: geoData.map(d => d.value),
+          backgroundColor: AN_PALETTE,
+          borderColor: 'rgba(0,0,0,0.2)',
+          borderWidth: 2,
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: { legend: { position: 'right' } },
+      },
+    });
+  }
+})();
+</script>
+{% endblock %}
