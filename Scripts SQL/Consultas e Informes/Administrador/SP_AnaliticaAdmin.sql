@@ -1120,6 +1120,17 @@ GO
 --  sido cerradas. Usado por el botón "Ejecutar todos".
 -- =====================================================================
 -- =====================================================================
+--  GRANTs faltantes para el SP existente de regalías del artista
+--  (en el script original no se aplicaron — esto causa "permission denied").
+-- =====================================================================
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolSistema;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolArtista;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolAdministrador;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolReportes;
+GO
+
+
+-- =====================================================================
 --  HISTORIAL DE REGALÍAS DE UN ARTISTA · DESDE Analitica.Regalia
 -- ---------------------------------------------------------------------
 --  Lee los registros YA cerrados por `SP_CerrarFacturacionMensual`,

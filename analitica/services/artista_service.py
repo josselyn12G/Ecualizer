@@ -75,10 +75,31 @@ def regalias_artista(id_artista: int,
                       fecha_inicio: str,
                       fecha_fin: str,
                       valor_por_reproduccion: float = 0.004) -> list[dict]:
-    """Reporte de regalías del artista en el rango (por canción y país)."""
+    """Reporte de regalías PRE-cierre (calculado en vivo desde Reproduccion)."""
     return _exec_rows(
         "EXEC Pagos.sp_ReporteRegaliasArtista "
         "@idArtista=%s, @fechaInicio=%s, @fechaFin=%s, "
         "@valorPorReproduccion=%s;",
         [id_artista, fecha_inicio, fecha_fin, valor_por_reproduccion],
+    )
+
+
+def historial_regalias_artista(id_artista: int,
+                                desde: str | None = None,
+                                hasta: str | None = None) -> list[dict]:
+    """Histórico de regalías YA cerradas (desde Analitica.Regalia)."""
+    return _exec_rows(
+        "EXEC Pagos.sp_HistorialRegaliasArtista "
+        "@idArtista=%s, @desde=%s, @hasta=%s;",
+        [id_artista, desde, hasta],
+    )
+
+
+def resumen_mensual_regalias_artista(id_artista: int,
+                                       meses: int = 12) -> list[dict]:
+    """Resumen mes-a-mes para gráfico de evolución."""
+    return _exec_rows(
+        "EXEC Pagos.sp_ResumenMensualRegaliasArtista "
+        "@idArtista=%s, @meses=%s;",
+        [id_artista, meses],
     )

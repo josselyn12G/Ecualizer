@@ -3,9 +3,11 @@
 from .dashboard_views import (
     DashboardArtistaView,
     AnalyticsArtistaView,
+    MonetizacionArtistaView,
 )
 
 __all__ = [
     'DashboardArtistaView',
     'AnalyticsArtistaView',
+    'MonetizacionArtistaView',
 ]

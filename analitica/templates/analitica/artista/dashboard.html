@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{# ── 1. KPIs principales ── #}
+{# ── 1. KPIs ── #}
 <div class="an-grid an-grid--kpis" style="margin-bottom:1rem;">
 
   <div class="kpi-card">
@@ -39,45 +39,87 @@
   </div>
 
   <div class="kpi-card">
-    <div class="kpi-card__icon"><span class="material-icons">payments</span></div>
-    <div class="kpi-card__label">Regalías del mes</div>
-    <div class="kpi-card__value">${{ kpis.regalias_mes|default:0|floatformat:2 }}</div>
-    <div class="kpi-card__sub">Neto del artista (USD)</div>
+    <div class="kpi-card__icon"><span class="material-icons">library_music</span></div>
+    <div class="kpi-card__label">Canciones con datos</div>
+    <div class="kpi-card__value">{{ repros_cancion|length }}</div>
+    <div class="kpi-card__sub">En tu catálogo este mes</div>
   </div>
 
 </div>
 
-{# ── 2. Charts: Top 10 + Distribución geográfica ── #}
-<div class="an-grid an-grid--equal-2" style="margin-bottom:1rem;">
-
-  <div class="chart-card">
-    <div class="chart-card__head">
-      <div class="chart-card__title">
-        <span class="material-icons">leaderboard</span> Top 10 canciones (mes)
-      </div>
-      <span class="chart-card__hint">sp_Top10CancionesArtista</span>
-    </div>
-    <div class="chart-card__body chart-card__body--lg">
-      <canvas id="chartTop10"></canvas>
-    </div>
-  </div>
-
-  <div class="chart-card">
-    <div class="chart-card__head">
-      <div class="chart-card__title">
-        <span class="material-icons">public</span> Distribución geográfica (mes)
-      </div>
-      <span class="chart-card__hint">sp_DistribucionGeograficaArtista</span>
-    </div>
-    <div class="chart-card__body chart-card__body--lg">
-      <canvas id="chartGeo"></canvas>
-    </div>
-  </div>
-
-</div>
-
-{# ── 3. Tabla: reproducciones por canción + oyentes únicos ── #}
+{# ── 2. Top 10 (chart + tabla) ── #}
 <div class="chart-card" style="margin-bottom:1rem;">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">leaderboard</span> Top 10 canciones (mes)
+    </div>
+    <span class="chart-card__hint">sp_Top10CancionesArtista</span>
+  </div>
+  <div class="an-grid an-grid--equal-2">
+    <div class="chart-card__body chart-card__body--lg" style="min-height:320px;">
+      {% if top10 %}
+        <canvas id="chartTop10"></canvas>
+      {% else %}
+        <div class="an-empty"><span class="material-icons">music_off</span>Sin reproducciones en el mes.</div>
+      {% endif %}
+    </div>
+    <div style="overflow:auto; max-height:360px;">
+      <table class="an-table">
+        <thead><tr><th>#</th><th>Canción</th><th>Álbum</th><th class="num">Reprods</th></tr></thead>
+        <tbody>
+          {% for r in top10 %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ r.Cancion }}</td>
+            <td>{{ r.Album }}</td>
+            <td class="num accent">{{ r.TotalReproducciones }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="an-empty">Sin datos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{# ── 3. Distribución geográfica (chart + tabla) ── #}
+<div class="chart-card" style="margin-bottom:1rem;">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">public</span> Distribución geográfica (mes)
+    </div>
+    <span class="chart-card__hint">sp_DistribucionGeograficaArtista</span>
+  </div>
+  <div class="an-grid an-grid--equal-2">
+    <div class="chart-card__body chart-card__body--lg" style="min-height:320px;">
+      {% if geografia %}
+        <canvas id="chartGeo"></canvas>
+      {% else %}
+        <div class="an-empty"><span class="material-icons">map</span>Sin reproducciones geo-localizadas.</div>
+      {% endif %}
+    </div>
+    <div style="overflow:auto; max-height:360px;">
+      <table class="an-table">
+        <thead><tr><th>País</th><th class="num">Reprods</th><th class="num">%</th></tr></thead>
+        <tbody>
+          {% for r in geografia %}
+          <tr>
+            <td>{{ r.Pais|default:"—" }}</td>
+            <td class="num">{{ r.TotalReproducciones }}</td>
+            <td class="num accent">{{ r.Porcentaje }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="an-empty">Sin datos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{# ── 4. Tabla: reproducciones por canción + oyentes únicos ── #}
+<div class="chart-card">
   <div class="chart-card__head">
     <div class="chart-card__title">
       <span class="material-icons">queue_music</span>
@@ -109,66 +151,33 @@
   </table>
 </div>
 
-{# ── 4. Tabla: regalías del mes ── #}
-<div class="chart-card">
-  <div class="chart-card__head">
-    <div class="chart-card__title">
-      <span class="material-icons">payments</span>
-      Regalías del mes (detalle por canción y país)
-    </div>
-    <span class="chart-card__hint">sp_ReporteRegaliasArtista</span>
-  </div>
-  <table class="an-table">
-    <thead>
-      <tr>
-        <th>Canción</th>
-        <th>País</th>
-        <th class="num">Reproducciones</th>
-        <th class="num">Bruto</th>
-        <th class="num">Deducción discográfica</th>
-        <th class="num">Neto artista</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in regalias %}
-      <tr>
-        <td>{{ r.Cancion }}</td>
-        <td>{{ r.Pais|default:"—" }}</td>
-        <td class="num">{{ r.TotalReproducciones }}</td>
-        <td class="num">${{ r.MontoBruto|floatformat:2 }}</td>
-        <td class="num">${{ r.DeduccionDiscografica|floatformat:2 }}</td>
-        <td class="num accent">${{ r.MontoNetoArtista|floatformat:2 }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="6" class="an-empty"><span class="material-icons">attach_money</span>Sin regalías en el mes.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
 {% endblock %}
 
 {% block analitica_js %}
+{{ top10|json_script:"data-top10" }}
+{{ geografia|json_script:"data-geo" }}
 <script>
 (function () {
-  // ── Top 10 canciones (bar horizontal) ──
-  const top10Data = [
-    {% for r in top10 %}
-    { label: {{ r.Cancion|stringformat:"r" }},
-      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ];
-  if (top10Data.length) {
-    new Chart(document.getElementById('chartTop10'), {
+  function safeJSON(id) {
+    const el = document.getElementById(id);
+    if (!el) return [];
+    try { return JSON.parse(el.textContent); } catch (e) { return []; }
+  }
+
+  const top10 = safeJSON('data-top10');
+  const geo   = safeJSON('data-geo');
+
+  const canvasT = document.getElementById('chartTop10');
+  if (canvasT && top10.length) {
+    new Chart(canvasT, {
       type: 'bar',
       data: {
-        labels: top10Data.map(d => d.label),
+        labels:   top10.map(d => d.Cancion || ''),
         datasets: [{
           label: 'Reproducciones',
-          data: top10Data.map(d => d.value),
+          data: top10.map(d => d.TotalReproducciones || 0),
           backgroundColor: AN_PALETTE,
-          borderRadius: 6,
-          borderSkipped: false,
+          borderRadius: 6, borderSkipped: false,
         }],
       },
       options: {
@@ -183,23 +192,16 @@
     });
   }
 
-  // ── Distribución geográfica (doughnut) ──
-  const geoData = [
-    {% for r in geografia %}
-    { label: {{ r.Pais|default:"Desconocido"|stringformat:"r" }},
-      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ];
-  if (geoData.length) {
-    new Chart(document.getElementById('chartGeo'), {
+  const canvasG = document.getElementById('chartGeo');
+  if (canvasG && geo.length) {
+    new Chart(canvasG, {
       type: 'doughnut',
       data: {
-        labels: geoData.map(d => d.label),
+        labels:   geo.map(d => d.Pais || 'Desconocido'),
         datasets: [{
-          data: geoData.map(d => d.value),
+          data: geo.map(d => d.TotalReproducciones || 0),
           backgroundColor: AN_PALETTE,
-          borderColor: 'rgba(0,0,0,0.2)',
-          borderWidth: 2,
+          borderColor: 'rgba(0,0,0,0.2)', borderWidth: 2,
         }],
       },
       options: {

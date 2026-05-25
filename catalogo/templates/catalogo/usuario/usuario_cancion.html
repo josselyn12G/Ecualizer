@@ -536,6 +536,11 @@
       cursor: pointer;
     }
     .play-fab:hover { transform: scale(1.05); }
+    .play-fab.playing {
+      background: #ea580c;
+      box-shadow: inset 0 4px 12px rgba(0,0,0,0.35), 0 4px 12px rgba(249,115,22,0.35);
+      transform: scale(0.98);
+    }
     .play-fab .material-icons { font-size: 1.7rem; }
     .icon-btn {
       width: 38px; height: 38px;
@@ -719,11 +724,26 @@ function reproducir(id, btn) {
   })
   .then(r => r.json())
   .then(data => {
-    btn.disabled = false;
     if (data.ok) {
-      btn.innerHTML = '<span class="material-icons">check</span> Reproducido';
-      setTimeout(() => location.reload(), 800);
-    } else { alert('Error: ' + (data.error || 'desconocido')); }
+      btn.innerHTML = '<span class="material-icons">pause</span>';
+      btn.classList.add('playing');
+      const audio = document.getElementById('ezAudio');
+      if (audio) {
+        const checkPlaying = () => {
+          if (audio.paused || audio.ended) {
+            btn.innerHTML = '<span class="material-icons">play_arrow</span>';
+            btn.classList.remove('playing');
+            btn.disabled = false;
+          } else {
+            requestAnimationFrame(checkPlaying);
+          }
+        };
+        checkPlaying();
+      }
+    } else { 
+      alert('Error: ' + (data.error || 'desconocido'));
+      btn.disabled = false;
+    }
   })
   .catch(() => { btn.disabled = false; });
 }

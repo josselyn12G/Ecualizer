@@ -6,3 +6,5 @@ from .admin import (  # noqa: F401
     ContratoListView, ContratoCreateView,
     ContratoUpdateView, ContratoDeleteView,
 )
+
+from .artista import ContratosArtistaView  # noqa: F401

@@ -481,3 +481,100 @@ GO
 -- Pruebas
 EXEC Pagos.sp_ReporteRegaliasArtista @idArtista = 2, @fechaInicio = '2026-01-01', @fechaFin = '2026-04-30';
 GO
+
+
+USE Ecualizer;
+GO
+
+-- ── 1. GRANT faltante para el SP de regalías existente ──
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolSistema;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolArtista;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolAdministrador;
+GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO RolReportes;
+GO
+
+
+-- ── 2. Histórico de regalías cerradas (lee de Analitica.Regalia) ──
+CREATE OR ALTER PROCEDURE Pagos.sp_HistorialRegaliasArtista
+    @idArtista INT,
+    @desde DATE = NULL,
+    @hasta DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM Usuario.Artista WHERE idUsuario = @idArtista)
+    BEGIN
+        RAISERROR('Error: El artista no existe.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        Reg.idRegalia,
+        DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo, 1)        AS FechaInicioPeriodo,
+        EOMONTH(DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo,1)) AS FechaFinPeriodo,
+        Reg.mesPeriodo                                           AS Mes,
+        Reg.anioPeriodo                                          AS Anio,
+        C.nombreCancion                                          AS Cancion,
+        Alb.tituloAlbum                                          AS Album,
+        Reg.paisReproduccion                                     AS Pais,
+        Reg.cantidadReproducciones                               AS Reproducciones,
+        CAST(Reg.montoTotalGenerado AS DECIMAL(18,2))            AS MontoBruto,
+        CAST(Reg.montoDiscografica  AS DECIMAL(18,2))            AS MontoDiscografica,
+        CAST(Reg.montoArtista       AS DECIMAL(18,2))            AS MontoNetoArtista
+    FROM Analitica.Regalia Reg
+    INNER JOIN Catalogo.Cancion C    ON C.idCancion = Reg.Cancion_idCancion
+    INNER JOIN Catalogo.Album   Alb  ON Alb.idAlbum = C.Album_idAlbum
+    WHERE Alb.Artista_idUsuario = @idArtista
+      AND (@desde IS NULL OR EOMONTH(DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo, 1)) >= @desde)
+      AND (@hasta IS NULL OR DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo, 1)        <= @hasta)
+    ORDER BY Reg.anioPeriodo DESC, Reg.mesPeriodo DESC, MontoNetoArtista DESC;
+END
+GO
+GRANT EXECUTE ON Pagos.sp_HistorialRegaliasArtista TO RolArtista;
+GRANT EXECUTE ON Pagos.sp_HistorialRegaliasArtista TO RolAdministrador;
+GRANT EXECUTE ON Pagos.sp_HistorialRegaliasArtista TO RolReportes;
+GO
+
+
+-- ── 3. Resumen mensual para gráfico de evolución ──
+CREATE OR ALTER PROCEDURE Pagos.sp_ResumenMensualRegaliasArtista
+    @idArtista INT,
+    @meses INT = 12
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM Usuario.Artista WHERE idUsuario = @idArtista)
+    BEGIN
+        RAISERROR('Error: El artista no existe.', 16, 1);
+        RETURN;
+    END
+
+    DECLARE @fechaMin DATE = DATEADD(MONTH, -@meses, CAST(GETDATE() AS DATE));
+
+    SELECT
+        Reg.anioPeriodo                                  AS Anio,
+        Reg.mesPeriodo                                   AS Mes,
+        FORMAT(DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo, 1), 'MMM yyyy', 'es-ES') AS Etiqueta,
+        SUM(Reg.cantidadReproducciones)                  AS Reproducciones,
+        CAST(SUM(Reg.montoTotalGenerado) AS DECIMAL(18,2)) AS MontoBruto,
+        CAST(SUM(Reg.montoDiscografica)  AS DECIMAL(18,2)) AS MontoDiscografica,
+        CAST(SUM(Reg.montoArtista)       AS DECIMAL(18,2)) AS MontoNetoArtista
+    FROM Analitica.Regalia Reg
+    INNER JOIN Catalogo.Cancion C    ON C.idCancion = Reg.Cancion_idCancion
+    INNER JOIN Catalogo.Album   Alb  ON Alb.idAlbum = C.Album_idAlbum
+    WHERE Alb.Artista_idUsuario = @idArtista
+      AND DATEFROMPARTS(Reg.anioPeriodo, Reg.mesPeriodo, 1) >= @fechaMin
+    GROUP BY Reg.anioPeriodo, Reg.mesPeriodo
+    ORDER BY Anio, Mes;
+END
+GO
+GRANT EXECUTE ON Pagos.sp_ResumenMensualRegaliasArtista TO RolArtista;
+GRANT EXECUTE ON Pagos.sp_ResumenMensualRegaliasArtista TO RolAdministrador;
+GRANT EXECUTE ON Pagos.sp_ResumenMensualRegaliasArtista TO RolReportes;
+GO
+
+
+PRINT '>>> Listo. Recarga la página de Monetización del artista.';
+GO

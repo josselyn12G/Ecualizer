@@ -59,19 +59,21 @@
       <a href="{% url 'artista_analytics' %}"
          class="sb-item {% block nav_analytics %}{% endblock %}">
         <span class="material-icons">bar_chart</span>
-        <span class="sb-item__label">Analytics</span>
+        <span class="sb-item__label">Analítica</span>
       </a>
 
       <div class="sb-divider"></div>
 
-      <a href="{% url 'artista_monetizacion' %}" class="sb-item {% block nav_monetizacion %}{% endblock %}">
+      <a href="{% url 'artista_monetizacion' %}"
+         class="sb-item {% block nav_monetizacion %}{% endblock %}">
         <span class="material-icons">payments</span>
         <span class="sb-item__label">Monetización</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_comunidad %}{% endblock %}">
-        <span class="material-icons">group</span>
-        <span class="sb-item__label">Comunidad</span>
+      <a href="{% url 'artista_contratos' %}"
+         class="sb-item {% block nav_contratos %}{% endblock %}">
+        <span class="material-icons">description</span>
+        <span class="sb-item__label">Contratos</span>
       </a>
 
       <div class="sb-divider"></div>
