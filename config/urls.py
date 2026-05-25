@@ -1,32 +1,31 @@
-"""
-URL configuration for ecualizer_config project.
+"""URL configuration for ecualizer_config project."""
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render
 
 
 def home(request):
+    """Página inicial pública."""
     return render(request, 'home.html')
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # ── Páginas públicas ───────────────────────────────────
     path('', home, name='home'),
-    path('usuarios/', include('usuarios.urls')),
-    path('catalogo/', include('catalogo.urls')),
+
+    # ── Apps de Ecualizer ──────────────────────────────────
+    path('usuarios/',   include('usuarios.urls')),
+    path('catalogo/',   include('catalogo.urls')),
     path('biblioteca/', include('biblioteca.urls')),
+
+    # IMPORTANTE: estos paths van ANTES de `admin/` porque Django resuelve
+    # los patterns en orden y `path('admin/', admin.site.urls)` matchea
+    # cualquier URL que empiece con `admin/` (incluyendo admin/analitica/…).
+    # Si los pusiéramos después nunca llegarían a resolverse.
+    path('admin/analitica/', include('analitica.urls')),
+    path('admin/industria/', include('industria.urls')),
+
+    # ── Django admin built-in (último para no interceptar las anteriores) ─
+    path('admin/', admin.site.urls),
 ]

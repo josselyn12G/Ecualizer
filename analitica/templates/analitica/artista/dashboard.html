@@ -1,0 +1,214 @@
+{% extends "analitica/artista/_base_analitica_artista.html" %}
+{% load static %}
+
+{% block title %}Dashboard — Ecualizer{% endblock %}
+{% block topbar_title %}Mi Dashboard{% endblock %}
+{% block breadcrumb %}Artista / Dashboard{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+
+{# ── 1. KPIs principales ── #}
+<div class="an-grid an-grid--kpis" style="margin-bottom:1rem;">
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">people</span></div>
+    <div class="kpi-card__label">Oyentes únicos</div>
+    <div class="kpi-card__value">{{ kpis.oyentes_mes|default:0 }}</div>
+    <div class="kpi-card__sub">{{ kpis.periodo_label|default:"Mes actual" }}</div>
+    {% if kpis.crecimiento_pct is not None %}
+    <span class="kpi-card__trend {% if kpis.crecimiento_pct >= 0 %}trend-up{% else %}trend-down{% endif %}">
+      <span class="material-icons">{% if kpis.crecimiento_pct >= 0 %}trending_up{% else %}trending_down{% endif %}</span>
+      {% if kpis.crecimiento_pct >= 0 %}+{% endif %}{{ kpis.crecimiento_pct }}%
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">play_circle</span></div>
+    <div class="kpi-card__label">Reproducciones del mes</div>
+    <div class="kpi-card__value">{{ kpis.reproducciones_mes|default:0 }}</div>
+    <div class="kpi-card__sub">Suma del catálogo del mes</div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">history</span></div>
+    <div class="kpi-card__label">Mes anterior</div>
+    <div class="kpi-card__value">{{ kpis.oyentes_anterior|default:0 }}</div>
+    <div class="kpi-card__sub">Oyentes únicos · comparativo</div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon"><span class="material-icons">payments</span></div>
+    <div class="kpi-card__label">Regalías del mes</div>
+    <div class="kpi-card__value">${{ kpis.regalias_mes|default:0|floatformat:2 }}</div>
+    <div class="kpi-card__sub">Neto del artista (USD)</div>
+  </div>
+
+</div>
+
+{# ── 2. Charts: Top 10 + Distribución geográfica ── #}
+<div class="an-grid an-grid--equal-2" style="margin-bottom:1rem;">
+
+  <div class="chart-card">
+    <div class="chart-card__head">
+      <div class="chart-card__title">
+        <span class="material-icons">leaderboard</span> Top 10 canciones (mes)
+      </div>
+      <span class="chart-card__hint">sp_Top10CancionesArtista</span>
+    </div>
+    <div class="chart-card__body chart-card__body--lg">
+      <canvas id="chartTop10"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card__head">
+      <div class="chart-card__title">
+        <span class="material-icons">public</span> Distribución geográfica (mes)
+      </div>
+      <span class="chart-card__hint">sp_DistribucionGeograficaArtista</span>
+    </div>
+    <div class="chart-card__body chart-card__body--lg">
+      <canvas id="chartGeo"></canvas>
+    </div>
+  </div>
+
+</div>
+
+{# ── 3. Tabla: reproducciones por canción + oyentes únicos ── #}
+<div class="chart-card" style="margin-bottom:1rem;">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">queue_music</span>
+      Reproducciones por canción (mes)
+    </div>
+    <span class="chart-card__hint">sp_ReporteReproduccionesPorCancion</span>
+  </div>
+  <table class="an-table">
+    <thead>
+      <tr>
+        <th>Canción</th>
+        <th>Álbum</th>
+        <th class="num">Reproducciones</th>
+        <th class="num">Oyentes únicos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in repros_cancion %}
+      <tr>
+        <td>{{ r.Cancion }}</td>
+        <td>{{ r.Album }}</td>
+        <td class="num">{{ r.TotalReproducciones }}</td>
+        <td class="num accent">{{ r.OyentesUnicos }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="an-empty"><span class="material-icons">music_off</span>Sin reproducciones en el mes.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ── 4. Tabla: regalías del mes ── #}
+<div class="chart-card">
+  <div class="chart-card__head">
+    <div class="chart-card__title">
+      <span class="material-icons">payments</span>
+      Regalías del mes (detalle por canción y país)
+    </div>
+    <span class="chart-card__hint">sp_ReporteRegaliasArtista</span>
+  </div>
+  <table class="an-table">
+    <thead>
+      <tr>
+        <th>Canción</th>
+        <th>País</th>
+        <th class="num">Reproducciones</th>
+        <th class="num">Bruto</th>
+        <th class="num">Deducción discográfica</th>
+        <th class="num">Neto artista</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in regalias %}
+      <tr>
+        <td>{{ r.Cancion }}</td>
+        <td>{{ r.Pais|default:"—" }}</td>
+        <td class="num">{{ r.TotalReproducciones }}</td>
+        <td class="num">${{ r.MontoBruto|floatformat:2 }}</td>
+        <td class="num">${{ r.DeduccionDiscografica|floatformat:2 }}</td>
+        <td class="num accent">${{ r.MontoNetoArtista|floatformat:2 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="an-empty"><span class="material-icons">attach_money</span>Sin regalías en el mes.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block analitica_js %}
+<script>
+(function () {
+  // ── Top 10 canciones (bar horizontal) ──
+  const top10Data = [
+    {% for r in top10 %}
+    { label: {{ r.Cancion|stringformat:"r" }},
+      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  if (top10Data.length) {
+    new Chart(document.getElementById('chartTop10'), {
+      type: 'bar',
+      data: {
+        labels: top10Data.map(d => d.label),
+        datasets: [{
+          label: 'Reproducciones',
+          data: top10Data.map(d => d.value),
+          backgroundColor: AN_PALETTE,
+          borderRadius: 6,
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { precision: 0 } },
+          y: { ticks: { autoSkip: false } },
+        },
+      },
+    });
+  }
+
+  // ── Distribución geográfica (doughnut) ──
+  const geoData = [
+    {% for r in geografia %}
+    { label: {{ r.Pais|default:"Desconocido"|stringformat:"r" }},
+      value: {{ r.TotalReproducciones|default:0 }} }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  if (geoData.length) {
+    new Chart(document.getElementById('chartGeo'), {
+      type: 'doughnut',
+      data: {
+        labels: geoData.map(d => d.label),
+        datasets: [{
+          data: geoData.map(d => d.value),
+          backgroundColor: AN_PALETTE,
+          borderColor: 'rgba(0,0,0,0.2)',
+          borderWidth: 2,
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: { legend: { position: 'right' } },
+      },
+    });
+  }
+})();
+</script>
+{% endblock %}

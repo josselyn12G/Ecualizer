@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from analitica.views.artista import AnalyticsArtistaView
 
 urlpatterns = [
     path('', views.index_usuarios, name='index_usuarios'),
@@ -18,6 +19,9 @@ urlpatterns = [
     # ── Dashboards / perfiles ──────────────────────────────
     path('perfil/oyente/',  views.DashboardOyenteView.as_view(),  name='dashboard_oyente'),
     path('perfil/artista/', views.DashboardArtistaView.as_view(), name='dashboard_artista'),
+    path('perfil/artista/analytics/',
+         AnalyticsArtistaView.as_view(),
+         name='artista_analytics'),
 
     # ── Panel de administracion ────────────────────────────
     path('admin/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),

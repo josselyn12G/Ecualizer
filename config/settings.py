@@ -181,6 +181,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'ecualizer.analitica': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         'django.db.backends': {
             'handlers': ['file'],
             'level': 'WARNING',

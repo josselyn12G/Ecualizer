@@ -366,7 +366,7 @@ GO
 -- El usuario de reportes se asigna al rol funcional de Reportes.
 ALTER ROLE RolReportes ADD MEMBER user_Reportes;
 GO
-
+w
 -- El administrador de base de datos tiene control total sobre la base.
 -- Este permiso solo debe otorgarse al administrador técnico de la base de datos.
 ALTER ROLE db_owner ADD MEMBER user_AdminDB;
