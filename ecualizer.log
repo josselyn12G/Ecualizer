@@ -182,3 +182,47 @@
 [2026-05-25 10:24:38,511] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ReporteRegaliasArtista @idArtista=%s, @fechaInicio=%s, @fechaFin=%s, @valorPorReproduccion=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The EXECUTE permission was denied on the object 'sp_ReporteRegaliasArtista', database 'Ecualizer', schema 'Pagos'. (229) (SQLExecDirectW)")
 [2026-05-25 10:24:59,431] INFO    ecualizer.auth: LOGIN form válido
 [2026-05-25 10:24:59,437] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 10:35:37,506] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-25 10:35:46,303] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 10:35:46,312] INFO    ecualizer.auth: LOGIN persona=duki@ecualizer.com tipo=artista
+[2026-05-25 10:35:46,446] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ReporteRegaliasArtista @idArtista=%s, @fechaInicio=%s, @fechaFin=%s, @valorPorReproduccion=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The EXECUTE permission was denied on the object 'sp_ReporteRegaliasArtista', database 'Ecualizer', schema 'Pagos'. (229) (SQLExecDirectW)")
+[2026-05-25 10:36:28,722] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 10:36:28,729] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 14:03:13,392] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:03:13,396] INFO    ecualizer.auth: LOGIN persona=duki@ecualizer.com tipo=artista
+[2026-05-25 14:06:44,690] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ReporteRegaliasArtista @idArtista=%s, @fechaInicio=%s, @fechaFin=%s, @valorPorReproduccion=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The EXECUTE permission was denied on the object 'sp_ReporteRegaliasArtista', database 'Ecualizer', schema 'Pagos'. (229) (SQLExecDirectW)")
+[2026-05-25 14:06:44,723] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_HistorialRegaliasArtista @idArtista=%s, @desde=%s, @hasta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_HistorialRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:06:44,726] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ResumenMensualRegaliasArtista @idArtista=%s, @meses=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_ResumenMensualRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:06:55,151] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ReporteRegaliasArtista @idArtista=%s, @fechaInicio=%s, @fechaFin=%s, @valorPorReproduccion=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The EXECUTE permission was denied on the object 'sp_ReporteRegaliasArtista', database 'Ecualizer', schema 'Pagos'. (229) (SQLExecDirectW)")
+[2026-05-25 14:06:55,152] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_HistorialRegaliasArtista @idArtista=%s, @desde=%s, @hasta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_HistorialRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:06:55,154] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ResumenMensualRegaliasArtista @idArtista=%s, @meses=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_ResumenMensualRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:11:48,029] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_HistorialRegaliasArtista @idArtista=%s, @desde=%s, @hasta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_HistorialRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:11:48,031] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ResumenMensualRegaliasArtista @idArtista=%s, @meses=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_ResumenMensualRegaliasArtista'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:14:25,057] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:14:25,067] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-25 14:15:09,728] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-25 14:15:26,807] ERROR   ecualizer.analitica: Analitica SP error · EXEC Pagos.sp_ReporteIngresosMensuales @anio=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Pagos.sp_ReporteIngresosMensuales'. (2812) (SQLExecDirectW)")
+[2026-05-25 14:15:43,590] INFO    ecualizer.analitica: Cierre facturación 3/2026 OK · filas=1
+[2026-05-25 14:15:56,277] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:15:56,285] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-25 14:16:59,852] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:16:59,860] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 14:18:15,231] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:18:15,241] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-25 14:18:36,665] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-25 14:19:05,774] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:19:05,782] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 14:20:50,183] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"__all__": [{"message": "Credenciales incorrectas.", "code": ""}]}
+[2026-05-25 14:20:56,923] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-25 14:24:00,054] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:24:00,066] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-25 14:25:11,586] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"__all__": [{"message": "Credenciales incorrectas.", "code": ""}]}
+[2026-05-25 14:25:17,743] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"__all__": [{"message": "Credenciales incorrectas.", "code": ""}]}
+[2026-05-25 14:25:24,217] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-25 14:25:49,699] INFO    ecualizer.analitica: Cierre facturación 4/2026 OK · filas=1
+[2026-05-25 14:26:30,324] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:26:30,333] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-25 14:28:23,867] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:28:23,870] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 14:30:17,720] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 14:30:17,731] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista

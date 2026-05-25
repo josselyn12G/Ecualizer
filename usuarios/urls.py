@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
-from analitica.views.artista import AnalyticsArtistaView
+from analitica.views.artista import AnalyticsArtistaView, MonetizacionArtistaView
+from industria.views import ContratosArtistaView
 
 urlpatterns = [
     path('', views.index_usuarios, name='index_usuarios'),
@@ -22,6 +23,12 @@ urlpatterns = [
     path('perfil/artista/analytics/',
          AnalyticsArtistaView.as_view(),
          name='artista_analytics'),
+    path('perfil/artista/monetizacion/',
+         MonetizacionArtistaView.as_view(),
+         name='artista_monetizacion'),
+    path('perfil/artista/contratos/',
+         ContratosArtistaView.as_view(),
+         name='artista_contratos'),
 
     # ── Panel de administracion ────────────────────────────
     path('admin/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),
