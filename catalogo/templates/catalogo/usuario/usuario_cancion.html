@@ -659,23 +659,36 @@
       <button class="icon-btn" title="Más"><span class="material-icons">more_horiz</span></button>
     </div>
 
-    <!-- Letra (deslizable) -->
+    <!-- Letra desde lyrics.ovh (API) -->
     <div class="lyrics-section">
       <h3>
         Letra
-        {% if letra_origen == 'api' %}
-          <span class="lyrics-source">lyrics.ovh</span>
-        {% elif letra_origen == 'db' %}
-          <span class="lyrics-source">Ecualizer</span>
-        {% endif %}
+        <span class="lyrics-source">lyrics.ovh</span>
       </h3>
 
-      {% if letra %}
-        <div class="lyrics-body">{{ letra }}</div>
+      {% if letra_api %}
+        <div class="lyrics-body">{{ letra_api }}</div>
       {% else %}
         <div class="lyrics-empty">
           <span class="material-icons">lyrics</span>
-          Letra no disponible para esta canción.
+          lyrics.ovh no tiene letra para esta canción.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Letra desde la base de datos de Ecualizer -->
+    <div class="lyrics-section" style="margin-top:1rem;">
+      <h3>
+        Letra original del artista
+        <span class="lyrics-source">Ecualizer · BD</span>
+      </h3>
+
+      {% if letra_db %}
+        <div class="lyrics-body">{{ letra_db }}</div>
+      {% else %}
+        <div class="lyrics-empty">
+          <span class="material-icons">edit_note</span>
+          El artista aún no ha subido la letra oficial a Ecualizer.
         </div>
       {% endif %}
     </div>

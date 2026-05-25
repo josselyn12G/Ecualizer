@@ -17,7 +17,7 @@ from django.contrib import messages
 from django.db import DatabaseError
 
 from usuarios.mixins import RequiereArtista
-from ...models import Cancion, Album
+from ...models import Cancion, Album, GeneroMusical
 from ...forms import CancionCreateForm, CancionUpdateForm
 from ...services import (
     sp_crear_cancion,
@@ -93,13 +93,24 @@ class ArtistaCancionCreateView(RequiereArtista, View):
     def get(self, request):
         artista_id = request.session['usuario_id']
         form = CancionCreateForm(artista_id=artista_id)
-        return render(request, self.template_name, {'form': form, 'modo': 'create'})
+        return render(request, self.template_name, {
+            'form': form,
+            'modo': 'create',
+            'all_generos': list(GeneroMusical.objects.all()),
+            'generos_actuales_ids': set(),
+        })
 
     def post(self, request):
         artista_id = request.session['usuario_id']
         form = CancionCreateForm(request.POST, artista_id=artista_id)
+        # IDs que vinieron del front (chips activos) — para repintar si falla
+        seleccionados = set(int(x) for x in request.POST.getlist('generos') if x.isdigit())
         if not form.is_valid():
-            return render(request, self.template_name, {'form': form, 'modo': 'create'})
+            return render(request, self.template_name, {
+                'form': form, 'modo': 'create',
+                'all_generos': list(GeneroMusical.objects.all()),
+                'generos_actuales_ids': seleccionados,
+            })
 
         data = form.cleaned_data
         try:
@@ -117,7 +128,11 @@ class ArtistaCancionCreateView(RequiereArtista, View):
             messages.success(request, 'Canción creada correctamente.')
         except DatabaseError as e:
             messages.error(request, f'Error al crear canción: {e}')
-            return render(request, self.template_name, {'form': form, 'modo': 'create'})
+            return render(request, self.template_name, {
+                'form': form, 'modo': 'create',
+                'all_generos': list(GeneroMusical.objects.all()),
+                'generos_actuales_ids': seleccionados,
+            })
         return redirect('catalogo:artista_cancion_list')
 
 
@@ -138,17 +153,23 @@ class ArtistaCancionUpdateView(RequiereArtista, View):
         artista_id = request.session['usuario_id']
         cancion = self._get_cancion(pk, artista_id)
         form = CancionUpdateForm(instance=cancion, artista_id=artista_id)
+        actuales = set(cancion.generos.values_list('pk', flat=True))
         return render(request, self.template_name, {
             'form': form, 'cancion': cancion, 'modo': 'update',
+            'all_generos': list(GeneroMusical.objects.all()),
+            'generos_actuales_ids': actuales,
         })
 
     def post(self, request, pk):
         artista_id = request.session['usuario_id']
         cancion = self._get_cancion(pk, artista_id)
         form = CancionUpdateForm(request.POST, instance=cancion, artista_id=artista_id)
+        seleccionados = set(int(x) for x in request.POST.getlist('generos') if x.isdigit())
         if not form.is_valid():
             return render(request, self.template_name, {
                 'form': form, 'cancion': cancion, 'modo': 'update',
+                'all_generos': list(GeneroMusical.objects.all()),
+                'generos_actuales_ids': seleccionados,
             })
         data = form.cleaned_data
         try:
@@ -170,6 +191,8 @@ class ArtistaCancionUpdateView(RequiereArtista, View):
             messages.error(request, f'Error al editar: {e}')
             return render(request, self.template_name, {
                 'form': form, 'cancion': cancion, 'modo': 'update',
+                'all_generos': list(GeneroMusical.objects.all()),
+                'generos_actuales_ids': seleccionados,
             })
         return redirect('catalogo:artista_cancion_list')
 

@@ -248,6 +248,67 @@
 
 {% elif modo == 'create' or modo == 'update' %}
 
+  <style>
+    /* ── Gestor de géneros (chips dinámicos) ── */
+    .genres-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+    .genres-box__title {
+      font-size: 0.74rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.55rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .genres-box__title .material-icons { font-size: 0.95rem; color: var(--accent); }
+    .genres-row {
+      display: flex; flex-wrap: wrap; gap: 0.45rem;
+      min-height: 32px;
+    }
+    .genre-chip {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.78rem; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .genre-chip:hover {
+      background: rgba(249,115,22,0.12);
+      border-color: rgba(249,115,22,0.30);
+      color: var(--accent);
+    }
+    .genre-chip .material-icons { font-size: 0.85rem; }
+    .genre-chip--active {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.30);
+    }
+    .genre-chip--active:hover {
+      background: linear-gradient(135deg, #fb923c, #ea580c);
+      color: #fff;
+    }
+    .genre-chip__remove {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.25);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .genre-chip--active:hover .genre-chip__remove { background: rgba(0,0,0,0.45); }
+    .genres-empty {
+      color: var(--text-light); font-size: 0.78rem; font-style: italic;
+    }
+  </style>
+
   <div class="panel-card" style="padding:1.5rem 1.75rem; max-width:760px;">
     <h3 style="font-weight:800; letter-spacing:-0.02em; margin-bottom:0.25rem;">
       {% if modo == 'create' %}Nueva Canción{% else %}Editar Canción{% endif %}
@@ -256,18 +317,70 @@
       {% if modo == 'create' %}Sube una nueva canción a tu catálogo.{% else %}Modifica los datos de la canción.{% endif %}
     </small>
 
-    <form method="post">
+    <form method="post" id="songForm">
       {% csrf_token %}
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
         {% for field in form %}
-          <div style="{% if field.name == 'letra_cancion' or field.name == 'generos' or field.name == 'nombre_cancion' or field.name == 'album' %}grid-column: 1 / -1;{% endif %}">
+          {% if field.name != 'generos' %}
+          <div style="{% if field.name == 'letra_cancion' or field.name == 'nombre_cancion' or field.name == 'album' %}grid-column: 1 / -1;{% endif %}">
             <label class="field-label">{{ field.label }}</label>
             {{ field }}
             {% if field.help_text %}<div style="color:var(--text-light); font-size:0.72rem; margin-top:0.25rem;">{{ field.help_text }}</div>{% endif %}
             {% for error in field.errors %}<div style="color:var(--red); font-size:0.78rem; margin-top:0.25rem;">{{ error }}</div>{% endfor %}
           </div>
+          {% endif %}
         {% endfor %}
       </div>
+
+      <!-- ────────── Géneros (chips dinámicos) ────────── -->
+      <div style="margin-top:1.25rem; display:grid; grid-template-columns:1fr; gap:0.75rem;">
+
+        <div class="genres-box">
+          <div class="genres-box__title">
+            <span class="material-icons">label</span>
+            Géneros seleccionados
+            <span style="margin-left:auto; color:var(--accent);" id="genCount">0</span>
+          </div>
+          <div class="genres-row" id="genSelected">
+            <span class="genres-empty" id="genSelectedEmpty">Aún no has agregado géneros. Toca uno de la lista de abajo.</span>
+          </div>
+        </div>
+
+        <div class="genres-box">
+          <div class="genres-box__title">
+            <span class="material-icons">add_circle_outline</span>
+            Géneros disponibles
+            <small style="margin-left:auto; color:var(--text-light); text-transform:none; letter-spacing:0; font-weight:400;">
+              Click para agregar
+            </small>
+          </div>
+          <div class="genres-row" id="genAvailable">
+            {% for g in all_generos %}
+              <span class="genre-chip"
+                    data-id="{{ g.pk }}"
+                    data-name="{{ g.nombre_genero }}"
+                    {% if g.pk in generos_actuales_ids %}hidden{% endif %}>
+                <span class="material-icons">add</span>
+                {{ g.nombre_genero }}
+              </span>
+            {% empty %}
+              <span class="genres-empty">No hay géneros registrados. Pídele al administrador que cree algunos.</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        {# Hidden inputs vivos — se reflejan en POST como name="generos" #}
+        <div id="genHiddenInputs">
+          {% for gid in generos_actuales_ids %}
+            <input type="hidden" name="generos" value="{{ gid }}" data-id="{{ gid }}">
+          {% endfor %}
+        </div>
+
+        {% for error in form.generos.errors %}
+          <div style="color:var(--red); font-size:0.78rem;">{{ error }}</div>
+        {% endfor %}
+      </div>
+
       <div style="display:flex; gap:0.6rem; margin-top:1.5rem;">
         <button type="submit" class="btn-new">
           <span class="material-icons">save</span>
@@ -279,10 +392,89 @@
   </div>
 
   <script>
+    // ── Aplica estilo glass a inputs nativos de Django ──
     document.querySelectorAll('form input, form select, form textarea').forEach(function(el){
       if (el.type === 'submit' || el.type === 'button' || el.type === 'hidden') return;
       el.classList.add(el.tagName === 'SELECT' ? 'field-select' : (el.tagName === 'TEXTAREA' ? 'field-textarea' : 'field-input'));
     });
+
+    // ────────── Gestor de chips de géneros ──────────
+    (function(){
+      const ALL_GENRES = [
+        {% for g in all_generos %}
+          { id: {{ g.pk }}, name: "{{ g.nombre_genero|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+      const initialIds = [
+        {% for gid in generos_actuales_ids %}{{ gid }}{% if not forloop.last %},{% endif %}{% endfor %}
+      ];
+
+      const selectedBox  = document.getElementById('genSelected');
+      const emptyMsg     = document.getElementById('genSelectedEmpty');
+      const availableBox = document.getElementById('genAvailable');
+      const hiddenBox    = document.getElementById('genHiddenInputs');
+      const counter      = document.getElementById('genCount');
+      const selected = new Set(initialIds);
+
+      function refresh() {
+        // Contador
+        counter.textContent = selected.size;
+        // Empty state
+        emptyMsg.style.display = selected.size === 0 ? '' : 'none';
+
+        // Repinta chips seleccionados
+        selectedBox.querySelectorAll('.genre-chip').forEach(el => el.remove());
+        ALL_GENRES.forEach(g => {
+          if (!selected.has(g.id)) return;
+          const chip = document.createElement('span');
+          chip.className = 'genre-chip genre-chip--active';
+          chip.dataset.id = g.id;
+          chip.title = 'Quitar';
+          chip.innerHTML =
+            '<span>' + g.name + '</span>' +
+            '<span class="genre-chip__remove"><span class="material-icons">close</span></span>';
+          chip.addEventListener('click', () => removeGenre(g.id));
+          selectedBox.appendChild(chip);
+        });
+
+        // Oculta los disponibles que ya están seleccionados
+        availableBox.querySelectorAll('.genre-chip').forEach(el => {
+          const gid = parseInt(el.dataset.id, 10);
+          el.hidden = selected.has(gid);
+        });
+
+        // Hidden inputs (POST name="generos")
+        hiddenBox.innerHTML = '';
+        selected.forEach(id => {
+          const inp = document.createElement('input');
+          inp.type  = 'hidden';
+          inp.name  = 'generos';
+          inp.value = id;
+          inp.dataset.id = id;
+          hiddenBox.appendChild(inp);
+        });
+      }
+
+      function addGenre(id) {
+        if (selected.has(id)) return;        // anti-duplicado
+        selected.add(id);
+        refresh();
+      }
+      function removeGenre(id) {
+        selected.delete(id);
+        refresh();
+      }
+
+      // Bind clicks en disponibles
+      availableBox.querySelectorAll('.genre-chip').forEach(el => {
+        el.addEventListener('click', () => {
+          const gid = parseInt(el.dataset.id, 10);
+          addGenre(gid);
+        });
+      });
+
+      refresh();
+    })();
   </script>
 
 {% endif %}

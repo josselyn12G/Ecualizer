@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
 from django.db import DatabaseError
 
-from ..models import Persona, Usuario, Artista
+from ..models import Persona, Usuario
 from ..mixins import RequiereLogin
-from analitica.services import (
+from analitica.services.oyente_service import (
     sp_top_canciones_usuario,
     sp_tiempo_total_escucha,
     sp_generos_favoritos_usuario,
@@ -67,9 +67,9 @@ class DashboardOyenteView(RequiereLogin, View):
         historial = []
         for c in top_canciones[:8]:
             historial.append({
-                'nombre':  c.get('nombreCancion', ''),
-                'artista': c.get('nombreArtistico', '') or c.get('Artista', ''),
-                'album':   c.get('tituloAlbum', '') or c.get('Album', ''),
+                'nombre':   c.get('nombreCancion', ''),
+                'artista':  c.get('nombreArtistico', '') or c.get('Artista', ''),
+                'album':    c.get('tituloAlbum', '') or c.get('Album', ''),
                 'duracion': c.get('UltimaVezEscuchada', ''),
             })
 
@@ -90,25 +90,12 @@ class DashboardOyenteView(RequiereLogin, View):
 
 
 class DashboardArtistaView(RequiereLogin, View):
+    """Dashboard del artista — delega a la vista analítica del módulo analitica."""
+
     def get(self, request):
         if request.session.get('tipo_usuario') != 'artista':
             from .auth_views import _redirect_por_tipo
             return _redirect_por_tipo(request.session.get('tipo_usuario', ''))
 
-        persona = _get_persona(request)
-        try:
-            perfil = persona.artista
-        except (Artista.DoesNotExist, AttributeError):
-            perfil = None
-
-        return render(request, 'usuarios/artista/dashboard.html', {
-            'persona': persona,
-            'perfil':  perfil,
-            'stats': {
-                'albumes':         0,
-                'canciones':       0,
-                'reproducciones':  0,
-                'seguidores':      0,
-            },
-            'canciones_recientes': [],
-        })
+        from analitica.views.artista import DashboardArtistaView as _DashAnalitica
+        return _DashAnalitica.as_view()(request)

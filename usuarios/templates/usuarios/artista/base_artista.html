@@ -56,7 +56,8 @@
         <span class="sb-item__label">Mis Canciones</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_analytics %}{% endblock %}">
+      <a href="{% url 'artista_analytics' %}"
+         class="sb-item {% block nav_analytics %}{% endblock %}">
         <span class="material-icons">bar_chart</span>
         <span class="sb-item__label">Analytics</span>
       </a>

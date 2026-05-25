@@ -25,30 +25,53 @@
     <!-- Navegación principal -->
     <nav class="sidebar-nav">
 
-      <!-- Dashboard directo (sin sub-items) -->
+      <!-- Dashboard directo -->
       <a href="{% url 'admin_dashboard' %}"
          class="sidebar-direct {% block nav_dashboard %}{% endblock %}">
         <span class="material-icons">dashboard</span>
         <span>Dashboard</span>
       </a>
 
-      <!-- ── Inicio ──────────────────────────────────────── -->
-      <div class="nav-group {% block nav_inicio_open %}{% endblock %}">
+      <!-- ══ Analítica ════════════════════════════════════ -->
+      <div class="nav-group {% block nav_analitica_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
-          <span class="material-icons">home</span>
-          <span class="nav-group__label">Inicio</span>
+          <span class="material-icons">insights</span>
+          <span class="nav-group__label">Analítica</span>
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-          <a href="#" class="nav-item {% block nav_kpis %}{% endblock %}">KPIs</a>
-          <a href="#" class="nav-item {% block nav_ranking_canciones %}{% endblock %}">Ranking Canciones</a>
-          <a href="#" class="nav-item {% block nav_ingresos_inicio %}{% endblock %}">Ingresos</a>
-          <a href="#" class="nav-item {% block nav_usuarios_activos_inicio %}{% endblock %}">Usuarios Activos</a>
-          <a href="#" class="nav-item {% block nav_regalias_inicio %}{% endblock %}">Regalías</a>
+          <a href="{% url 'analitica:resumen' %}" class="nav-item {% block nav_an_resumen %}{% endblock %}">
+            <span class="material-icons">space_dashboard</span> Resumen General
+          </a>
+          <a href="{% url 'analitica:usuarios' %}" class="nav-item {% block nav_an_usuarios %}{% endblock %}">
+            <span class="material-icons">groups</span> Usuarios
+          </a>
+          <a href="{% url 'analitica:musica' %}" class="nav-item {% block nav_an_musica %}{% endblock %}">
+            <span class="material-icons">music_note</span> Música
+          </a>
+          <a href="{% url 'analitica:albumes' %}" class="nav-item {% block nav_an_albumes %}{% endblock %}">
+            <span class="material-icons">album</span> Álbumes
+          </a>
+          <a href="{% url 'analitica:reproducciones' %}" class="nav-item {% block nav_an_reproducciones %}{% endblock %}">
+            <span class="material-icons">play_circle</span> Reproducciones
+          </a>
+          <a href="{% url 'analitica:generos' %}" class="nav-item {% block nav_an_generos %}{% endblock %}">
+            <span class="material-icons">graphic_eq</span> Géneros
+          </a>
+          <a href="{% url 'analitica:artistas' %}" class="nav-item {% block nav_an_artistas %}{% endblock %}">
+            <span class="material-icons">mic</span> Artistas
+          </a>
+          <a href="{% url 'analitica:actividad' %}" class="nav-item {% block nav_an_actividad %}{% endblock %}">
+            <span class="material-icons">history</span> Actividad
+          </a>
+          <a href="{% url 'analitica:reportes' %}" class="nav-item {% block nav_an_reportes %}{% endblock %}">
+            <span class="material-icons">assessment</span> Reportes
+          </a>
+          
         </div>
       </div>
 
-      <!-- ── Biblioteca ──────────────────────────────────── -->
+      <!-- ══ Biblioteca ═══════════════════════════════════ -->
       <div class="nav-group {% block nav_biblioteca_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
           <span class="material-icons">library_music</span>
@@ -56,15 +79,22 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-          <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas %}{% endblock %}">Artistas</a>
-          <a href="{% url 'catalogo:admin_album_list' %}" class="nav-item {% block nav_albumes %}{% endblock %}">Álbumes</a>
-          <a href="{% url 'catalogo:admin_cancion_list' %}" class="nav-item {% block nav_canciones %}{% endblock %}">Canciones</a>
-          <a href="{% url 'catalogo:admin_genero_list' %}" class="nav-item {% block nav_generos %}{% endblock %}">Géneros</a>
-          <a href="{% url 'catalogo:admin_tipo_album_list' %}" class="nav-item {% block nav_tipos_album %}{% endblock %}">Tipos Álbum</a>
+          <a href="{% url 'catalogo:admin_album_list' %}" class="nav-item {% block nav_albumes %}{% endblock %}">
+            <span class="material-icons">album</span> Álbumes
+          </a>
+          <a href="{% url 'catalogo:admin_cancion_list' %}" class="nav-item {% block nav_canciones %}{% endblock %}">
+            <span class="material-icons">music_note</span> Canciones
+          </a>
+          <a href="{% url 'catalogo:admin_genero_list' %}" class="nav-item {% block nav_generos %}{% endblock %}">
+            <span class="material-icons">graphic_eq</span> Géneros
+          </a>
+          <a href="{% url 'catalogo:admin_tipo_album_list' %}" class="nav-item {% block nav_tipos_album %}{% endblock %}">
+            <span class="material-icons">category</span> Tipos Álbum
+          </a>
         </div>
       </div>
 
-      <!-- ── Usuarios ────────────────────────────────────── -->
+      <!-- ══ Usuarios ═════════════════════════════════════ -->
       <div class="nav-group {% block nav_usuarios_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
           <span class="material-icons">people</span>
@@ -72,14 +102,22 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-          <a href="{% url 'admin_oyente_list' %}" class="nav-item {% block nav_oyentes %}{% endblock %}">Oyentes</a>
-          <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas_users %}{% endblock %}">Artistas</a>
-          <a href="{% url 'admin_persona_list' %}" class="nav-item {% block nav_personas %}{% endblock %}">Personas</a>
-          <a href="{% url 'admin_admin_list' %}" class="nav-item {% block nav_admins %}{% endblock %}">Administradores</a>
+          <a href="{% url 'admin_oyente_list' %}" class="nav-item {% block nav_oyentes %}{% endblock %}">
+            <span class="material-icons">headphones</span> Oyentes
+          </a>
+          <a href="{% url 'admin_artista_list' %}" class="nav-item {% block nav_artistas_users %}{% endblock %}">
+            <span class="material-icons">mic</span> Artistas
+          </a>
+          <a href="{% url 'admin_persona_list' %}" class="nav-item {% block nav_personas %}{% endblock %}">
+            <span class="material-icons">badge</span> Personas
+          </a>
+          <a href="{% url 'admin_admin_list' %}" class="nav-item {% block nav_admins %}{% endblock %}">
+            <span class="material-icons">admin_panel_settings</span> Administradores
+          </a>
         </div>
       </div>
 
-      <!-- ── Comercial ───────────────────────────────────── -->
+      <!-- ══ Comercial ════════════════════════════════════ -->
       <div class="nav-group {% block nav_comercial_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
           <span class="material-icons">storefront</span>
@@ -87,6 +125,7 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
+<<<<<<< HEAD
           <a href="{% url 'admin_planes_list' %}" class="nav-item {% block nav_planes %}{% endblock %}">Planes</a>
           <a href="{% url 'admin_suscripciones_list' %}" class="nav-item {% block nav_suscripciones %}{% endblock %}">Suscripciones</a>
           <a href="{% url 'admin_pagos_list' %}" class="nav-item {% block nav_pagos %}{% endblock %}">Pagos</a>
@@ -114,6 +153,30 @@
       </div>
 
       <!-- ── Configuración ───────────────────────────────── -->
+=======
+          <a href="{% url 'industria:discografica_list' %}" class="nav-item {% block nav_discograficas %}{% endblock %}">
+            <span class="material-icons">domain</span> Discográficas
+          </a>
+          <a href="{% url 'industria:contrato_list' %}" class="nav-item {% block nav_contratos %}{% endblock %}">
+            <span class="material-icons">description</span> Contratos
+          </a>
+          <a href="{% url 'analitica:regalias' %}" class="nav-item {% block nav_regalias %}{% endblock %}">
+            <span class="material-icons">payments</span> Regalías
+          </a>
+          <a href="{% url 'analitica:planes' %}" class="nav-item {% block nav_planes %}{% endblock %}">
+            <span class="material-icons">card_membership</span> Planes
+          </a>
+          <a href="{% url 'analitica:suscripciones' %}" class="nav-item {% block nav_suscripciones %}{% endblock %}">
+            <span class="material-icons">subscriptions</span> Suscripciones
+          </a>
+          <a href="#" class="nav-item {% block nav_pagos %}{% endblock %}">
+            <span class="material-icons">receipt_long</span> Pagos
+          </a>
+        </div>
+      </div>
+
+      <!-- ══ Configuración ════════════════════════════════ -->
+>>>>>>> 4409fce93bfb7a1af0fb4822223f27a0c77d5f30
       <div class="nav-group {% block nav_config_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
           <span class="material-icons">settings</span>
@@ -121,9 +184,15 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-          <a href="#" class="nav-item {% block nav_seguridad %}{% endblock %}">Seguridad</a>
-          <a href="#" class="nav-item {% block nav_parametros %}{% endblock %}">Parámetros</a>
-          <a href="#" class="nav-item {% block nav_logs %}{% endblock %}">Logs</a>
+          <a href="#" class="nav-item {% block nav_seguridad %}{% endblock %}">
+            <span class="material-icons">shield</span> Seguridad
+          </a>
+          <a href="#" class="nav-item {% block nav_parametros %}{% endblock %}">
+            <span class="material-icons">tune</span> Parámetros
+          </a>
+          <a href="#" class="nav-item {% block nav_logs %}{% endblock %}">
+            <span class="material-icons">receipt</span> Logs
+          </a>
         </div>
       </div>
 
@@ -243,5 +312,8 @@
 })();
 </script>
 {% block extra_js %}{% endblock %}
+
+{# Popups globales (success/error/info) — reusan los messages de Django. #}
+{% include "usuarios/_popups.html" %}
 </body>
 </html>

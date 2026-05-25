@@ -135,12 +135,15 @@ class UsuarioCancionDetailView(RequiereOyente, View):
             cancion.album.artista.nombre_artistico,
         )
 
-        # Letra: primero intentamos api.lyrics.ovh, si no, lo que tenga en BD
+        # Letra: traemos AMBAS (api.lyrics.ovh + BD) para mostrarlas por
+        # separado en el detalle. Mantenemos `letra`/`letra_origen` por
+        # compatibilidad con el template antiguo.
         letra_api = obtener_letra(
             cancion.album.artista.nombre_artistico,
             cancion.nombre_cancion,
         )
-        letra = letra_api or cancion.letra_cancion or ''
+        letra_db = (cancion.letra_cancion or '').strip()
+        letra = letra_api or letra_db or ''
 
         liked = False
         try:
@@ -153,7 +156,9 @@ class UsuarioCancionDetailView(RequiereOyente, View):
             'cover_url': cover,
             'artist_image': artist_image,
             'letra': letra,
-            'letra_origen': 'api' if letra_api else ('db' if cancion.letra_cancion else None),
+            'letra_origen': 'api' if letra_api else ('db' if letra_db else None),
+            'letra_api': letra_api or '',
+            'letra_db':  letra_db,
             'generos': GeneroMusical.objects.all(),
             'modo': 'detail',
             'cancion_liked': liked,

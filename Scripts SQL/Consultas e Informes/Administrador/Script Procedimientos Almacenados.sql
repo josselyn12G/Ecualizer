@@ -264,3 +264,19 @@ EXEC Pagos.sp_ConsolidadoPagosArtistas
     @fechaFin = '2026-12-31',
     @valorPorReproduccion = 0.0040; -- Parámetro opcional (Spotify Rate)
 GO
+
+-- ====================================================================
+--  BLOQUE ADICIONAL · ANALÍTICA EXTENDIDA
+-- ====================================================================
+-- Los procedimientos para el Dashboard de Analítica (KPIs, charts,
+-- engagement, regalías, actividad, etc.) están en el archivo:
+--     SP_AnaliticaAdmin.sql  (mismo directorio)
+-- Ejecutar ESE archivo después de este para crear:
+--   * sp_AdmKpisResumen
+--   * sp_AdmReproduccionesPorDia / PorHora / PorPais / Engagement
+--   * sp_AdmTopGeneros / TopArtistas / TopCancionesLikes
+--   * sp_AdmAlbumesMasGuardados
+--   * sp_AdmCrecimientoUsuarios / DistribucionUsuariosPais
+--   * sp_AdmRegaliasResumen / RegaliasPorArtista
+--   * sp_AdmActividadReciente / DistribucionPlanes
+-- ====================================================================

@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'Ecualizer',
         'USER': 'login_Administrador',
         'PASSWORD': 'Admin@Ecualizer2026!',
-        'HOST': r'localhost\SQLEXPRESS',
+        'HOST': 'TONY',
         'PORT': '',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
@@ -177,6 +177,11 @@ LOGGING = {
             'propagate': False,
         },
         'ecualizer.biblioteca': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'ecualizer.analitica': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
