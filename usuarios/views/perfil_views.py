@@ -63,6 +63,22 @@ class DashboardOyenteView(RequiereLogin, View):
             n_likes = len(likes)
         except DatabaseError:
             n_likes = 0
+        
+        try:
+            from django.db import connection as conn
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT tp.nombrePlan FROM Pagos.Suscripcion s
+                    INNER JOIN Pagos.TipoPlan tp ON tp.idTipoPlan = s.TipoPlan_idTipoPlan
+                    WHERE s.Usuario_idUsuario = %s AND s.estadoSuscripcion = 'activa'
+                    """,
+                    [uid]
+                )
+                row = cur.fetchone()
+                plan_activo = row[0] if row else 'Free'
+        except DatabaseError:
+            plan_activo = 'Free'
 
         historial = []
         for c in top_canciones[:8]:
@@ -80,6 +96,7 @@ class DashboardOyenteView(RequiereLogin, View):
             'recomendaciones': recomendaciones,
             'generos':         generos,
             'historial':       historial,
+            'plan_activo':     plan_activo,
             'stats': {
                 'canciones_favoritas': n_likes,
                 'playlists':           0,

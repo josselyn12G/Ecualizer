@@ -1,7 +1,15 @@
 from django.urls import path
 from . import views
+from pagos.artista_views import ArtistaMonetizacionView
+from pagos.admin_views import (
+    AdminPlanesListView,
+    AdminSuscripcionesListView,
+    AdminPagosListView,
+    AdminIngresosView,
+)
 from analitica.views.artista import AnalyticsArtistaView, MonetizacionArtistaView
 from industria.views import ContratosArtistaView
+from .views.oyente_views import ParaTiView, ExplorarView, TendenciasView, NovedadesView
 
 urlpatterns = [
     path('', views.index_usuarios, name='index_usuarios'),
@@ -65,4 +73,10 @@ urlpatterns = [
 
     # Monetización Artista
     path('perfil/artista/monetizacion/', ArtistaMonetizacionView.as_view(), name='artista_monetizacion'),
+    
+    # Secciones oyente - Spotify
+    path('oyente/para-ti/',    ParaTiView.as_view(),    name='para_ti'),
+    path('oyente/explorar/',   ExplorarView.as_view(),   name='explorar'),
+    path('oyente/tendencias/', TendenciasView.as_view(), name='tendencias'),
+    path('oyente/novedades/',  NovedadesView.as_view(),  name='novedades'),
 ]

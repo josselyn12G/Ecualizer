@@ -47,22 +47,22 @@
         <span class="sb-item__label">Inicio</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_para_ti %}{% endblock %}">
+      <a href="{% url 'para_ti' %}" class="sb-item {% block nav_para_ti %}{% endblock %}">
         <span class="material-icons">auto_awesome</span>
         <span class="sb-item__label">Para Ti</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_explorar %}{% endblock %}">
+      <a href="{% url 'explorar' %}" class="sb-item {% block nav_explorar %}{% endblock %}">
         <span class="material-icons">explore</span>
         <span class="sb-item__label">Explorar</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_tendencias %}{% endblock %}">
+      <a href="{% url 'tendencias' %}" class="sb-item {% block nav_tendencias %}{% endblock %}">
         <span class="material-icons">trending_up</span>
         <span class="sb-item__label">Tendencias</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_novedades %}{% endblock %}">
+      <a href="{% url 'novedades' %}" class="sb-item {% block nav_novedades %}{% endblock %}">
         <span class="material-icons">new_releases</span>
         <span class="sb-item__label">Novedades</span>
       </a>
@@ -88,7 +88,7 @@
         <span class="sb-item__label">Artistas</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_playlists %}{% endblock %}">
+      <a href="{% url 'biblioteca:mis_playlists' %}" class="sb-item {% block nav_playlists %}{% endblock %}">
         <span class="material-icons">queue_music</span>
         <span class="sb-item__label">Playlists</span>
       </a>

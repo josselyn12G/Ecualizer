@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'Ecualizer',
         'USER': 'login_Administrador',
         'PASSWORD': 'Admin@Ecualizer2026!',
-        'HOST': 'TONY',
+        'HOST': r'localhost\MSSQLSERVER',
         'PORT': '',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
@@ -193,3 +193,7 @@ LOGGING = {
         },
     },
 }
+
+# Spotify API
+SPOTIFY_CLIENT_ID = '7a24e29fb30b4cf5a46861df271d7784'
+SPOTIFY_CLIENT_SECRET = '28c0a8ed5c6242538c2c273da17b6f6f'

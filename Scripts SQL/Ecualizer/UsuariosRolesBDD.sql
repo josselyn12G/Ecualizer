@@ -425,3 +425,6 @@ GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Administrador;
 GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Artista;
 GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Sistema;
 GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Reportes;
+GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Administrador;
+GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Oyente;
+GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Sistema;

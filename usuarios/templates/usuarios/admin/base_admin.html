@@ -125,35 +125,6 @@
           <span class="material-icons nav-group__arrow">chevron_right</span>
         </button>
         <div class="nav-group__items">
-<<<<<<< HEAD
-          <a href="{% url 'admin_planes_list' %}" class="nav-item {% block nav_planes %}{% endblock %}">Planes</a>
-          <a href="{% url 'admin_suscripciones_list' %}" class="nav-item {% block nav_suscripciones %}{% endblock %}">Suscripciones</a>
-          <a href="{% url 'admin_pagos_list' %}" class="nav-item {% block nav_pagos %}{% endblock %}">Pagos</a>
-          <a href="#" class="nav-item {% block nav_regalias %}{% endblock %}">Regalías</a>
-          <a href="#" class="nav-item {% block nav_discograficas %}{% endblock %}">Discográficas</a>
-          <a href="#" class="nav-item {% block nav_contratos %}{% endblock %}">Contratos</a>
-        </div>
-      </div>
-
-      <!-- ── Analítica ───────────────────────────────────── -->
-      <div class="nav-group {% block nav_analitica_open %}{% endblock %}">
-        <button class="nav-group__header" type="button">
-          <span class="material-icons">bar_chart</span>
-          <span class="nav-group__label">Analítica</span>
-          <span class="material-icons nav-group__arrow">chevron_right</span>
-        </button>
-        <div class="nav-group__items">
-          <a href="#" class="nav-item {% block nav_reproducciones %}{% endblock %}">Reproducciones</a>
-          <a href="#" class="nav-item {% block nav_ranking_global %}{% endblock %}">Ranking Global</a>
-          <a href="{% url 'admin_ingresos' %}" class="nav-item {% block nav_ingresos_analitica %}{% endblock %}">Ingresos</a>
-          <a href="#" class="nav-item {% block nav_usuarios_activos %}{% endblock %}">Usuarios Activos</a>
-          <a href="#" class="nav-item {% block nav_likes %}{% endblock %}">Likes</a>
-          <a href="#" class="nav-item {% block nav_engagement %}{% endblock %}">Engagement</a>
-        </div>
-      </div>
-
-      <!-- ── Configuración ───────────────────────────────── -->
-=======
           <a href="{% url 'industria:discografica_list' %}" class="nav-item {% block nav_discograficas %}{% endblock %}">
             <span class="material-icons">domain</span> Discográficas
           </a>
@@ -169,14 +140,11 @@
           <a href="{% url 'analitica:suscripciones' %}" class="nav-item {% block nav_suscripciones %}{% endblock %}">
             <span class="material-icons">subscriptions</span> Suscripciones
           </a>
-          <a href="#" class="nav-item {% block nav_pagos %}{% endblock %}">
+          <a href="{% url 'admin_pagos_list' %}" class="nav-item {% block nav_pagos %}{% endblock %}">
             <span class="material-icons">receipt_long</span> Pagos
           </a>
         </div>
       </div>
-
-      <!-- ══ Configuración ════════════════════════════════ -->
->>>>>>> 4409fce93bfb7a1af0fb4822223f27a0c77d5f30
       <div class="nav-group {% block nav_config_open %}{% endblock %}">
         <button class="nav-group__header" type="button">
           <span class="material-icons">settings</span>

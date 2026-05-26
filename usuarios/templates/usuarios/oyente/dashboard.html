@@ -8,10 +8,9 @@
 {% block content %}
 <div class="d-grid">
 
-  <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+  <!-- COLUMNA PRINCIPAL -->
   <div class="d-main">
 
-    <!-- Intro superior -->
     <div class="section-intro">
       <div>
         <div class="section-tag">¿Qué está sonando?</div>
@@ -22,90 +21,102 @@
       </a>
     </div>
 
-    <!-- Hero (welcome banner) -->
     {% include "usuarios/oyente/components/welcome_banner.html" %}
 
-    <!-- Historial estilo playlist -->
+    {% if plan_activo == 'Free' %}
+    <!-- BANNER ANUNCIO FREE - llamativo -->
+    <div style="margin: 1rem 0; border-radius: 14px; overflow: hidden; position: relative;">
+      <div style="background: linear-gradient(90deg, #1a1a1a 0%, #2a1a0a 100%); border: 1px solid rgba(249,115,22,0.4); padding: 1rem 1.25rem; display:flex; align-items:center; gap:1rem;">
+        <div style="width:48px; height:48px; background:rgba(249,115,22,0.2); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <span class="material-icons" style="color:#f97316; font-size:1.5rem;">campaign</span>
+        </div>
+        <div style="flex:1;">
+          <div style="color:#fff; font-weight:700; font-size:0.95rem;">Publicidad — Mejora tu experiencia con Ecualizer Premium</div>
+          <div style="color:rgba(255,255,255,0.5); font-size:0.78rem; margin-top:0.2rem;">Sin anuncios · Descargas · Alta calidad · Desde $4.99/mes</div>
+        </div>
+        <a href="{% url 'pagos:historial' %}" style="background:#f97316; color:#fff; border-radius:50px; padding:0.5rem 1.25rem; font-size:0.82rem; font-weight:700; text-decoration:none; white-space:nowrap; flex-shrink:0;">
+          Ver planes
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
     {% include "usuarios/oyente/components/recent_activity.html" %}
+
+    {% if plan_activo == 'Free' %}
+    <!-- HISTORIAL BLOQUEADO PARA FREE -->
+    <div style="position:relative; overflow:hidden; border-radius:14px;">
+      <div style="filter:blur(3px); pointer-events:none; user-select:none;">
+        {% include "usuarios/oyente/components/recent_activity.html" %}
+      </div>
+      <!-- Overlay de bloqueo -->
+      <div style="position:absolute; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(2px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; border-radius:14px; border:1px solid rgba(249,115,22,0.3);">
+        <span class="material-icons" style="font-size:3rem; color:#f97316;">lock</span>
+        <div style="text-align:center;">
+          <div style="color:#fff; font-size:1.1rem; font-weight:800; margin-bottom:0.3rem;">Contenido Premium</div>
+          <div style="color:rgba(255,255,255,0.6); font-size:0.85rem;">Actualiza tu plan para ver tu historial completo</div>
+        </div>
+        <a href="{% url 'pagos:historial' %}" style="background:#f97316; color:#fff; border-radius:50px; padding:0.6rem 1.5rem; font-size:0.88rem; font-weight:700; text-decoration:none;">
+          Ver planes
+        </a>
+      </div>
+    </div>
+    {% else %}
+    {% include "usuarios/oyente/components/recent_activity.html" %}
+    {% endif %}
 
   </div>
 
-  <!-- ══ PANEL DERECHO ══════════════════════════════ -->
+  <!-- COLUMNA DERECHA -->
   <aside class="d-right">
 
-    <!-- Géneros -->
     <div class="rs-block">
       <div class="rs-header">
         <span class="rs-title">Géneros</span>
-        <button class="rs-dots" title="Más opciones">•••</button>
+        <button class="rs-dots" title="Más opciones">⋯</button>
       </div>
       <div class="genre-tags">
-        <span class="genre-tag">
-          <span class="material-icons">headphones</span>Pop
-        </span>
-        <span class="genre-tag">
-          <span class="material-icons">electric_bolt</span>Rock
-        </span>
-        <span class="genre-tag">
-          <span class="material-icons">piano</span>Jazz
-        </span>
-        <span class="genre-tag">
-          <span class="material-icons">graphic_eq</span>Electrónica
-        </span>
-        <span class="genre-tag">
-          <span class="material-icons">music_note</span>Reggaetón
-        </span>
-        <span class="genre-tag">
-          <span class="material-icons">library_music</span>Clásica
-        </span>
+        <span class="genre-tag"><span class="material-icons">headphones</span>Pop</span>
+        <span class="genre-tag"><span class="material-icons">electric_bolt</span>Rock</span>
+        <span class="genre-tag"><span class="material-icons">piano</span>Jazz</span>
+        <span class="genre-tag"><span class="material-icons">graphic_eq</span>Electrónica</span>
+        <span class="genre-tag"><span class="material-icons">music_note</span>Reggaetón</span>
+        <span class="genre-tag"><span class="material-icons">library_music</span>Clásica</span>
       </div>
     </div>
 
-    <!-- Accesos Rápidos (estilo "Played" Apple Music) -->
     <div class="rs-block">
       <div class="rs-header">
         <span class="rs-title">Accesos Rápidos</span>
         <a href="#" class="rs-see-all">Ver todo</a>
       </div>
       <div class="played-list">
-
         <a href="#" class="played-item">
-          <div class="played-cover">
-            <span class="material-icons">auto_awesome</span>
-          </div>
+          <div class="played-cover"><span class="material-icons">auto_awesome</span></div>
           <div class="played-info">
             <div class="played-name">Recomendaciones</div>
             <div class="played-sub">Basadas en tus gustos</div>
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-
         <a href="#" class="played-item">
-          <div class="played-cover">
-            <span class="material-icons">trending_up</span>
-          </div>
+          <div class="played-cover"><span class="material-icons">trending_up</span></div>
           <div class="played-info">
             <div class="played-name">Tendencias</div>
             <div class="played-sub">Lo más escuchado hoy</div>
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-
         <a href="#" class="played-item">
-          <div class="played-cover">
-            <span class="material-icons">library_music</span>
-          </div>
+          <div class="played-cover"><span class="material-icons">library_music</span></div>
           <div class="played-info">
             <div class="played-name">Mi Biblioteca</div>
             <div class="played-sub">Tus canciones guardadas</div>
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-
         <a href="#" class="played-item">
-          <div class="played-cover">
-            <span class="material-icons">favorite</span>
-          </div>
+          <div class="played-cover"><span class="material-icons">favorite</span></div>
           <div class="played-info">
             <div class="played-name">Favoritas</div>
             <div class="played-sub">{{ stats.canciones_favoritas|default:"0" }} canciones</div>
@@ -113,26 +124,62 @@
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
 
+        {% if plan_activo != 'Free' %}
+        <!-- BOTÓN DESCARGA SOLO PARA PREMIUM -->
+        <a href="#" class="played-item" onclick="event.preventDefault(); document.getElementById('modal-descarga').style.display='flex'">
+          <div class="played-cover" style="background:rgba(34,197,94,0.15);">
+            <span class="material-icons" style="color:#22c55e;">download</span>
+          </div>
+          <div class="played-info">
+            <div class="played-name">Descargar música</div>
+            <div class="played-sub">Disponible en tu plan</div>
+          </div>
+          <span class="material-icons played-arrow">chevron_right</span>
+        </a>
+        {% endif %}
       </div>
     </div>
 
     <!-- Promo / Suscripción -->
     <div class="promo-card">
-      <span class="material-icons promo-card__icon">headphones</span>
-      <div class="promo-card__title">Mi Suscripción</div>
-      <div class="promo-card__sub">
-        {% if persona.estado == 'activo' %}
-          Tu cuenta está activa. Explora todo el contenido disponible en Ecualizer.
+      <span class="material-icons promo-card__icon">
+        {% if plan_activo == 'Free' %}workspace_premium{% else %}headphones{% endif %}
+      </span>
+      <div class="promo-card__title">
+        {% if plan_activo == 'Free' %}
+          ¡Actualiza tu plan!
         {% else %}
-          Activa tu cuenta para disfrutar de toda la música sin límites.
+          Plan {{ plan_activo }}
         {% endif %}
       </div>
-      <a href="#" class="promo-card__link">
-        Ver planes <span class="material-icons">arrow_outward</span>
+      <div class="promo-card__sub">
+        {% if plan_activo == 'Free' %}
+          Estás en el plan gratuito. Mejora para disfrutar sin anuncios.
+        {% else %}
+          Disfruta de música sin límites con tu plan activo.
+        {% endif %}
+      </div>
+      <a href="{% url 'pagos:historial' %}" class="promo-card__link">
+        {% if plan_activo == 'Free' %}Ver planes{% else %}Gestionar suscripción{% endif %}
+        <span class="material-icons">arrow_outward</span>
       </a>
     </div>
 
   </aside>
 
 </div>
+
+<!-- Modal descarga (solo premium) -->
+<div id="modal-descarga" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+  <div style="background:#1a1a2e; border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:2.5rem; max-width:380px; width:90%; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.5);">
+    <span class="material-icons" style="font-size:3.5rem; color:#22c55e; margin-bottom:1rem; display:block;">check_circle</span>
+    <h3 style="color:#fff; font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;">Descargado correctamente</h3>
+    <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:1.5rem;">Tu música está lista para escuchar sin conexión.</p>
+    <button onclick="document.getElementById('modal-descarga').style.display='none'"
+            style="background:#f97316; color:#fff; border:none; border-radius:50px; padding:0.7rem 2rem; font-size:0.9rem; font-weight:700; cursor:pointer;">
+      Aceptar
+    </button>
+  </div>
+</div>
+
 {% endblock %}
