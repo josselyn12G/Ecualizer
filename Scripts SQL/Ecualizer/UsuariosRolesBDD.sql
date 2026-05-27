@@ -428,3 +428,4 @@ GRANT EXECUTE ON Pagos.sp_ReporteRegaliasArtista TO user_Reportes;
 GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Administrador;
 GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Oyente;
 GRANT EXECUTE ON Biblioteca.SP_CrearPlaylistUsuario TO user_Sistema;
+// Eliminar permisos de ejecución a procedimientos almacenados específicos

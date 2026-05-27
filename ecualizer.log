@@ -266,3 +266,12 @@
 [2026-05-25 21:11:26,327] INFO    ecualizer.auth: LOGIN persona=duki@ecualizer.com tipo=artista
 [2026-05-25 21:12:36,604] INFO    ecualizer.auth: LOGIN form válido
 [2026-05-25 21:12:36,612] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 22:28:09,507] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 22:28:09,514] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-25 22:34:32,173] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 22:34:32,202] INFO    ecualizer.auth: LOGIN persona=admin.general@ecualizer.com tipo=administrador
+[2026-05-25 22:34:39,330] ERROR   ecualizer.analitica: Analitica SP error · EXEC Usuario.sp_ReporteUsuariosActivos @tipoCuenta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The EXECUTE permission was denied on the object 'sp_ReporteUsuariosActivos', database 'Ecualizer', schema 'Usuario'. (229) (SQLExecDirectW)")
+[2026-05-25 22:35:52,444] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-25 22:35:52,453] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
+[2026-05-26 21:22:16,141] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-26 21:22:16,152] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
