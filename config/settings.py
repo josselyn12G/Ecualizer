@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'Ecualizer',
         'USER': 'login_Administrador',
         'PASSWORD': 'Admin@Ecualizer2026!',
-        'HOST': 'TONY',
+        'HOST': '.\\SQLEXPRESS',
         'PORT': '',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
