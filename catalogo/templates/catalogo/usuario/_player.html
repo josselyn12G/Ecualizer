@@ -240,7 +240,11 @@
   const barFill  = document.getElementById('ezPlayerBarFill');
   const volume   = document.getElementById('ezPlayerVolume');
   const volFill  = document.getElementById('ezPlayerVolumeFill');
+  const btnPrev  = document.querySelector('.ez-icon-btn--play-prev');
+  const btnNext  = document.querySelector('.ez-icon-btn--play-next');
   let currentId  = null;
+  let queue      = [];   // cola de idCancion para reproducción automática
+  let queueIndex = -1;
 
   function fmt(s) {
     if (!isFinite(s) || s < 0) return '0:00';
@@ -258,7 +262,11 @@
   close.addEventListener('click', hide);
   audio.addEventListener('play',  () => setPlaying(true));
   audio.addEventListener('pause', () => setPlaying(false));
-  audio.addEventListener('ended', () => setPlaying(false));
+  // Al terminar una canción → avanzar automáticamente en la cola
+  audio.addEventListener('ended', () => {
+    setPlaying(false);
+    playNext();
+  });
   audio.addEventListener('loadedmetadata', () => {
     duration.textContent = fmt(audio.duration);
   });
@@ -286,31 +294,66 @@
     volFill.style.width = (ratio * 100) + '%';
   });
 
+  // Carga y reproduce una canción por su id (vía preview de Deezer)
+  function load(cancionId) {
+    if (!cancionId) return;
+    if (currentId === cancionId && audio.src) {
+      audio.play().catch(() => {});
+      show();
+      return;
+    }
+    fetch('/catalogo/canciones/' + cancionId + '/preview/')
+      .then(r => r.json())
+      .then(data => {
+        title.textContent  = data.title  || '';
+        artist.textContent = data.artist || '';
+        if (data.cover) cover.style.backgroundImage = "url('" + data.cover + "')";
+        show();
+        if (!data.ok || !data.preview) {
+          // Sin preview → intentar saltar a la siguiente de la cola
+          artist.textContent = (data.artist || '') + ' · sin preview, pasando a la siguiente…';
+          setTimeout(playNext, 1200);
+          return;
+        }
+        currentId = cancionId;
+        audio.src = data.preview;
+        audio.play().catch(() => {});
+      })
+      .catch(() => {});
+  }
+
+  function playNext() {
+    if (queue.length && queueIndex < queue.length - 1) {
+      queueIndex++;
+      load(queue[queueIndex]);
+    }
+  }
+  function playPrev() {
+    if (queue.length && queueIndex > 0) {
+      queueIndex--;
+      load(queue[queueIndex]);
+    }
+  }
+
+  if (btnNext) btnNext.addEventListener('click', playNext);
+  if (btnPrev) btnPrev.addEventListener('click', playPrev);
+
   // API global
   window.EzPlayer = {
+    // Reproduce una sola canción (resetea la cola a esa canción).
     play(cancionId) {
       if (!cancionId) return;
-      if (currentId === cancionId && audio.src) {
-        audio.play().catch(() => {});
-        show();
-        return;
-      }
-      fetch('/catalogo/canciones/' + cancionId + '/preview/')
-        .then(r => r.json())
-        .then(data => {
-          title.textContent  = data.title  || '';
-          artist.textContent = data.artist || '';
-          if (data.cover) cover.style.backgroundImage = "url('" + data.cover + "')";
-          show();
-          if (!data.ok || !data.preview) {
-            artist.textContent = (data.artist || '') + ' · sin preview en Deezer';
-            return;
-          }
-          currentId = cancionId;
-          audio.src = data.preview;
-          audio.play().catch(() => {});
-        })
-        .catch(() => {});
+      queue = [parseInt(cancionId, 10)];
+      queueIndex = 0;
+      load(cancionId);
+    },
+    // Reproduce una lista de canciones en orden, con autoplay.
+    // ids: array de idCancion; start: índice inicial (por defecto 0).
+    playQueue(ids, start) {
+      if (!ids || !ids.length) return;
+      queue = ids.map(x => parseInt(x, 10));
+      queueIndex = Math.max(0, Math.min(start || 0, queue.length - 1));
+      load(queue[queueIndex]);
     },
     stop() { hide(); },
   };

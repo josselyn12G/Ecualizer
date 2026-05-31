@@ -3,7 +3,7 @@
 
   <div class="playlist-section__header">
     <span class="playlist-section__title">Historial de Reproducciones</span>
-    <a href="#" class="playlist-section__see-all">
+    <a href="{% url 'catalogo:usuario_cancion_list' %}" class="playlist-section__see-all">
       Ver todo <span class="material-icons">chevron_right</span>
     </a>
   </div>
@@ -20,15 +20,16 @@
     </thead>
     <tbody>
       {% for track in historial %}
-      <tr class="playlist-row {% if forloop.counter == 1 %}playlist-row--active{% endif %}">
+      <tr class="playlist-row" {% if track.id %}onclick="EzPlayer && EzPlayer.play({{ track.id }})" style="cursor:pointer;"{% endif %}>
         <td class="col-num">
           <span class="material-icons track-play-icon">play_arrow</span>
           <span class="track-num">{{ forloop.counter|stringformat:"02d" }}</span>
         </td>
         <td>
           <div class="track-title-wrap">
-            <div class="track-cover">
-              <span class="material-icons">music_note</span>
+            <div class="track-cover"
+                 {% if track.cover %}style="background-image:url('{{ track.cover }}'); background-size:cover; background-position:center;"{% endif %}>
+              {% if not track.cover %}<span class="material-icons">music_note</span>{% endif %}
             </div>
             <span class="track-name">{{ track.nombre }}</span>
           </div>
@@ -42,7 +43,7 @@
         <td colspan="5" class="playlist-empty">
           <span class="material-icons">music_off</span>
           <p>Aún no hay historial de reproducciones.</p>
-          <a href="#" class="btn-new">
+          <a href="{% url 'catalogo:usuario_cancion_list' %}" class="btn-new">
             <span class="material-icons">explore</span>
             Explorar música
           </a>

@@ -78,12 +78,12 @@
 
       <div class="sb-divider"></div>
 
-      <a href="#" class="sb-item {% block nav_perfil %}{% endblock %}">
+      <a href="{% url 'perfil_artista' %}" class="sb-item {% block nav_perfil %}{% endblock %}">
         <span class="material-icons">person</span>
         <span class="sb-item__label">Perfil</span>
       </a>
 
-      <a href="#" class="sb-item {% block nav_configuracion %}{% endblock %}">
+      <a href="{% url 'configuracion_artista' %}" class="sb-item {% block nav_configuracion %}{% endblock %}">
         <span class="material-icons">settings</span>
         <span class="sb-item__label">Configuración</span>
       </a>

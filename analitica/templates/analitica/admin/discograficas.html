@@ -41,7 +41,7 @@
     <thead><tr><th>ID</th><th>Nombre</th><th>País</th><th>Correo</th><th>Tel</th><th class="num">Contratos</th><th class="num">Activos</th></tr></thead>
     <tbody>
       {% for d in discograficas %}
-      <tr><td>#{{ d.idDiscografica }}</td><td><strong style="color:#fff;">{{ d.nombreDiscografica }}</strong></td>
+      <tr><td>#{{ d.idDiscografica }}</td><td><strong style="color:var(--text);">{{ d.nombreDiscografica }}</strong></td>
           <td>{{ d.paisOrigen|default:"—" }}</td><td>{{ d.correoContacto }}</td><td>{{ d.telefonoContacto }}</td>
           <td class="num">{{ d.TotalContratos }}</td>
           <td class="num accent">{{ d.ContratosActivos }}</td></tr>

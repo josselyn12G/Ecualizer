@@ -13,10 +13,10 @@ from django.views.generic.edit import FormView
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
-from django.db import DatabaseError
+from django.db import DatabaseError, transaction
 
 from usuarios.mixins import RequiereArtista
-from ...models import Album
+from ...models import Album, Cancion, CancionGeneroMusical
 from ...forms import AlbumCreateForm, AlbumUpdateForm
 from ...services import (
     sp_crear_album,
@@ -90,6 +90,27 @@ class ArtistaAlbumCreateView(RequiereArtista, FormView):
 
 
 # ──────────────────────────────────────────────────────────
+# DETAIL · ver el álbum (solo lectura) + sus canciones
+# ──────────────────────────────────────────────────────────
+class ArtistaAlbumDetailView(RequiereArtista, View):
+    template_name = 'catalogo/artista/artista_album.html'
+
+    def get(self, request, pk):
+        from ...models import Cancion
+        artista_id = request.session['usuario_id']
+        album = get_object_or_404(
+            Album.objects.select_related('tipo_album', 'artista'),
+            pk=pk, artista_id=artista_id,
+        )
+        canciones = Cancion.objects.filter(album=album).order_by('numero_pista')
+        return render(request, self.template_name, {
+            'album': album,
+            'canciones': canciones,
+            'modo': 'detail',
+        })
+
+
+# ──────────────────────────────────────────────────────────
 # UPDATE
 # ──────────────────────────────────────────────────────────
 class ArtistaAlbumUpdateView(RequiereArtista, View):
@@ -151,4 +172,38 @@ class ArtistaAlbumDeactivateView(RequiereArtista, View):
             messages.success(request, f'Álbum "{album.titulo_album}" desactivado.')
         except DatabaseError as e:
             messages.error(request, f'Error al desactivar: {e}')
+        return redirect('catalogo:artista_album_list')
+
+
+# ──────────────────────────────────────────────────────────
+# DELETE (hard delete) · elimina el álbum permanentemente
+# A diferencia de "desactivar" (estado → inactivo), esto borra
+# el registro. Se eliminan en una transacción las canciones del
+# álbum y sus géneros asociados. Si existen datos que impiden el
+# borrado (reproducciones, likes, listas…), la BD lo bloquea y se
+# informa al artista para que use "Desactivar" en su lugar.
+# ──────────────────────────────────────────────────────────
+class ArtistaAlbumDeleteView(RequiereArtista, View):
+    def post(self, request, pk):
+        artista_id = request.session['usuario_id']
+        # Garantizar que el álbum sea del artista logueado.
+        album = get_object_or_404(Album, pk=pk, artista_id=artista_id)
+        titulo = album.titulo_album
+        try:
+            with transaction.atomic():
+                canciones = Cancion.objects.filter(album=album)
+                # 1) Quitar relaciones M:N de género de esas canciones.
+                CancionGeneroMusical.objects.filter(cancion__in=canciones).delete()
+                # 2) Eliminar las canciones del álbum.
+                canciones.delete()
+                # 3) Eliminar el álbum.
+                album.delete()
+            messages.success(request, f'Álbum "{titulo}" eliminado permanentemente.')
+        except DatabaseError:
+            messages.error(
+                request,
+                f'No se pudo eliminar "{titulo}" porque tiene datos asociados '
+                f'(reproducciones, "me gusta" o listas de reproducción). '
+                f'Usa la opción "Desactivar" en su lugar.'
+            )
         return redirect('catalogo:artista_album_list')

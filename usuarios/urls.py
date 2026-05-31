@@ -27,7 +27,11 @@ urlpatterns = [
 
     # ── Dashboards / perfiles ──────────────────────────────────────────
     path('perfil/oyente/',  views.DashboardOyenteView.as_view(),  name='dashboard_oyente'),
+    path('oyente/perfil/',        views.PerfilOyenteView.as_view(),        name='perfil_oyente'),
+    path('oyente/configuracion/', views.ConfiguracionOyenteView.as_view(), name='configuracion_oyente'),
     path('perfil/artista/', views.DashboardArtistaView.as_view(), name='dashboard_artista'),
+    path('artista/perfil/',        views.PerfilArtistaView.as_view(),        name='perfil_artista'),
+    path('artista/configuracion/', views.ConfiguracionArtistaView.as_view(), name='configuracion_artista'),
     path('perfil/artista/analytics/',
          AnalyticsArtistaView.as_view(),
          name='artista_analytics'),

@@ -13,6 +13,10 @@ from .registro_views import (
 from .perfil_views import (
     DashboardOyenteView,
     DashboardArtistaView,
+    PerfilOyenteView,
+    ConfiguracionOyenteView,
+    PerfilArtistaView,
+    ConfiguracionArtistaView,
 )
 from .admin_views import (
     AdminDashboardView,

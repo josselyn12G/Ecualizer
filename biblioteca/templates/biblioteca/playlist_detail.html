@@ -45,6 +45,16 @@
   .pop-row__rank  { color: var(--text-muted); font-size:0.86rem; font-weight:600; text-align:center; }
   .pop-row__cover { width:42px; height:42px; border-radius:8px; background:#1a1a1a; display:flex; align-items:center; justify-content:center; }
   .pop-row__cover .material-icons { font-size:1.2rem; color:rgba(255,255,255,0.3); }
+  .pop-row__cover--play { cursor:pointer; transition:background 0.15s; }
+  .pop-row__cover--play:hover { background:#f97316; }
+  .pop-row__cover--play:hover .material-icons { color:#fff; }
+  .btn-play-all {
+    display:inline-flex; align-items:center; gap:0.4rem;
+    background:#f97316; color:#fff; border:none; border-radius:50px;
+    padding:0.6rem 1.6rem; font-size:0.92rem; font-weight:700; cursor:pointer;
+  }
+  .btn-play-all:hover { background:#ea580c; }
+  .btn-play-all .material-icons { font-size:1.2rem; }
   .pop-row__title { color:#fff; font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .pop-row__sub   { font-size:0.74rem; color:var(--text-muted); }
   .pop-row__plays { color: var(--text-muted); font-size:0.85rem; display:flex; align-items:center; gap:0.35rem; }
@@ -74,6 +84,37 @@
     font-size:0.88rem; font-weight:600; cursor:pointer;
   }
   .btn-add:hover { background:#ea580c; }
+
+  /* ── Buscador para agregar canciones ── */
+  .add-search {
+    display:flex; align-items:center; gap:0.5rem;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:10px; padding:0.5rem 0.85rem; margin-bottom:0.85rem;
+  }
+  .add-search .material-icons { color:rgba(255,255,255,0.45); font-size:1.1rem; }
+  .add-search input {
+    flex:1; background:transparent; border:none; outline:none;
+    color:#fff; font-size:0.88rem;
+  }
+  .add-search input::placeholder { color:rgba(255,255,255,0.4); }
+  .add-song-list { max-height:340px; overflow-y:auto; display:flex; flex-direction:column; gap:0.2rem; }
+  .add-song-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.55rem 0.75rem; border-radius:10px; transition:background 0.15s;
+  }
+  .add-song-row:hover { background:rgba(255,255,255,0.05); }
+  .add-song-name   { color:#fff; font-size:0.88rem; font-weight:600; }
+  .add-song-artist { color:rgba(255,255,255,0.5); font-size:0.76rem; }
+  .btn-add-mini {
+    background:rgba(249,115,22,0.15); color:#f97316;
+    border:1px solid rgba(249,115,22,0.4); border-radius:50%;
+    width:32px; height:32px; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .btn-add-mini:hover { background:#f97316; color:#fff; }
+  .btn-add-mini .material-icons { font-size:1.05rem; }
+  .add-song-empty { color:rgba(255,255,255,0.4); font-size:0.85rem; text-align:center; padding:1rem; }
 </style>
 {% endblock %}
 
@@ -97,12 +138,21 @@
 </div>
 
 {% if canciones %}
+<div style="margin-bottom:1rem;">
+  <button type="button" class="btn-play-all" onclick="playFrom(0)">
+    <span class="material-icons">play_arrow</span> Reproducir
+  </button>
+</div>
+{% endif %}
+
+{% if canciones %}
 <div class="pop-list">
   {% for c in canciones %}
   <div class="pop-row">
     <div class="pop-row__rank">{{ c.posicionPlaylist }}</div>
-    <div class="pop-row__cover">
-      <span class="material-icons">music_note</span>
+    <div class="pop-row__cover pop-row__cover--play" title="Reproducir"
+         onclick="playFrom({{ forloop.counter0 }})">
+      <span class="material-icons">play_arrow</span>
     </div>
     <div>
       <div class="pop-row__title">{{ c.nombreCancion }}</div>
@@ -148,20 +198,64 @@
 </div>
 {% endif %}
 
-<!-- Agregar canción -->
+<!-- Agregar canción (buscador del catálogo) -->
 <div class="add-cancion-card">
-  <h4>Agregar canción</h4>
-  <form method="post" action="{% url 'biblioteca:agregar_cancion_playlist' playlist.idPlaylist %}" class="add-cancion-form">
-    {% csrf_token %}
-    <select name="cancion_id" required>
-      <option value="">Selecciona una canción...</option>
-      {% for c in todas_canciones %}
-      <option value="{{ c.idCancion }}">{{ c.nombreCancion }} — {{ c.nombreArtistico }}</option>
-      {% endfor %}
-    </select>
-    <button type="submit" class="btn-add">Agregar</button>
-  </form>
+  <h4>Agregar canciones</h4>
+  <div class="add-search">
+    <span class="material-icons">search</span>
+    <input type="text" id="songSearch" placeholder="Buscar canción o artista en el catálogo...">
+  </div>
+  <div class="add-song-list" id="songList">
+    {% for c in todas_canciones %}
+    <div class="add-song-row" data-text="{{ c.nombreCancion|lower }} {{ c.nombreArtistico|lower }}">
+      <div class="add-song-info">
+        <div class="add-song-name">{{ c.nombreCancion }}</div>
+        <div class="add-song-artist">{{ c.nombreArtistico }}</div>
+      </div>
+      <form method="post" action="{% url 'biblioteca:agregar_cancion_playlist' playlist.idPlaylist %}">
+        {% csrf_token %}
+        <input type="hidden" name="cancion_id" value="{{ c.idCancion }}">
+        <button type="submit" class="btn-add-mini" title="Agregar a la playlist">
+          <span class="material-icons">add</span>
+        </button>
+      </form>
+    </div>
+    {% empty %}
+    <div class="add-song-empty">No hay canciones en el catálogo.</div>
+    {% endfor %}
+    <div class="add-song-empty" id="songEmpty" style="display:none;">Sin resultados para tu búsqueda.</div>
+  </div>
 </div>
+
+<script>
+(function(){
+  var input = document.getElementById('songSearch');
+  var rows  = Array.prototype.slice.call(document.querySelectorAll('#songList .add-song-row'));
+  var empty = document.getElementById('songEmpty');
+  if (!input) return;
+  input.addEventListener('input', function(){
+    var q = input.value.toLowerCase().trim();
+    var visibles = 0;
+    rows.forEach(function(r){
+      var match = q === '' || (r.dataset.text || '').indexOf(q) !== -1;
+      r.style.display = match ? '' : 'none';
+      if (match) visibles++;
+    });
+    if (empty) empty.style.display = visibles === 0 ? '' : 'none';
+  });
+})();
+</script>
+
+{# Reproducción de la playlist en orden + autoplay #}
+<script>
+  var PLAYLIST_IDS = [{% for c in canciones %}{{ c.idCancion }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+  function playFrom(i){
+    if (window.EzPlayer && PLAYLIST_IDS.length) {
+      EzPlayer.playQueue(PLAYLIST_IDS, i);
+    }
+  }
+</script>
+{% include "catalogo/usuario/_player.html" %}
 {% endif %}
 
 {% endblock %}

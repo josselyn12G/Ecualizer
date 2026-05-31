@@ -16,7 +16,7 @@
         <div class="section-tag">¿Qué está sonando?</div>
         <h2 class="section-title">Tendencias</h2>
       </div>
-      <a href="#" class="section-more">
+      <a href="{% url 'tendencias' %}" class="section-more">
         Ver más <span class="material-icons">chevron_right</span>
       </a>
     </div>
@@ -43,28 +43,6 @@
 
     {% include "usuarios/oyente/components/recent_activity.html" %}
 
-    {% if plan_activo == 'Free' %}
-    <!-- HISTORIAL BLOQUEADO PARA FREE -->
-    <div style="position:relative; overflow:hidden; border-radius:14px;">
-      <div style="filter:blur(3px); pointer-events:none; user-select:none;">
-        {% include "usuarios/oyente/components/recent_activity.html" %}
-      </div>
-      <!-- Overlay de bloqueo -->
-      <div style="position:absolute; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(2px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; border-radius:14px; border:1px solid rgba(249,115,22,0.3);">
-        <span class="material-icons" style="font-size:3rem; color:#f97316;">lock</span>
-        <div style="text-align:center;">
-          <div style="color:#fff; font-size:1.1rem; font-weight:800; margin-bottom:0.3rem;">Contenido Premium</div>
-          <div style="color:rgba(255,255,255,0.6); font-size:0.85rem;">Actualiza tu plan para ver tu historial completo</div>
-        </div>
-        <a href="{% url 'pagos:historial' %}" style="background:#f97316; color:#fff; border-radius:50px; padding:0.6rem 1.5rem; font-size:0.88rem; font-weight:700; text-decoration:none;">
-          Ver planes
-        </a>
-      </div>
-    </div>
-    {% else %}
-    {% include "usuarios/oyente/components/recent_activity.html" %}
-    {% endif %}
-
   </div>
 
   <!-- COLUMNA DERECHA -->
@@ -72,26 +50,11 @@
 
     <div class="rs-block">
       <div class="rs-header">
-        <span class="rs-title">Géneros</span>
-        <button class="rs-dots" title="Más opciones">⋯</button>
-      </div>
-      <div class="genre-tags">
-        <span class="genre-tag"><span class="material-icons">headphones</span>Pop</span>
-        <span class="genre-tag"><span class="material-icons">electric_bolt</span>Rock</span>
-        <span class="genre-tag"><span class="material-icons">piano</span>Jazz</span>
-        <span class="genre-tag"><span class="material-icons">graphic_eq</span>Electrónica</span>
-        <span class="genre-tag"><span class="material-icons">music_note</span>Reggaetón</span>
-        <span class="genre-tag"><span class="material-icons">library_music</span>Clásica</span>
-      </div>
-    </div>
-
-    <div class="rs-block">
-      <div class="rs-header">
         <span class="rs-title">Accesos Rápidos</span>
-        <a href="#" class="rs-see-all">Ver todo</a>
+        <a href="{% url 'explorar' %}" class="rs-see-all">Ver todo</a>
       </div>
       <div class="played-list">
-        <a href="#" class="played-item">
+        <a href="{% url 'para_ti' %}" class="played-item">
           <div class="played-cover"><span class="material-icons">auto_awesome</span></div>
           <div class="played-info">
             <div class="played-name">Recomendaciones</div>
@@ -99,7 +62,7 @@
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-        <a href="#" class="played-item">
+        <a href="{% url 'tendencias' %}" class="played-item">
           <div class="played-cover"><span class="material-icons">trending_up</span></div>
           <div class="played-info">
             <div class="played-name">Tendencias</div>
@@ -107,15 +70,15 @@
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-        <a href="#" class="played-item">
+        <a href="{% url 'biblioteca:mis_albumes' %}" class="played-item">
           <div class="played-cover"><span class="material-icons">library_music</span></div>
           <div class="played-info">
             <div class="played-name">Mi Biblioteca</div>
-            <div class="played-sub">Tus canciones guardadas</div>
+            <div class="played-sub">Tus álbumes guardados</div>
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-        <a href="#" class="played-item">
+        <a href="{% url 'biblioteca:mis_canciones_liked' %}" class="played-item">
           <div class="played-cover"><span class="material-icons">favorite</span></div>
           <div class="played-info">
             <div class="played-name">Favoritas</div>
@@ -123,20 +86,6 @@
           </div>
           <span class="material-icons played-arrow">chevron_right</span>
         </a>
-
-        {% if plan_activo != 'Free' %}
-        <!-- BOTÓN DESCARGA SOLO PARA PREMIUM -->
-        <a href="#" class="played-item" onclick="event.preventDefault(); document.getElementById('modal-descarga').style.display='flex'">
-          <div class="played-cover" style="background:rgba(34,197,94,0.15);">
-            <span class="material-icons" style="color:#22c55e;">download</span>
-          </div>
-          <div class="played-info">
-            <div class="played-name">Descargar música</div>
-            <div class="played-sub">Disponible en tu plan</div>
-          </div>
-          <span class="material-icons played-arrow">chevron_right</span>
-        </a>
-        {% endif %}
       </div>
     </div>
 
@@ -181,5 +130,8 @@
     </button>
   </div>
 </div>
+
+{# Player flotante (Deezer preview) — habilita reproducir desde el historial #}
+{% include "catalogo/usuario/_player.html" %}
 
 {% endblock %}

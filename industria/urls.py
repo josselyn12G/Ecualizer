@@ -28,10 +28,10 @@ urlpatterns = [
     path('contratos/nuevo/',
          views.ContratoCreateView.as_view(),
          name='contrato_create'),
-    path('contratos/<int:pk>/editar/',
+    path('contratos/<int:artista>/<int:disco>/<int:num>/editar/',
          views.ContratoUpdateView.as_view(),
          name='contrato_update'),
-    path('contratos/<int:pk>/eliminar/',
+    path('contratos/<int:artista>/<int:disco>/<int:num>/eliminar/',
          views.ContratoDeleteView.as_view(),
          name='contrato_delete'),
 ]

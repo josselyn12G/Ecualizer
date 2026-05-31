@@ -585,3 +585,32 @@ class AdminEditAdministradorForm(forms.ModelForm):
             'rol_admin':    forms.Select(attrs=_SELECT),
             'departamento': forms.Select(attrs=_SELECT),
         }
+
+
+# ─────────────────────────────────────────────
+# PERFIL DEL OYENTE — edición de sus propios datos
+# ─────────────────────────────────────────────
+
+class PerfilPersonaForm(AdminEditPersonaForm):
+    """Datos personales editables por el propio oyente.
+
+    Reutiliza las validaciones de AdminEditPersonaForm pero SIN el campo
+    'estado' (un usuario no puede cambiar su propio estado) y con la
+    cédula en solo-lectura (no se modifica)."""
+
+    class Meta(AdminEditPersonaForm.Meta):
+        fields = [
+            'cedula_usuario', 'primer_nombre', 'segundo_nombre',
+            'primer_apellido', 'segundo_apellido', 'correo',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # La cédula se muestra pero no se puede modificar.
+        self.fields['cedula_usuario'].disabled = True
+
+
+class PerfilUsuarioForm(AdminEditUsuarioForm):
+    """Datos de perfil de oyente (alias, país, nacimiento, género)
+    editables por el propio usuario. Reutiliza AdminEditUsuarioForm."""
+    pass

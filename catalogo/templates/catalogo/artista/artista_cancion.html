@@ -47,6 +47,14 @@
   }
   .field-textarea { min-height: 90px; resize: vertical; }
 
+  /* El desplegable nativo de <select> usa fondo blanco del sistema:
+     forzamos texto oscuro en las opciones para que sean legibles. */
+  .field-select option,
+  .field-select optgroup {
+    color: #1f2937;
+    background-color: #ffffff;
+  }
+
   /* ── Tabla "songs" ── */
   .songs-table {
     width: 100%; border-collapse: collapse;

@@ -16,6 +16,7 @@ from django.urls import path
 from .views.artista.album_views import (
     ArtistaAlbumListView, ArtistaAlbumCreateView,
     ArtistaAlbumUpdateView, ArtistaAlbumDeactivateView,
+    ArtistaAlbumDeleteView, ArtistaAlbumDetailView,
 )
 from .views.artista.cancion_views import (
     ArtistaCancionListView, ArtistaCancionCreateView,
@@ -63,12 +64,18 @@ urlpatterns = [
     path('artista/albumes/nuevo/',
          ArtistaAlbumCreateView.as_view(),
          name='artista_album_create'),
+    path('artista/albumes/<int:pk>/',
+         ArtistaAlbumDetailView.as_view(),
+         name='artista_album_detail'),
     path('artista/albumes/<int:pk>/editar/',
          ArtistaAlbumUpdateView.as_view(),
          name='artista_album_update'),
     path('artista/albumes/<int:pk>/desactivar/',
          ArtistaAlbumDeactivateView.as_view(),
          name='artista_album_deactivate'),
+    path('artista/albumes/<int:pk>/eliminar/',
+         ArtistaAlbumDeleteView.as_view(),
+         name='artista_album_delete'),
 
     # ═════════════════════════════════════════════════════
     # ARTISTA · Cancion

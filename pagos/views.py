@@ -9,6 +9,7 @@ from .services import sp_historial_suscripciones_pagos
 from django.views import View
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, connection
+from django.contrib import messages
 
 from usuarios.mixins import RequiereOyente
 from .services import sp_historial_suscripciones_pagos
@@ -74,6 +75,10 @@ class HistorialSuscripcionesView(RequiereOyente, View):
         if not plan_id:
             return redirect('pagos:historial')
 
+        # Renovación automática: viene del checkbox del modal ('S' / 'N').
+        # Se persiste en la columna Pagos.Suscripcion.renovacionAutomatica.
+        renovacion = 'S' if request.POST.get('auto_renovacion') else 'N'
+
         try:
             with connection.cursor() as cur:
                 # Obtener precio del plan
@@ -94,14 +99,16 @@ class HistorialSuscripcionesView(RequiereOyente, View):
                     [uid]
                 )
 
-                # Crear nueva suscripción
+                # Crear nueva suscripción (guardando la renovación automática)
                 cur.execute(
                     """
                     INSERT INTO Pagos.Suscripcion
-                    (Usuario_idUsuario, TipoPlan_idTipoPlan, fechaInicio, fechaFin, estadoSuscripcion)
-                    VALUES (%s, %s, GETDATE(), DATEADD(month, 1, GETDATE()), 'activa')
+                    (Usuario_idUsuario, TipoPlan_idTipoPlan, fechaInicio, fechaFin,
+                     estadoSuscripcion, renovacionAutomatica)
+                    VALUES (%s, %s, GETDATE(), DATEADD(month, 1, GETDATE()),
+                            'activa', %s)
                     """,
-                    [uid, plan_id]
+                    [uid, plan_id, renovacion]
                 )
 
                 # Obtener el ID de la suscripción recién creada
@@ -115,16 +122,19 @@ class HistorialSuscripcionesView(RequiereOyente, View):
                 )
                 id_suscripcion = cur.fetchone()[0]
 
-                # Registrar pago
-                cur.execute(
-                    """
-                    INSERT INTO Pagos.Pago
-                    (Suscripcion_idSuscripcion, monto, metodoPago, fechaPago, resultadoPago)
-                    VALUES (%s, %s, 'Tarjeta de credito', GETDATE(), 'Completado')
-                    """,
-                    [id_suscripcion, precio]
-                )
+                # Registrar pago SOLO para planes de pago (precio > 0).
+                # El plan Free no genera transacción.
+                if precio and float(precio) > 0:
+                    cur.execute(
+                        """
+                        INSERT INTO Pagos.Pago
+                        (Suscripcion_idSuscripcion, monto, metodoPago, fechaPago, resultadoPago)
+                        VALUES (%s, %s, 'Tarjeta de credito', GETDATE(), 'Completado')
+                        """,
+                        [id_suscripcion, precio]
+                    )
+            messages.success(request, 'Tu plan se actualizó correctamente.')
         except DatabaseError:
-            pass
+            messages.error(request, 'No se pudo actualizar el plan. Inténtalo de nuevo.')
 
         return redirect('pagos:historial')

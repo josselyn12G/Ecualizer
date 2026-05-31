@@ -54,8 +54,8 @@
           {% endif %}
         </td>
         <td class="num" style="white-space:nowrap;">
-          <a href="{% url 'industria:contrato_update' c.pk %}" class="btn-action btn-action--editar">Editar</a>
-          <form method="post" action="{% url 'industria:contrato_delete' c.pk %}" style="display:inline;"
+          <a href="{% url 'industria:contrato_update' c.artista_id c.discografica_id c.id_contrato %}" class="btn-action btn-action--editar">Editar</a>
+          <form method="post" action="{% url 'industria:contrato_delete' c.artista_id c.discografica_id c.id_contrato %}" style="display:inline;"
                 onsubmit="return confirm('¿Eliminar este contrato?');">
             {% csrf_token %}
             <button type="submit" class="btn-action btn-action--eliminar">Eliminar</button>

@@ -107,13 +107,13 @@
       {% for s in suscripciones %}
       <tr>
         <td>#{{ s.idSuscripcion }}</td>
-        <td><strong style="color:#fff;">{{ s.Usuario }}</strong>
-          <div style="font-size:0.74rem; color:rgba(255,255,255,0.45);">@{{ s.Alias }}</div>
+        <td><strong style="color:var(--text);">{{ s.Usuario }}</strong>
+          <div style="font-size:0.74rem; color:var(--text-muted);">@{{ s.Alias }}</div>
         </td>
         <td>{{ s.Correo }}</td>
         <td>
           {{ s.Plan }}
-          <div style="font-size:0.74rem; color:rgba(255,255,255,0.45);">
+          <div style="font-size:0.74rem; color:var(--text-muted);">
             ${{ s.Precio|floatformat:2 }} · {{ s.Duracion }}
           </div>
         </td>
@@ -134,7 +134,7 @@
           {% if s.renovacionAutomatica == 'S' %}
             <span class="material-icons" style="color:#22c55e; font-size:1.1rem;" title="Renovación automática">autorenew</span>
           {% else %}
-            <span class="material-icons" style="color:rgba(255,255,255,0.3); font-size:1.1rem;" title="Manual">block</span>
+            <span class="material-icons" style="color:var(--text-light); font-size:1.1rem;" title="Manual">block</span>
           {% endif %}
         </td>
       </tr>

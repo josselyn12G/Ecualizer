@@ -17,12 +17,36 @@ def sp_crear_playlist(usuario_id, nombre, descripcion, visibilidad, tipo):
 
 
 def sp_listar_playlists(usuario_id, visibilidad=None):
+    """Lista las playlists del usuario.
+
+    Se consulta directamente sobre las tablas Biblioteca.Playlist /
+    UsuarioPlaylist (en vez de un SP) para no depender de procedimientos
+    que pueden no estar desplegados. Devuelve las columnas que usa el
+    template: idPlaylist, nombrePlaylist, descripcionPlaylist,
+    tipoVisibilidad, tipoPlaylist y TotalCanciones.
+    """
+    sql = """
+        SELECT
+            p.idPlaylist,
+            p.nombrePlaylist,
+            p.descripcionPlaylist,
+            p.tipoVisibilidad,
+            p.tipoPlaylist,
+            (SELECT COUNT(*) FROM Biblioteca.CancionPlaylist cp
+             WHERE cp.Playlist_idPlaylist = p.idPlaylist) AS TotalCanciones
+        FROM Biblioteca.Playlist p
+        INNER JOIN Biblioteca.UsuarioPlaylist up
+                ON up.Playlist_idPlaylist = p.idPlaylist
+        WHERE up.Usuario_idUsuario = %s
+    """
+    params = [usuario_id]
+    if visibilidad:
+        sql += " AND p.tipoVisibilidad = %s"
+        params.append(visibilidad)
+    sql += " ORDER BY p.idPlaylist DESC;"
+
     with connection.cursor() as cur:
-        cur.execute(
-            "EXEC Biblioteca.sp_ListarPlaylistsUsuario "
-            "@idUsuario=%s, @visibilidad=%s;",
-            [usuario_id, visibilidad]
-        )
+        cur.execute(sql, params)
         cols = [c[0] for c in cur.description]
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 

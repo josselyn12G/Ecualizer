@@ -55,8 +55,8 @@
         {% for p in planes %}
         <tr>
           <td>#{{ p.idTipoPlan }}</td>
-          <td><strong style="color:#fff;">{{ p.nombrePlan }}</strong>
-            {% if p.descripcionPlan %}<div style="font-size:0.74rem; color:rgba(255,255,255,0.45);">{{ p.descripcionPlan|truncatechars:60 }}</div>{% endif %}
+          <td><strong style="color:var(--text);">{{ p.nombrePlan }}</strong>
+            {% if p.descripcionPlan %}<div style="font-size:0.74rem; color:var(--text-muted);">{{ p.descripcionPlan|truncatechars:60 }}</div>{% endif %}
           </td>
           <td>{{ p.duracion }}</td>
           <td class="num">${{ p.precio|floatformat:2 }}</td>

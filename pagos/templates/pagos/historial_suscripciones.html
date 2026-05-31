@@ -127,21 +127,30 @@
     <h3 style="color:#fff; font-size:1.4rem; font-weight:800; margin-bottom:0.75rem;">Cambiar de plan</h3>
     <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; margin-bottom:0.5rem;">¿Quieres cambiar al plan</p>
     <p id="modal-plan-nombre" style="color:#fff; font-size:1.2rem; font-weight:800; margin-bottom:0.25rem;"></p>
-    <p id="modal-plan-precio" style="color:#f97316; font-size:1.5rem; font-weight:800; margin-bottom:1.5rem;"></p>
-    <div style="display:flex; gap:0.75rem; justify-content:center;">
-      <button onclick="cerrarModal()"
-              style="background:rgba(255,255,255,0.08); color:#fff; border:none; border-radius:50px; padding:0.7rem 1.75rem; font-size:0.9rem; cursor:pointer; font-weight:600;">
-        Cancelar
-      </button>
-      <form method="post" style="display:inline;">
-        {% csrf_token %}
-        <input type="hidden" name="plan_id" id="modal-plan-id" value="">
+    <p id="modal-plan-precio" style="color:#f97316; font-size:1.5rem; font-weight:800; margin-bottom:1rem;"></p>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="plan_id" id="modal-plan-id" value="">
+
+      <!-- Renovación automática (se guarda en la base de datos) -->
+      <label id="modal-auto-wrap" style="display:flex; align-items:center; gap:0.6rem; justify-content:center; margin-bottom:1.5rem; color:rgba(255,255,255,0.8); font-size:0.88rem; cursor:pointer;">
+        <input type="checkbox" name="auto_renovacion" id="modal-auto" value="S" checked
+               style="width:18px; height:18px; accent-color:#f97316; cursor:pointer;">
+        Renovar automáticamente al finalizar el período
+      </label>
+
+      <div style="display:flex; gap:0.75rem; justify-content:center;">
+        <button type="button" onclick="cerrarModal()"
+                style="background:rgba(255,255,255,0.08); color:#fff; border:none; border-radius:50px; padding:0.7rem 1.75rem; font-size:0.9rem; cursor:pointer; font-weight:600;">
+          Cancelar
+        </button>
         <button type="submit"
                 style="background:#f97316; color:#fff; border:none; border-radius:50px; padding:0.7rem 1.75rem; font-size:0.9rem; font-weight:700; cursor:pointer;">
           Confirmar
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -151,7 +160,8 @@
   <table>
     <thead>
       <tr>
-        <th>Plan</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Monto</th><th>Pago</th><th>Fecha pago</th>
+        <th>Plan</th><th>Inicio</th><th>Fin</th><th>Estado</th>
+        <th>Auto-renovación</th><th>Monto</th><th>Pago</th><th>Fecha pago</th>
       </tr>
     </thead>
     <tbody>
@@ -161,9 +171,16 @@
         <td>{{ s.Inicio }}</td>
         <td>{{ s.Fin }}</td>
         <td><span class="badge-{{ s.EstadoSuscripcion }}">{{ s.EstadoSuscripcion|capfirst }}</span></td>
-        <td>${{ s.Monto }}</td>
-        <td>{{ s.EstadoPago }}</td>
-        <td>{{ s.FechaPago }}</td>
+        <td>
+          {% if s.RenovacionAutomatica == 'S' %}
+            <span style="color:#22c55e; font-weight:600;">● Sí</span>
+          {% else %}
+            <span style="color:rgba(255,255,255,0.4); font-weight:600;">● No</span>
+          {% endif %}
+        </td>
+        <td>{% if s.Monto != None %}${{ s.Monto }}{% else %}<span style="color:rgba(255,255,255,0.4);">Gratis</span>{% endif %}</td>
+        <td>{{ s.EstadoPago|default:"—" }}</td>
+        <td>{{ s.FechaPago|default:"—" }}</td>
       </tr>
       {% endfor %}
     </tbody>

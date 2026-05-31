@@ -89,6 +89,12 @@ class RegistroOyenteView(View):
                     usuario.save()
                     logger.info('Usuario OK · alias=%s', usuario.alias)
 
+                    # Plan Free por defecto para todo oyente nuevo.
+                    from pagos.services import asegurar_plan_free
+                    asegurar_plan_free(persona.id_usuario)
+                    logger.info('Plan Free asignado por defecto a id=%s',
+                                persona.id_usuario)
+
                 request.session['usuario_id'] = persona.id_usuario
                 request.session['usuario_nombre'] = persona.primer_nombre
                 request.session['tipo_usuario'] = 'oyente'
