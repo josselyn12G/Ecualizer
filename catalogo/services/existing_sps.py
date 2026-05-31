@@ -71,17 +71,36 @@ def sp_top10_canciones_artista(id_artista, periodo='mes'):
 # ADMIN · Ranking global de canciones
 # ──────────────────────────────────────────────────────────
 def sp_ranking_global_canciones(periodo='todo', id_genero=None, pais=None):
+    """Top 20 canciones por reproducciones (consulta directa).
+
+    El SP Analitica.sp_RankingGlobalCanciones puede no estar desplegado,
+    por lo que se consulta directamente sobre Analitica.Reproduccion.
+    Devuelve: Cancion, Artista, TotalReproduccionesGlobales, OyentesUnicos.
     """
-    @periodo  VARCHAR(10) = 'todo',
-    @idGenero TINYINT     = NULL,
-    @pais     VARCHAR(50) = NULL
+    filtros = {
+        'semana': 'AND r.fechaHora >= DATEADD(DAY, -7, GETDATE())',
+        'mes':    'AND r.fechaHora >= DATEADD(MONTH, -1, GETDATE())',
+        'año':    'AND r.fechaHora >= DATEADD(YEAR, -1, GETDATE())',
+        'anio':   'AND r.fechaHora >= DATEADD(YEAR, -1, GETDATE())',
+        'todo':   '',
+    }
+    filtro = filtros.get(periodo, '')
+    sql = f"""
+        SELECT TOP 20
+            c.nombreCancion    AS Cancion,
+            ar.nombreArtistico AS Artista,
+            COUNT(*)                            AS TotalReproduccionesGlobales,
+            COUNT(DISTINCT r.Usuario_idUsuario) AS OyentesUnicos
+        FROM Analitica.Reproduccion r
+        JOIN Catalogo.Cancion c  ON c.idCancion = r.Cancion_idCancion
+        JOIN Catalogo.Album   al ON al.idAlbum  = c.Album_idAlbum
+        JOIN Usuario.Artista  ar ON ar.idUsuario = al.Artista_idUsuario
+        WHERE 1 = 1 {filtro}
+        GROUP BY c.nombreCancion, ar.nombreArtistico
+        ORDER BY TotalReproduccionesGlobales DESC;
     """
     with connection.cursor() as cur:
-        cur.execute(
-            "EXEC Analitica.sp_RankingGlobalCanciones "
-            "@periodo=%s, @idGenero=%s, @pais=%s;",
-            [periodo, id_genero, pais],
-        )
+        cur.execute(sql)
         cols = [c[0] for c in cur.description]
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 

@@ -87,9 +87,35 @@ def albumes_mas_guardados(top: int = 10) -> list[dict]:
 
 
 def ranking_global_canciones(periodo: str = 'mes') -> list[dict]:
-    """Reutiliza el SP ya existente."""
-    return _exec_rows(
-        "EXEC Analitica.sp_RankingGlobalCanciones @periodo=%s;", [periodo])
+    """Top 20 canciones por reproducciones en el período indicado.
+
+    Consulta directa sobre Analitica.Reproduccion (el SP
+    sp_RankingGlobalCanciones puede no estar desplegado). Devuelve
+    columnas: Cancion, Artista, TotalReproduccionesGlobales, OyentesUnicos.
+    """
+    filtros = {
+        'semana': 'AND r.fechaHora >= DATEADD(DAY, -7, GETDATE())',
+        'mes':    'AND r.fechaHora >= DATEADD(MONTH, -1, GETDATE())',
+        'año':    'AND r.fechaHora >= DATEADD(YEAR, -1, GETDATE())',
+        'anio':   'AND r.fechaHora >= DATEADD(YEAR, -1, GETDATE())',
+        'todo':   '',
+    }
+    filtro = filtros.get(periodo, filtros['mes'])
+    sql = f"""
+        SELECT TOP 20
+            c.nombreCancion    AS Cancion,
+            ar.nombreArtistico AS Artista,
+            COUNT(*)                              AS TotalReproduccionesGlobales,
+            COUNT(DISTINCT r.Usuario_idUsuario)   AS OyentesUnicos
+        FROM Analitica.Reproduccion r
+        JOIN Catalogo.Cancion c  ON c.idCancion = r.Cancion_idCancion
+        JOIN Catalogo.Album   al ON al.idAlbum  = c.Album_idAlbum
+        JOIN Usuario.Artista  ar ON ar.idUsuario = al.Artista_idUsuario
+        WHERE 1 = 1 {filtro}
+        GROUP BY c.nombreCancion, ar.nombreArtistico
+        ORDER BY TotalReproduccionesGlobales DESC;
+    """
+    return _exec_rows(sql)
 
 
 # ──────────────────────────────────────────────────────────

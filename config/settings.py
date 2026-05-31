@@ -198,3 +198,21 @@ LOGGING = {
 # Spotify API
 SPOTIFY_CLIENT_ID = '7a24e29fb30b4cf5a46861df271d7784'
 SPOTIFY_CLIENT_SECRET = '28c0a8ed5c6242538c2c273da17b6f6f'
+
+# ─────────────────────────────────────────────
+# Caché (acelera las secciones del oyente: Para Ti, Explorar,
+# Tendencias y Novedades, que consultan la API de Spotify).
+# Caché en memoria del proceso; tras la primera carga, las
+# siguientes son instantáneas hasta que expira el TTL.
+# ─────────────────────────────────────────────
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'ecualizer-cache',
+        'TIMEOUT': 60 * 60,            # 1 hora por defecto
+        'OPTIONS': {'MAX_ENTRIES': 500},
+    }
+}
+
+# Segundos que se cachean los resultados de las secciones del oyente.
+SPOTIFY_CACHE_TTL = 60 * 60  # 1 hora
