@@ -538,3 +538,5 @@
 [2026-05-31 11:31:35,948] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_TiempoTotalEscucha @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_TiempoTotalEscucha'. (2812) (SQLExecDirectW)")
 [2026-05-31 11:31:35,950] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_GenerosFavoritosUsuario @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_GenerosFavoritosUsuario'. (2812) (SQLExecDirectW)")
 [2026-05-31 11:31:35,952] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_RecomendacionesSemanales @idUsuario=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_RecomendacionesSemanales'. (2812) (SQLExecDirectW)")
+[2026-05-31 12:00:20,195] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-31 12:00:20,232] INFO    ecualizer.auth: LOGIN persona=badbunny@ecualizer.com tipo=artista
