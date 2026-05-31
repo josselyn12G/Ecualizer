@@ -294,3 +294,29 @@
 [2026-05-30 00:02:00,718] ERROR   ecualizer.analitica: Analitica SP error · EXEC Usuario.sp_ReporteUsuariosActivos @tipoCuenta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Usuario.sp_ReporteUsuariosActivos'. (2812) (SQLExecDirectW)")
 [2026-05-30 00:02:08,210] ERROR   ecualizer.analitica: Analitica SP error · EXEC Usuario.sp_ReporteUsuariosActivos @tipoCuenta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Usuario.sp_ReporteUsuariosActivos'. (2812) (SQLExecDirectW)")
 [2026-05-30 00:02:27,107] ERROR   ecualizer.analitica: Analitica SP error · EXEC Usuario.sp_ReporteUsuariosActivos @tipoCuenta=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Usuario.sp_ReporteUsuariosActivos'. (2812) (SQLExecDirectW)")
+[2026-05-30 12:34:29,587] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-30 12:34:30,416] INFO    ecualizer.auth: ADMIN LOGIN form válido
+[2026-05-30 20:34:01,568] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-30 20:34:01,602] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-30 20:34:01,616] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_TopCancionesUsuario @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_TopCancionesUsuario'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:34:01,617] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_TiempoTotalEscucha @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_TiempoTotalEscucha'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:34:01,618] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_GenerosFavoritosUsuario @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_GenerosFavoritosUsuario'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:34:01,619] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_RecomendacionesSemanales @idUsuario=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_RecomendacionesSemanales'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:35:34,035] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-30 20:35:36,088] WARNING ecualizer.auth: LOGIN inválido · errors={"contrasena": [{"message": "This field is required.", "code": "required"}]}
+[2026-05-30 20:35:37,499] WARNING ecualizer.auth: LOGIN inválido · errors={"contrasena": [{"message": "This field is required.", "code": "required"}]}
+[2026-05-30 20:35:39,517] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-30 20:40:39,437] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-30 20:40:56,987] WARNING ecualizer.auth: LOGIN inválido · errors={"contrasena": [{"message": "This field is required.", "code": "required"}]}
+[2026-05-30 20:41:01,406] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-30 20:42:21,222] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"correo": [{"message": "Enter a valid email address.", "code": "invalid"}]}
+[2026-05-30 20:42:25,357] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"contrasena": [{"message": "This field is required.", "code": "required"}]}
+[2026-05-30 20:42:29,643] WARNING ecualizer.auth: ADMIN LOGIN inválido · errors={"__all__": [{"message": "Credenciales incorrectas.", "code": ""}]}
+[2026-05-30 20:45:28,704] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}
+[2026-05-30 20:46:15,931] INFO    ecualizer.auth: LOGIN form válido
+[2026-05-30 20:46:15,973] INFO    ecualizer.auth: LOGIN persona=mario.lp@gmail.com tipo=oyente
+[2026-05-30 20:46:15,995] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_TopCancionesUsuario @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_TopCancionesUsuario'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:46:15,997] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_TiempoTotalEscucha @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_TiempoTotalEscucha'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:46:15,999] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_GenerosFavoritosUsuario @idUsuario=%s, @periodo=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_GenerosFavoritosUsuario'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:46:16,002] ERROR   ecualizer.analitica: Analitica SP error · EXEC Analitica.sp_RecomendacionesSemanales @idUsuario=%s; · ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Could not find stored procedure 'Analitica.sp_RecomendacionesSemanales'. (2812) (SQLExecDirectW)")
+[2026-05-30 20:47:27,334] WARNING ecualizer.auth: LOGIN inválido · errors={"__all__": [{"message": "Correo o contrase\u00f1a incorrectos.", "code": ""}]}

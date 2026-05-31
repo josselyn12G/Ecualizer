@@ -10,6 +10,62 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     .bg-image { background-image: url("{% static 'img/FondoDashboard.png' %}"); }
+
+    /* ── Notificaciones estilo Facebook ───────────────────── */
+    .notif { position: relative; }
+    .notif__btn { position: relative; }
+    .notif__badge {
+      position: absolute; top: -4px; right: -4px;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      background: #ef4444; color: #fff;
+      border-radius: 9px; font-size: 0.68rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.35);
+      font-family: 'Inter', sans-serif;
+    }
+    .notif__panel {
+      position: absolute; top: calc(100% + 10px); right: 0;
+      width: 360px; max-width: calc(100vw - 32px);
+      background: rgba(22, 22, 26, 0.98);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.5);
+      backdrop-filter: blur(22px);
+      overflow: hidden; z-index: 1000;
+      opacity: 0; transform: translateY(-8px) scale(0.98);
+      pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .notif.open .notif__panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .notif__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-weight: 700; color: #fff; font-size: 0.95rem;
+    }
+    .notif__count { font-size: 0.72rem; font-weight: 600; color: #f97316; }
+    .notif__list { max-height: 380px; overflow-y: auto; }
+    .notif__item {
+      display: flex; gap: 0.7rem; align-items: flex-start;
+      padding: 0.8rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.15s;
+    }
+    .notif__item:hover { background: rgba(255,255,255,0.04); }
+    .notif__ico {
+      flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(249,115,22,0.18); color: #f97316;
+    }
+    .notif__item--renovacion .notif__ico { background: rgba(59,130,246,0.18); color: #3b82f6; }
+    .notif__ico .material-icons { font-size: 1.15rem; }
+    .notif__body { min-width: 0; }
+    .notif__title { color: #fff; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.1rem; }
+    .notif__msg { color: rgba(255,255,255,0.72); font-size: 0.8rem; line-height: 1.4; }
+    .notif__date { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-top: 0.25rem; }
+    .notif__empty {
+      padding: 2rem 1rem; text-align: center; color: rgba(255,255,255,0.5);
+    }
+    .notif__empty .material-icons { font-size: 2rem; opacity: 0.6; }
+    .notif__empty p { font-size: 0.85rem; margin-top: 0.4rem; }
   </style>
   {% block extra_css %}{% endblock %}
 </head>
@@ -169,9 +225,37 @@
         </div>
       </div>
       <div class="topbar__right">
-        <button class="topbar-icon-btn" type="button" title="Notificaciones">
-          <span class="material-icons">notifications_none</span>
-        </button>
+        <div class="notif" id="notifWrap">
+          <button class="topbar-icon-btn notif__btn" id="notifBtn" type="button" title="Notificaciones" aria-haspopup="true" aria-expanded="false">
+            <span class="material-icons">{% if notif_count %}notifications_active{% else %}notifications_none{% endif %}</span>
+            {% if notif_count %}<span class="notif__badge">{{ notif_count }}</span>{% endif %}
+          </button>
+
+          <div class="notif__panel" id="notifPanel" role="menu">
+            <div class="notif__head">
+              <span>Notificaciones</span>
+              {% if notif_count %}<span class="notif__count">{{ notif_count }} nueva{{ notif_count|pluralize }}</span>{% endif %}
+            </div>
+            <div class="notif__list">
+              {% for n in notificaciones %}
+              <div class="notif__item notif__item--{{ n.tipo }}">
+                <span class="notif__ico"><span class="material-icons">{{ n.icono }}</span></span>
+                <div class="notif__body">
+                  <div class="notif__title">{{ n.titulo }}</div>
+                  <div class="notif__msg">{{ n.mensaje }}</div>
+                  <div class="notif__date">{{ n.fecha_str }}</div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="notif__empty">
+                <span class="material-icons">notifications_off</span>
+                <p>No tienes notificaciones por ahora.</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
         <button class="topbar-icon-btn" type="button" title="Buscar">
           <span class="material-icons">search</span>
         </button>
@@ -280,6 +364,31 @@
       setTimeout(function () { el.remove(); }, 400);
     });
   }, 4000);
+
+  // ── Panel de notificaciones (estilo Facebook) ──
+  const notifWrap = document.getElementById('notifWrap');
+  const notifBtn  = document.getElementById('notifBtn');
+  if (notifWrap && notifBtn) {
+    notifBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const open = notifWrap.classList.toggle('open');
+      notifBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    // Cerrar al hacer clic fuera del panel
+    document.addEventListener('click', function (e) {
+      if (!notifWrap.contains(e.target)) {
+        notifWrap.classList.remove('open');
+        notifBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    // Cerrar con la tecla Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        notifWrap.classList.remove('open');
+        notifBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 })();
 </script>
 {% block extra_js %}{% endblock %}

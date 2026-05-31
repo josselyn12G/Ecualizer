@@ -157,13 +157,13 @@
 (function(){
   {% for m in messages %}
     {%  if m.tags == 'success' or m.level_tag == 'success' %}
-      Popup.success({{ m|escapejs|stringformat:"'%s'" }});
+      Popup.success('{{ m|escapejs }}');
     {% elif m.tags == 'error' or m.tags == 'danger' or m.level_tag == 'error' %}
-      Popup.error({{ m|escapejs|stringformat:"'%s'" }});
+      Popup.error('{{ m|escapejs }}');
     {% elif m.tags == 'warning' or m.level_tag == 'warning' %}
-      Popup.error({{ m|escapejs|stringformat:"'%s'" }}, {title: 'AVISO'});
+      Popup.error('{{ m|escapejs }}', {title: 'AVISO'});
     {% else %}
-      Popup.info({{ m|escapejs|stringformat:"'%s'" }});
+      Popup.info('{{ m|escapejs }}');
     {% endif %}
   {% endfor %}
 })();

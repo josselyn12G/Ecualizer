@@ -15,6 +15,29 @@ logger = logging.getLogger('ecualizer.auth')
 
 
 # ----------------------------------------------------
+# Convierte los errores de un formulario en popups (messages)
+# Genera mensajes limpios y legibles para el usuario final:
+#   - Errores generales (ej. "Correo o contraseña incorrectos.")
+#     se muestran tal cual.
+#   - Errores de un campo concreto se anteponen con su etiqueta
+#     legible (ej. "Contraseña: Este campo es obligatorio.")
+#     en lugar del nombre técnico del campo.
+# ----------------------------------------------------
+def _errores_a_popups(request, form):
+    # 1) Errores que no pertenecen a un campo (credenciales, cuenta inactiva…)
+    for err in form.non_field_errors():
+        messages.error(request, str(err))
+
+    # 2) Errores por campo, usando la etiqueta visible del campo
+    for campo, errs in form.errors.items():
+        if campo == '__all__':
+            continue
+        etiqueta = form.fields[campo].label if campo in form.fields else campo
+        for err in errs:
+            messages.error(request, f'{etiqueta}: {err}')
+
+
+# ----------------------------------------------------
 # Detecta qué tipo de cuenta tiene la persona
 # ----------------------------------------------------
 def _detectar_tipo(persona):
@@ -137,13 +160,7 @@ class LoginView(View):
 
         # Form inválido → loguear + propagar como popups
         logger.warning('LOGIN inválido · errors=%s', form.errors.as_json())
-        for err in form.non_field_errors():
-            messages.error(request, str(err))
-        for campo, errs in form.errors.items():
-            if campo == '__all__':
-                continue
-            for err in errs:
-                messages.error(request, f'{campo}: {err}')
+        _errores_a_popups(request, form)
 
         return render(
             request,
@@ -228,13 +245,7 @@ class AdminLoginView(View):
             return redirect('admin_dashboard')
 
         logger.warning('ADMIN LOGIN inválido · errors=%s', form.errors.as_json())
-        for err in form.non_field_errors():
-            messages.error(request, str(err))
-        for campo, errs in form.errors.items():
-            if campo == '__all__':
-                continue
-            for err in errs:
-                messages.error(request, f'{campo}: {err}')
+        _errores_a_popups(request, form)
 
         return render(
             request,
